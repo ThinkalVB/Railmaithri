@@ -12,6 +12,7 @@ class Login : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.login)
         supportActionBar!!.hide()
+
         requestPermissions()
     }
 
