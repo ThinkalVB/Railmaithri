@@ -33,4 +33,5 @@ class Login : AppCompatActivity() {
             ActivityCompat.requestPermissions(this, neededPermissions.toTypedArray(), requestCode)
         }
     }
+
 }
