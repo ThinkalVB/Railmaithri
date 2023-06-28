@@ -1,6 +1,10 @@
 package gov.keralapolice.railmaithri
 
 import android.content.Context
+import android.os.Handler
+import android.os.Looper
+import android.widget.Toast
+import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -29,6 +33,27 @@ class Helper {
         fun getData(context: Context, key: String): String? {
             val sharedPref = context.getSharedPreferences("app_store", Context.MODE_PRIVATE)
             return sharedPref.getString(key, "")
+        }
+
+        // Show a short message
+        fun showToast(context: Context, message: String, duration: Int = Toast.LENGTH_SHORT){
+            Handler(Looper.getMainLooper()).post {
+                Toast.makeText(context, message, duration).show()
+            }
+        }
+
+        // Decode error message from api response
+        fun getError(response: String): String {
+            return try {
+                val apiResponse   = JSONObject(response)
+                val errorMessages = apiResponse.getJSONArray("non_field_errors")
+                errorMessages.getString(0)
+            }catch (_: Exception) {
+                var errorMessage = response.replace("[^A-Za-z0-9: ]".toRegex(), " ").trim()
+                errorMessage = errorMessage.replace("\\s+".toRegex()) { it.value[0].toString() }
+                errorMessage.lowercase().replaceFirstChar(Char::uppercase)
+                errorMessage
+            }
         }
     }
 }
