@@ -155,7 +155,6 @@ class Login : AppCompatActivity() {
         val response = clientNT.newCall(request).execute()
         return if (response.isSuccessful) {
             Helper.saveData(this, storage, response.body!!.string())
-            Log.d("Railmaithri", Helper.getData(this, storage)!!)
             true
         } else {
             false

@@ -43,7 +43,7 @@
         android:hint="password"
         android:inputType="textPassword"
         android:paddingHorizontal="8dp"
-        android:paddingVertical="16dp"
+        android:paddingVertical="12dp"
         app:layout_constraintBottom_toTopOf="@+id/login"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -61,7 +61,7 @@
         android:hint="username"
         android:inputType="textPersonName"
         android:paddingHorizontal="8dp"
-        android:paddingVertical="16dp"
+        android:paddingVertical="12dp"
         app:layout_constraintBottom_toTopOf="@+id/password"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -71,8 +71,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
-        android:text="Railway Police"
-        android:textColor="@color/DarkRed"
+        android:text="Kerala Railway Police"
+        android:textColor="@color/WhiteSmoke"
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/username"
@@ -81,7 +81,7 @@
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="256sp"
+        android:layout_width="200sp"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toTopOf="@+id/textView"
         app:layout_constraintEnd_toEndOf="parent"
