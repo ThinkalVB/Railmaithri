@@ -76,7 +76,6 @@
         app:layout_constraintTop_toTopOf="@+id/app_bar" />
 
     <ScrollView
-        android:id="@+id/scrollView2"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:scrollbars="none"
@@ -91,8 +90,8 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <!-- Incident report, Passenger statistics, Stranger check -->
             <LinearLayout
-                android:id="@+id/ly_row_1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
@@ -101,16 +100,21 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
                     <ImageView
-                        android:background="@drawable/rectangular_boarder"
-                        android:paddingTop="16dp"
-                        android:paddingStart="40dp"
-                        android:paddingBottom="36dp"
-                        android:id="@+id/add_incident_report"
                         android:layout_width="125dp"
                         android:layout_height="125dp"
+                        android:paddingBottom="24dp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/home_button" />
+                    <ImageView
+                        android:id="@+id/add_incident_report"
+                        android:layout_marginTop="24dp"
+                        android:layout_marginEnd="24dp"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         app:srcCompat="@drawable/im_incident_report" />
                     <Button
@@ -121,13 +125,15 @@
                         android:drawableTop="@drawable/ic_search"
                         android:insetTop="0dp"
                         android:insetBottom="0dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="4dp"
-                        android:text="Incident report"
+                        android:text="Incident report\n"
                         android:textAlignment="center"
                         android:textColor="@color/black"
                         android:textSize="12sp"
@@ -141,16 +147,21 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
                     <ImageView
-                        android:background="@drawable/rectangular_boarder"
-                        android:paddingTop="16dp"
-                        android:paddingStart="40dp"
-                        android:paddingBottom="36dp"
-                        android:id="@+id/add_passenger_statistics"
                         android:layout_width="125dp"
                         android:layout_height="125dp"
+                        android:paddingBottom="24dp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/home_button" />
+                    <ImageView
+                        android:id="@+id/add_passenger_statistics"
+                        android:layout_marginTop="24dp"
+                        android:layout_marginEnd="24dp"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         app:srcCompat="@drawable/im_passenger_statistics" />
                     <Button
@@ -161,13 +172,15 @@
                         android:drawableTop="@drawable/ic_search"
                         android:insetTop="0dp"
                         android:insetBottom="0dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="4dp"
-                        android:text="Passenger statistics"
+                        android:text="Passenger statistics\n"
                         android:textAlignment="center"
                         android:textColor="@color/black"
                         android:textSize="12sp"
@@ -181,16 +194,21 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
                     <ImageView
-                        android:background="@drawable/rectangular_boarder"
-                        android:paddingTop="16dp"
-                        android:paddingStart="40dp"
-                        android:paddingBottom="36dp"
-                        android:id="@+id/add_stranger_check"
                         android:layout_width="125dp"
                         android:layout_height="125dp"
+                        android:paddingBottom="24dp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/home_button" />
+                    <ImageView
+                        android:id="@+id/add_stranger_check"
+                        android:layout_marginTop="24dp"
+                        android:layout_marginEnd="24dp"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         app:srcCompat="@drawable/im_stranger_check" />
                     <Button
@@ -201,13 +219,15 @@
                         android:drawableTop="@drawable/ic_search"
                         android:insetTop="0dp"
                         android:insetBottom="0dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="4dp"
-                        android:text="Stranger check"
+                        android:text="Stranger check\n"
                         android:textAlignment="center"
                         android:textColor="@color/black"
                         android:textSize="12sp"
@@ -219,8 +239,8 @@
 
             </LinearLayout>
 
+            <!-- Beat diary, Lost property, Abandoned property -->
             <LinearLayout
-                android:id="@+id/ly_row_2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
@@ -229,16 +249,21 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
                     <ImageView
-                        android:background="@drawable/rectangular_boarder"
-                        android:paddingTop="16dp"
-                        android:paddingStart="40dp"
-                        android:paddingBottom="36dp"
-                        android:id="@+id/add_beat_diary"
                         android:layout_width="125dp"
                         android:layout_height="125dp"
+                        android:paddingBottom="24dp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/home_button" />
+                    <ImageView
+                        android:id="@+id/add_beat_diary"
+                        android:layout_marginTop="24dp"
+                        android:layout_marginEnd="24dp"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         app:srcCompat="@drawable/im_beat_diary" />
                     <Button
@@ -249,13 +274,15 @@
                         android:drawableTop="@drawable/ic_search"
                         android:insetTop="0dp"
                         android:insetBottom="0dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="4dp"
-                        android:text="Beat diary"
+                        android:text="Beat diary\n"
                         android:textAlignment="center"
                         android:textColor="@color/black"
                         android:textSize="12sp"
@@ -269,16 +296,21 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
                     <ImageView
-                        android:background="@drawable/rectangular_boarder"
-                        android:paddingTop="16dp"
-                        android:paddingStart="40dp"
-                        android:paddingBottom="36dp"
-                        android:id="@+id/add_lost_property"
                         android:layout_width="125dp"
                         android:layout_height="125dp"
+                        android:paddingBottom="24dp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/home_button" />
+                    <ImageView
+                        android:id="@+id/add_lost_property"
+                        android:layout_marginTop="24dp"
+                        android:layout_marginEnd="24dp"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         app:srcCompat="@drawable/im_lost_property" />
                     <Button
@@ -289,13 +321,15 @@
                         android:drawableTop="@drawable/ic_search"
                         android:insetTop="0dp"
                         android:insetBottom="0dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="4dp"
-                        android:text="Lost property"
+                        android:text="Lost property\n"
                         android:textAlignment="center"
                         android:textColor="@color/black"
                         android:textSize="12sp"
@@ -309,16 +343,21 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
                     <ImageView
-                        android:background="@drawable/rectangular_boarder"
-                        android:paddingTop="16dp"
-                        android:paddingStart="40dp"
-                        android:paddingBottom="36dp"
-                        android:id="@+id/add_abandoned_property"
                         android:layout_width="125dp"
                         android:layout_height="125dp"
+                        android:paddingBottom="24dp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/home_button" />
+                    <ImageView
+                        android:id="@+id/add_abandoned_property"
+                        android:layout_marginTop="24dp"
+                        android:layout_marginEnd="24dp"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         app:srcCompat="@drawable/im_abandoned_property" />
                     <Button
@@ -329,13 +368,15 @@
                         android:drawableTop="@drawable/ic_search"
                         android:insetTop="0dp"
                         android:insetBottom="0dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="4dp"
-                        android:text="Abandoned property"
+                        android:text="Abandoned property\n"
                         android:textAlignment="center"
                         android:textColor="@color/black"
                         android:textSize="12sp"
@@ -347,8 +388,8 @@
 
             </LinearLayout>
 
+            <!-- Reliable person, Emergency contact, POI -->
             <LinearLayout
-                android:id="@+id/ly_row_3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
@@ -357,16 +398,21 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
                     <ImageView
-                        android:background="@drawable/rectangular_boarder"
-                        android:paddingTop="16dp"
-                        android:paddingStart="40dp"
-                        android:paddingBottom="36dp"
-                        android:id="@+id/add_reliable_person"
                         android:layout_width="125dp"
                         android:layout_height="125dp"
+                        android:paddingBottom="24dp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/home_button" />
+                    <ImageView
+                        android:id="@+id/add_reliable_person"
+                        android:layout_marginTop="24dp"
+                        android:layout_marginEnd="24dp"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         app:srcCompat="@drawable/im_reliable_person" />
                     <Button
@@ -377,13 +423,15 @@
                         android:drawableTop="@drawable/ic_search"
                         android:insetTop="0dp"
                         android:insetBottom="0dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="4dp"
-                        android:text="Reliable person"
+                        android:text="Reliable person\n"
                         android:textAlignment="center"
                         android:textColor="@color/black"
                         android:textSize="12sp"
@@ -397,33 +445,40 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
                     <ImageView
-                        android:background="@drawable/rectangular_boarder"
-                        android:paddingTop="16dp"
-                        android:paddingStart="40dp"
-                        android:paddingBottom="36dp"
-                        android:id="@+id/add_emergency_contacts"
                         android:layout_width="125dp"
                         android:layout_height="125dp"
+                        android:paddingBottom="24dp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/home_button" />
+                    <ImageView
+                        android:id="@+id/add_emergency_contact"
+                        android:layout_marginTop="24dp"
+                        android:layout_marginEnd="24dp"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
                         app:srcCompat="@drawable/im_emergency_contact" />
                     <Button
-                        android:id="@+id/search_emergency_contacts"
+                        android:id="@+id/search_emergency_contact"
                         android:layout_width="35dp"
                         android:layout_height="35dp"
                         android:backgroundTint="@color/LightSlateGray"
                         android:drawableTop="@drawable/ic_search"
                         android:insetTop="0dp"
                         android:insetBottom="0dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="4dp"
-                        android:text="Emergency contact"
+                        android:text="Emergency contact\n"
                         android:textAlignment="center"
                         android:textColor="@color/black"
                         android:textSize="12sp"
@@ -437,16 +492,21 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
                     <ImageView
-                        android:background="@drawable/rectangular_boarder"
-                        android:paddingTop="16dp"
-                        android:paddingStart="40dp"
-                        android:paddingBottom="36dp"
-                        android:id="@+id/add_poi"
                         android:layout_width="125dp"
                         android:layout_height="125dp"
+                        android:paddingBottom="24dp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/home_button" />
+                    <ImageView
+                        android:id="@+id/add_poi"
+                        android:layout_marginTop="24dp"
+                        android:layout_marginEnd="24dp"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         app:srcCompat="@drawable/im_poi" />
                     <Button
@@ -457,13 +517,15 @@
                         android:drawableTop="@drawable/ic_search"
                         android:insetTop="0dp"
                         android:insetBottom="0dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="4dp"
-                        android:text="POI"
+                        android:text="POI\n"
                         android:textAlignment="center"
                         android:textColor="@color/black"
                         android:textSize="12sp"
@@ -475,8 +537,8 @@
 
             </LinearLayout>
 
+            <!-- Intelligence information, Unauthorised person, Shop and labours -->
             <LinearLayout
-                android:id="@+id/ly_row_4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
@@ -485,16 +547,21 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
                     <ImageView
-                        android:background="@drawable/rectangular_boarder"
-                        android:paddingTop="16dp"
-                        android:paddingStart="40dp"
-                        android:paddingBottom="36dp"
-                        android:id="@+id/add_intelligence_information"
                         android:layout_width="125dp"
                         android:layout_height="125dp"
+                        android:paddingBottom="24dp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/home_button" />
+                    <ImageView
+                        android:id="@+id/add_intelligence_information"
+                        android:layout_marginTop="24dp"
+                        android:layout_marginEnd="24dp"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         app:srcCompat="@drawable/im_intelligence_information" />
                     <Button
@@ -505,6 +572,8 @@
                         android:drawableTop="@drawable/ic_search"
                         android:insetTop="0dp"
                         android:insetBottom="0dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
                     <TextView
@@ -525,33 +594,40 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
                     <ImageView
-                        android:background="@drawable/rectangular_boarder"
-                        android:paddingTop="16dp"
-                        android:paddingStart="40dp"
-                        android:paddingBottom="36dp"
-                        android:id="@+id/add_unauthorized_people"
                         android:layout_width="125dp"
                         android:layout_height="125dp"
+                        android:paddingBottom="24dp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/home_button" />
+                    <ImageView
+                        android:id="@+id/add_unauthorized_person"
+                        android:layout_marginTop="24dp"
+                        android:layout_marginEnd="24dp"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
                         app:srcCompat="@drawable/im_unauthorized_person" />
                     <Button
-                        android:id="@+id/search_unauthorized_people"
+                        android:id="@+id/search_unauthorized_person"
                         android:layout_width="35dp"
                         android:layout_height="35dp"
                         android:backgroundTint="@color/LightSlateGray"
                         android:drawableTop="@drawable/ic_search"
                         android:insetTop="0dp"
                         android:insetBottom="0dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="4dp"
-                        android:text="Unauthorized people"
+                        android:text="Unauthorized person\n"
                         android:textAlignment="center"
                         android:textColor="@color/black"
                         android:textSize="12sp"
@@ -565,16 +641,21 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
                     <ImageView
-                        android:background="@drawable/rectangular_boarder"
-                        android:paddingTop="16dp"
-                        android:paddingStart="40dp"
-                        android:paddingBottom="36dp"
-                        android:id="@+id/add_shop_and_labours"
                         android:layout_width="125dp"
                         android:layout_height="125dp"
+                        android:paddingBottom="24dp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/home_button" />
+                    <ImageView
+                        android:id="@+id/add_shop_and_labours"
+                        android:layout_marginTop="24dp"
+                        android:layout_marginEnd="24dp"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         app:srcCompat="@drawable/im_shop_and_labours" />
                     <Button
@@ -585,13 +666,15 @@
                         android:drawableTop="@drawable/ic_search"
                         android:insetTop="0dp"
                         android:insetBottom="0dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="4dp"
-                        android:text="Shop and labours"
+                        android:text="Shop and labours\n"
                         android:textAlignment="center"
                         android:textColor="@color/black"
                         android:textSize="12sp"
@@ -603,8 +686,8 @@
 
             </LinearLayout>
 
+            <!-- Crime memo, Suraksha samithi member, Rail volunteer -->
             <LinearLayout
-                android:id="@+id/ly_row_5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
@@ -613,16 +696,21 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
                     <ImageView
-                        android:background="@drawable/rectangular_boarder"
-                        android:paddingTop="16dp"
-                        android:paddingStart="40dp"
-                        android:paddingBottom="36dp"
-                        android:id="@+id/add_crime_memo"
                         android:layout_width="125dp"
                         android:layout_height="125dp"
+                        android:paddingBottom="24dp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/home_button" />
+                    <ImageView
+                        android:id="@+id/add_crime_memo"
+                        android:layout_marginTop="24dp"
+                        android:layout_marginEnd="24dp"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         app:srcCompat="@drawable/im_crime_memo" />
                     <Button
@@ -633,13 +721,15 @@
                         android:drawableTop="@drawable/ic_search"
                         android:insetTop="0dp"
                         android:insetBottom="0dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="4dp"
-                        android:text="Crime memo"
+                        android:text="Crime memo\n"
                         android:textAlignment="center"
                         android:textColor="@color/black"
                         android:textSize="12sp"
@@ -653,16 +743,21 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
                     <ImageView
-                        android:background="@drawable/rectangular_boarder"
-                        android:paddingTop="16dp"
-                        android:paddingStart="40dp"
-                        android:paddingBottom="36dp"
-                        android:id="@+id/add_suraksha_samithi_member"
                         android:layout_width="125dp"
                         android:layout_height="125dp"
+                        android:paddingBottom="24dp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/home_button" />
+                    <ImageView
+                        android:id="@+id/add_suraksha_samithi_member"
+                        android:layout_marginTop="24dp"
+                        android:layout_marginEnd="24dp"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         app:srcCompat="@drawable/im_suraksha_samithi_member" />
                     <Button
@@ -673,6 +768,8 @@
                         android:drawableTop="@drawable/ic_search"
                         android:insetTop="0dp"
                         android:insetBottom="0dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
                     <TextView
@@ -693,16 +790,21 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
                     <ImageView
-                        android:background="@drawable/rectangular_boarder"
-                        android:paddingTop="16dp"
-                        android:paddingStart="40dp"
-                        android:paddingBottom="36dp"
-                        android:id="@+id/add_rail_volunteer"
                         android:layout_width="125dp"
                         android:layout_height="125dp"
+                        android:paddingBottom="24dp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/home_button" />
+                    <ImageView
+                        android:id="@+id/add_rail_volunteer"
+                        android:layout_marginTop="24dp"
+                        android:layout_marginEnd="24dp"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         app:srcCompat="@drawable/im_rail_volunteer" />
                     <Button
@@ -713,14 +815,15 @@
                         android:drawableTop="@drawable/ic_search"
                         android:insetTop="0dp"
                         android:insetBottom="0dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-
                         android:layout_marginBottom="4dp"
-                        android:text="Rail volunteer"
+                        android:text="Rail volunteer\n"
                         android:textAlignment="center"
                         android:textColor="@color/black"
                         android:textSize="12sp"
@@ -732,8 +835,8 @@
 
             </LinearLayout>
 
+            <!-- Railmaithri meeting, Close communication, Task list -->
             <LinearLayout
-                android:id="@+id/ly_row_6"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
@@ -742,16 +845,21 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
                     <ImageView
-                        android:background="@drawable/rectangular_boarder"
-                        android:paddingTop="16dp"
-                        android:paddingStart="40dp"
-                        android:paddingBottom="36dp"
-                        android:id="@+id/add_railmaithri_meeting"
                         android:layout_width="125dp"
                         android:layout_height="125dp"
+                        android:paddingBottom="24dp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/home_button" />
+                    <ImageView
+                        android:id="@+id/add_railmaithri_meeting"
+                        android:layout_marginTop="24dp"
+                        android:layout_marginEnd="24dp"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         app:srcCompat="@drawable/im_railmaithri_meeting" />
                     <Button
@@ -762,13 +870,15 @@
                         android:drawableTop="@drawable/ic_search"
                         android:insetTop="0dp"
                         android:insetBottom="0dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="4dp"
-                        android:text="Railmaithri meeting"
+                        android:text="Railmaithri meeting\n"
                         android:textAlignment="center"
                         android:textColor="@color/black"
                         android:textSize="12sp"
@@ -782,23 +892,28 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
                     <ImageView
-                        android:background="@drawable/rectangular_boarder"
-                        android:paddingTop="16dp"
-                        android:paddingStart="40dp"
-                        android:paddingBottom="36dp"
-                        android:id="@+id/close_communication"
                         android:layout_width="125dp"
                         android:layout_height="125dp"
+                        android:paddingBottom="24dp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/home_button" />
+                    <ImageView
+                        android:id="@+id/close_communication"
+                        android:layout_marginTop="24dp"
+                        android:layout_marginEnd="24dp"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         app:srcCompat="@drawable/im_close_communication" />
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="4dp"
-                        android:text="Close communication"
+                        android:text="Close communication\n"
                         android:textAlignment="center"
                         android:textColor="@color/black"
                         android:textSize="12sp"
@@ -812,33 +927,71 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
                     <ImageView
-                        android:background="@drawable/rectangular_boarder"
-                        android:paddingTop="16dp"
-                        android:paddingStart="40dp"
-                        android:paddingBottom="36dp"
-                        android:id="@+id/task_list"
                         android:layout_width="125dp"
                         android:layout_height="125dp"
+                        android:paddingBottom="24dp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/home_button" />
+                    <ImageView
+                        android:id="@+id/task_list"
+                        android:layout_marginTop="24dp"
+                        android:layout_marginEnd="24dp"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
                         app:srcCompat="@drawable/im_task_list" />
-                    <Button
-                        android:id="@+id/search_task_list"
-                        android:layout_width="35dp"
-                        android:layout_height="35dp"
-                        android:backgroundTint="@color/LightSlateGray"
-                        android:drawableTop="@drawable/ic_search"
-                        android:insetTop="0dp"
-                        android:insetBottom="0dp"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="4dp"
-                        android:text="Task list"
+                        android:text="Task list\n"
+                        android:textAlignment="center"
+                        android:textColor="@color/black"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </LinearLayout>
+
+            <!-- Watch zone -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:layout_width="125dp"
+                        android:layout_height="125dp"
+                        android:paddingBottom="24dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/home_button" />
+                    <ImageView
+                        android:id="@+id/watch_zone"
+                        android:layout_marginTop="24dp"
+                        android:layout_marginEnd="24dp"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/im_watch_zone" />
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="4dp"
+                        android:text="Watch zone\n"
                         android:textAlignment="center"
                         android:textColor="@color/black"
                         android:textSize="12sp"
@@ -851,7 +1004,6 @@
             </LinearLayout>
 
         </LinearLayout>
-
 
     </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>
