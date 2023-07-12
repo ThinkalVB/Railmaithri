@@ -6,6 +6,7 @@ class URL {
         private const val DEPLOYMENT_URL      = "https://railmaithri.keralapolice.gov.in:8000"
         private const val BASE_URL            = DEPLOYMENT_URL
 
+
         const val RAILWAY_STATIONS_LIST       = "$BASE_URL/railmaithri/dropdown/railway_station_list/"
         const val TRAINS_LIST                 = "$BASE_URL/railmaithri/dropdown/train_list/"
         const val INTELLIGENCE_SEVERITY_TYPES = "$BASE_URL/railmaithri/dropdown/severity_type_list/"
@@ -30,6 +31,7 @@ class URL {
         const val CRIME_MEMO_TYPES            = "$BASE_URL/api/v1/crime_memo_category/"
 
         const val MOBILE_LOGIN                = "$BASE_URL/accounts/mobile_login/"
+        const val MOBILE_LOGOUT               = "$BASE_URL/accounts/logout/"
         const val INCIDENT_REPORT             = "$BASE_URL/api/v1/incident_report/"
         const val PASSENGER_STATISTICS        = "$BASE_URL/api/v1/passenger_statistics/"
         const val STRANGER_CHECK              = "$BASE_URL/api/v1/stranger_check/"
@@ -116,3 +118,9 @@ class Mode {
     }
 }
 
+class App {
+    companion object{
+        const val APP_VERSION               = "1.0.0"
+        const val API_VERSION               = "1.0.0"
+    }
+}
