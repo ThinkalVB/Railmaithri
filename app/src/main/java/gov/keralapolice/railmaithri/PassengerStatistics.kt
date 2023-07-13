@@ -22,7 +22,6 @@ class PassengerStatistics : AppCompatActivity() {
     private lateinit var progressPB:        ProgressBar
     private lateinit var actionBT:          Button
 
-    private lateinit var formData:          JSONObject
     private lateinit var train:             FieldSpinner
     private lateinit var coachNumber:       FieldEditText
     private lateinit var density:           FieldSpinner
@@ -34,38 +33,48 @@ class PassengerStatistics : AppCompatActivity() {
         mode        = intent.getStringExtra("mode")!!
         progressPB  = findViewById(R.id.progress_bar)
         actionBT    = findViewById(R.id.action)
+
         actionBT.setOnClickListener {
-            if(extractData()) {
+            val formData = getFormData()
+            if(formData != null) {
                 progressPB.visibility = View.VISIBLE
                 actionBT.isClickable  = false
-                CoroutineScope(Dispatchers.IO).launch {  sendFormData()  }
+                CoroutineScope(Dispatchers.IO).launch {  sendFormData(formData)  }
             }
         }
 
-        prepareForm()
+        prepareActionButton()
+        renderForm()
+    }
+
+    private fun renderForm() {
         train = FieldSpinner(this,
             JSONArray(Helper.getData(this, Storage.TRAINS_LIST)!!),
             "train",
             "Train",
-            isRequired = true
+            isRequired = Helper.resolveIsRequired(true, mode),
+            isReadOnly = Helper.resolveIsReadonly(false, mode)
         )
         coachNumber = FieldEditText(this,
             fieldType = "text",
             fieldLabel = "coach",
             fieldName = "Coach number",
-            isRequired = true
+            isRequired = Helper.resolveIsRequired(true, mode),
+            isReadOnly = Helper.resolveIsReadonly(false, mode)
         )
         density = FieldSpinner(this,
             JSONArray(Helper.getData(this, Storage.DENSITY_TYPES)!!),
             "density",
             "Density",
-            isRequired = true
+            isRequired = Helper.resolveIsRequired(true, mode),
+            isReadOnly = Helper.resolveIsReadonly(false, mode)
         )
         compartmentType = FieldSpinner(this,
             JSONArray(Helper.getData(this, Storage.COMPARTMENT_TYPES)!!),
             "compartment_type",
             "Compartment type",
-            isRequired = true
+            isRequired = Helper.resolveIsRequired(true, mode),
+            isReadOnly = Helper.resolveIsReadonly(false, mode)
         )
 
         val form = findViewById<LinearLayout>(R.id.form)
@@ -75,7 +84,7 @@ class PassengerStatistics : AppCompatActivity() {
         form.addView(compartmentType.getLayout())
     }
 
-    private fun sendFormData() {
+    private fun sendFormData(formData: JSONObject) {
         try {
             val clientNT  = OkHttpClient().newBuilder().build()
             val token     = Helper.getData(this, Storage.TOKEN)!!
@@ -105,12 +114,9 @@ class PassengerStatistics : AppCompatActivity() {
         }
     }
 
-    private fun prepareForm() {
+    private fun prepareActionButton() {
         if(mode == Mode.NEW_FORM){
-            formData      = JSONObject()
             actionBT.text = "Save"
-            formData.put("utc_timestamp", Helper.getUTC())
-            formData.put("last_updated",  Helper.getUTC())
         }
         if(mode == Mode.UPDATE_FORM) {
             actionBT.text = "Update"
@@ -123,16 +129,21 @@ class PassengerStatistics : AppCompatActivity() {
         }
     }
 
-    private fun extractData(): Boolean {
+    private fun getFormData(): JSONObject? {
+        val formData = JSONObject()
         try{
+            if(mode == Mode.NEW_FORM){
+                formData.put("utc_timestamp", Helper.getUTC())
+                formData.put("last_updated",  Helper.getUTC())
+            }
             train.exportData(formData)
             density.exportData(formData)
             compartmentType.exportData(formData)
             coachNumber.exportData(formData)
         }catch (e: Exception){
             Helper.showToast(this, e.message!!)
-            return false
+            return null
         }
-        return true
+        return formData
     }
 }

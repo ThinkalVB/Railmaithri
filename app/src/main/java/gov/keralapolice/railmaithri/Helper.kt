@@ -160,5 +160,23 @@ class Helper {
             }
             return JSONObject()
         }
+
+        // Resolve the value of isRequired attribute based on the mode
+        fun resolveIsRequired(defaultValue: Boolean, mode: String) : Boolean {
+            return if(mode == Mode.SEARCH_FORM || mode == Mode.VIEW_FORM){
+                false
+            }else{
+                defaultValue
+            }
+        }
+
+        // Resolve the value of isReadonly attribute based on the mode
+        fun resolveIsReadonly(defaultValue: Boolean, mode: String) : Boolean {
+            return if(mode == Mode.VIEW_FORM){
+                true
+            }else{
+                defaultValue
+            }
+        }
     }
 }
