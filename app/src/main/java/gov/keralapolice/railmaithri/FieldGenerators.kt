@@ -1,0 +1,306 @@
+package gov.keralapolice.railmaithri
+
+import android.app.DatePickerDialog
+import android.app.TimePickerDialog
+import android.content.Context
+import android.graphics.Color
+import android.graphics.Typeface
+import android.icu.util.Calendar
+import android.text.InputType
+import android.util.Log
+import android.view.View
+import android.widget.*
+import androidx.core.widget.doAfterTextChanged
+import org.json.JSONArray
+import org.json.JSONObject
+import java.util.ArrayList
+
+
+// This exception is thrown when the field is required but empty when calling getData()
+class FieldRequiredException(message: String) : Exception(message){
+    init{
+        Log.e("Railmaithri", message)
+    }
+}
+
+class FieldEditText(context: Context,
+                    isReadOnly: Boolean = false,
+                    fieldLabel: String = "",
+                    fieldHintText: String = "",
+                    fieldMinLines: Int = 1,
+                    fieldMaxLines: Int = 1,
+                    fieldHeight: Int = 48,
+                    fieldName: String = "",
+                    fieldType: String = "text",
+                    isRequired: Boolean = false) {
+    private var _fieldName       = fieldName
+    private var _fieldLabel      = fieldLabel
+    private val _isRequired      = isRequired
+
+    private val _linearLayout:   LinearLayout
+    private val _textView:       TextView
+    private val _editText:       EditText
+
+    init {
+        _linearLayout = LinearLayout(context)
+        _linearLayout.layoutParams = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT)
+        _linearLayout.orientation = LinearLayout.VERTICAL
+
+        _textView        = TextView(context)
+        _textView.text   = fieldName
+        _textView.setTypeface(null, Typeface.BOLD)
+        if(isRequired){
+            _textView.setTextColor(Color.RED)
+        } else{
+            _textView.setTextColor(Color.GRAY)
+        }
+        _linearLayout.addView(_textView)
+
+        _editText       = EditText(context)
+        when (fieldType) {
+            "phone" -> {
+                _editText.inputType = InputType.TYPE_CLASS_PHONE
+            }
+            "email" -> {
+                _editText.inputType = InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS
+            }
+            "number" -> {
+                _editText.inputType = InputType.TYPE_CLASS_NUMBER
+            }
+            "datetime" -> {
+                _editText.inputType = InputType.TYPE_CLASS_DATETIME
+            }
+            "text" -> {
+                _editText.inputType = InputType.TYPE_CLASS_TEXT
+            }
+            "password" -> {
+                _editText.inputType = InputType.TYPE_TEXT_VARIATION_PASSWORD
+            }
+            "multiline" -> {
+                _editText.inputType = InputType.TYPE_TEXT_FLAG_MULTI_LINE
+            }
+            "date" -> {
+                // No specific class is available hence simple text is used
+                _editText.inputType = InputType.TYPE_CLASS_TEXT
+                _editText.setOnClickListener {
+                    val calendar    = Calendar.getInstance()
+                    val year        = calendar.get(Calendar.YEAR)
+                    val month       = calendar.get(Calendar.MONTH)
+                    val day         = calendar.get(Calendar.DAY_OF_MONTH)
+                    val datePickerDialog = DatePickerDialog(context,
+                        { _, year, monthOfYear, dayOfMonth ->
+                            val date = "$year-${monthOfYear+1}-$dayOfMonth"
+                            _editText.setText(date)
+                        }, year, month, day)
+                    datePickerDialog.show()
+                }
+            }
+            "time" -> {
+                // No specific class is available hence simple text is used
+                _editText.inputType = InputType.TYPE_CLASS_TEXT
+                _editText.setOnClickListener {
+                    val timePickerDialog = TimePickerDialog(context,
+                        { _, hourOfDay, minutes ->
+                            val time = "$hourOfDay:${minutes}"
+                            _editText.setText(time)
+                        }, 0, 0, false)
+                    timePickerDialog.show()
+                }
+            }
+        }
+        _editText.hint      = fieldHintText
+        _editText.minLines  = fieldMinLines
+        _editText.maxLines  = fieldMaxLines
+        if(isReadOnly) {
+            _editText.isEnabled     = false
+            _editText.isFocusable   = false
+        }
+        val scale               = context.resources.displayMetrics.density
+        val adjustedFieldHeight = (fieldHeight * scale + 0.5f).toInt()
+        val padding8dp          = (8 * scale + 0.5f).toInt()
+        _editText.setPadding(padding8dp, 0, padding8dp, 0)
+        _editText.setBackgroundResource(R.drawable.rectangular_boarder)
+
+        _editText.layoutParams  = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            adjustedFieldHeight)
+        _editText.doAfterTextChanged {
+            if(isRequired){
+                if(_editText.text.isBlank()){
+                    _textView.setTextColor(Color.RED)
+                } else{
+                    _textView.setTextColor(Color.GRAY)
+                }
+            }
+        }
+        _linearLayout.addView(_editText)
+    }
+
+    fun importData(jsonObject: JSONObject, filedLabel: String? = null){
+        var actualLabel = _fieldLabel
+        if (filedLabel != null){
+            actualLabel = filedLabel
+        }
+
+        val fieldValue  = jsonObject.getString(actualLabel)?: ""
+        _editText.setText(fieldValue)
+        if(_isRequired && fieldValue.isBlank()){
+            _textView.setTextColor(Color.RED)
+        } else{
+            _textView.setTextColor(Color.GRAY)
+        }
+    }
+
+    fun exportData(jsonObject: JSONObject, filedLabel: String? = null){
+        var actualLabel = _fieldLabel
+        if (filedLabel != null){
+            actualLabel = filedLabel
+        }
+
+        if (_linearLayout.visibility == View. VISIBLE){
+            if(_editText.text.isNotEmpty()){
+                jsonObject.put(actualLabel, _editText.text)
+            } else {
+                if(_isRequired) {
+                    val errorMessage = "$_fieldName is a required field"
+                    throw(FieldRequiredException(errorMessage))
+                }
+            }
+        }
+    }
+
+    fun hide() {
+        _linearLayout.visibility = View.GONE
+    }
+
+    fun show() {
+        _linearLayout.visibility = View.VISIBLE
+    }
+
+    fun getLayout(): LinearLayout {
+        return  _linearLayout
+    }
+}
+
+class FieldSpinner(context: Context,
+                   fieldData: JSONArray = JSONArray(),
+                   fieldLabel: String = "",
+                   fieldName: String = "",
+                   fieldHeight: Int = 48,
+                   isRequired: Boolean = false,
+                   isReadOnly: Boolean = false) {
+    private var _fieldLabel = fieldLabel
+    private var _fieldData  = fieldData
+
+    private val _linearLayout:  LinearLayout
+    private val _textView:      TextView
+    private val _spinner:       Spinner
+    private val _arrayAdapter:  ArrayAdapter<String>
+
+    init {
+        val valuesList = ArrayList<String>()
+        for (i in 0 until _fieldData.length()) {
+            val arrayElement = _fieldData.getJSONObject(i)
+            val value        = arrayElement.getString("name")
+            valuesList.add(value)
+        }
+        _linearLayout = LinearLayout(context)
+        _linearLayout.layoutParams = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        )
+        _linearLayout.orientation = LinearLayout.VERTICAL
+
+        _textView = TextView(context)
+        _textView.text = fieldName
+        _textView.setTypeface(null, Typeface.BOLD)
+        _textView.setTextColor(Color.GRAY)
+        _linearLayout.addView(_textView)
+
+        _spinner = Spinner(context)
+        if (isReadOnly) {
+            _spinner.isEnabled = false
+            _spinner.isFocusable = false
+        }
+        val scale               = context.resources.displayMetrics.density
+        val adjustedFieldHeight = (fieldHeight * scale + 0.5f).toInt()
+        val padding8dp          = (8 * scale + 0.5f).toInt()
+        _spinner.setPadding(padding8dp, 0, padding8dp, 0)
+        _spinner.layoutParams = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            adjustedFieldHeight
+        )
+
+        _arrayAdapter = ArrayAdapter(context,
+            android.R.layout.simple_spinner_item,
+            valuesList)
+        _arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        _spinner.adapter = _arrayAdapter
+        _linearLayout.addView(_spinner)
+
+        if(isRequired){
+            _textView.setTextColor(Color.RED)
+        } else{
+            _textView.setTextColor(Color.GRAY)
+        }
+    }
+
+    fun importData(jsonObject: JSONObject, filedLabel: String? = null){
+        var actualLabel = _fieldLabel
+        if (filedLabel != null){
+            actualLabel = filedLabel
+        }
+
+        val fieldValue  = jsonObject.get(actualLabel)?: ""
+        if(fieldValue is String){
+            val valuePos  = _arrayAdapter.getPosition(fieldValue)
+            _spinner.setSelection(valuePos)
+        } else if (fieldValue is Int){
+            for (i in 0 until _fieldData.length()) {
+                val arrayElement = _fieldData.getJSONObject(i)
+                val id           = arrayElement.getInt("id")
+                if (id == fieldValue){
+                    val value    = arrayElement.getString("name")
+                    val valuePos = _arrayAdapter.getPosition(value)
+                    _spinner.setSelection(valuePos)
+                    break
+                }
+            }
+        }
+    }
+
+    fun exportData(jsonObject: JSONObject, filedLabel: String? = null) {
+        var actualLabel = _fieldLabel
+        if (filedLabel != null){
+            actualLabel = filedLabel
+        }
+
+        var selectedID = 0
+        for (i in 0 until _fieldData.length()) {
+            val arrayElement = _fieldData.getJSONObject(i)
+            val value        = arrayElement.getString("name")
+            if (value == _spinner.selectedItem){
+                selectedID = arrayElement.getInt("id")
+                break
+            }
+        }
+
+        if (_linearLayout.visibility == View.VISIBLE) {
+            jsonObject.put(actualLabel, selectedID)
+        }
+    }
+
+    fun hide() {
+        _linearLayout.visibility = View.GONE
+    }
+
+    fun show() {
+        _linearLayout.visibility = View.VISIBLE
+    }
+
+    fun getLayout(): LinearLayout {
+        return _linearLayout
+    }
+}

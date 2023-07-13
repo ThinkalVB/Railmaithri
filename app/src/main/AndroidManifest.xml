@@ -30,6 +30,9 @@
         android:theme="@style/Theme.Railmaithri"
         tools:targetApi="31">
         <activity
+            android:name=".PassengerStatistics"
+            android:exported="false" />
+        <activity
             android:name=".Home"
             android:exported="false" />
         <activity

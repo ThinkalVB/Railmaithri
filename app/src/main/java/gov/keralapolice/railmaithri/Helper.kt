@@ -9,6 +9,16 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 import java.util.TimeZone
+import androidx.core.content.ContextCompat
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.Priority
+import com.google.android.gms.tasks.CancellationTokenSource
+import android.Manifest.permission
+import android.location.Location
+import android.location.LocationManager
+import android.annotation.SuppressLint
+import android.content.pm.PackageManager
+
 
 class Helper {
     companion object {
@@ -35,6 +45,12 @@ class Helper {
             return sharedPref.getString(key, "")
         }
 
+        // Remove a key and value from shared preference
+        fun removeData(context: Context, key: String) {
+            val sharedPref = context.getSharedPreferences("app_store", Context.MODE_PRIVATE)
+            sharedPref.edit().remove(key).apply()
+        }
+
         // Show a short message
         fun showToast(context: Context, message: String, duration: Int = Toast.LENGTH_SHORT){
             Handler(Looper.getMainLooper()).post {
@@ -54,6 +70,95 @@ class Helper {
                 errorMessage.lowercase().replaceFirstChar(Char::uppercase)
                 errorMessage
             }
+        }
+
+        // Save the file to app memory
+        fun saveFile(context: Context, file: ByteArray, fileName: String) {
+            try {
+                val outputStream = context.openFileOutput(fileName, Context.MODE_PRIVATE)
+                outputStream.write(file)
+                outputStream.close()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+
+        // Load file from app memory
+        fun loadFile(context: Context, fileName: String): ByteArray? {
+            var file: ByteArray? = null
+            try {
+                val inputStream = context.openFileInput(fileName)
+                file = inputStream.readBytes()
+                inputStream.close()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+            return file
+        }
+
+        // Remove from app memory
+        fun purgeFile(context: Context, fileName: String) {
+            try {
+                val file = context.getFileStreamPath(fileName)
+                file.delete()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+
+        // Check if the phone have location permission
+        fun haveLocationPermission(context: Context): Boolean {
+            val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+            val isEnabled       = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+            val permission      = permission.ACCESS_FINE_LOCATION
+            val havePermission  = (ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED)
+            return havePermission && isEnabled
+        }
+
+        // Get latest location
+        @SuppressLint("MissingPermission")
+        fun getLocation(context: Context, callback: (location: Location?) -> Unit) {
+            val cToken          = CancellationTokenSource().token
+            val fusedLocation   = LocationServices.getFusedLocationProviderClient(context)
+            val locationRequest = fusedLocation.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, cToken)
+            locationRequest.addOnSuccessListener {      location : Location? ->
+                fusedLocation.lastLocation.addOnSuccessListener { location : Location? ->
+                    callback(location)
+                }
+            }
+        }
+
+        // Save form data
+        fun saveFormData(context: Context, formData: JSONObject, formType: String) {
+            val key      = formData.getString("utc_timestamp")
+            val savedStr = getData(context, formType)
+            var savedObj = JSONObject()
+            if(!savedStr.isNullOrEmpty()){
+                savedObj = JSONObject(savedStr)
+            }
+            savedObj.put(key, formData)
+            saveData(context, formType, savedObj.toString())
+        }
+
+        // Remove form data
+        fun removeFormData(context: Context, key: String, formType: String) {
+            val savedStr = getData(context, formType)
+            var savedObj = JSONObject()
+            if(!savedStr.isNullOrEmpty()){
+                savedObj = JSONObject(savedStr)
+                savedObj.remove(key)
+            }
+            saveData(context, formType, savedObj.toString())
+        }
+
+        // Load form data
+        fun loadFormData(context: Context, key: String, formType: String): JSONObject {
+            val savedStr = getData(context, formType)
+            if(!savedStr.isNullOrEmpty()){
+                val savedObj = JSONObject(savedStr)
+                return savedObj.getJSONObject(key)
+            }
+            return JSONObject()
         }
     }
 }

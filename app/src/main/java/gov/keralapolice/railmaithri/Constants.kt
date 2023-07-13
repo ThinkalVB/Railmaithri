@@ -112,6 +112,7 @@ class Storage {
 
 class Mode {
     companion object{
+        const val SEARCH_FORM                 = "SEARCH_FORM"
         const val NEW_FORM                    = "NEW_FORM"
         const val UPDATE_FORM                 = "UPDATE_FORM"
         const val VIEW_FORM                   = "VIEW_FORM"
@@ -122,5 +123,13 @@ class App {
     companion object{
         const val APP_VERSION               = "1.0.0"
         const val API_VERSION               = "1.0.0"
+    }
+}
+
+class FormState {
+    companion object{
+        const val FORM_TO_UPLOAD            = "FORM_TO_UPLOAD"
+        const val CACHED_FORM               = "CACHED_FORM"
+        const val FORM_TO_UPDATE            = "FORM_TO_UPDATE"
     }
 }

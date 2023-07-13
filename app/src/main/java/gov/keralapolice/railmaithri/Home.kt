@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -29,11 +30,23 @@ class Home : AppCompatActivity() {
         profile   = JSONObject(Helper.getData(this, Storage.PROFILE)!!)
         token     = Helper.getData(this, Storage.TOKEN)!!
         logoutBT  = findViewById<ImageView>(R.id.logout)
+        findViewById<TextView>(R.id.officer_name).text = profile.getString("username")
 
         logoutBT.setOnClickListener {
             CoroutineScope(Dispatchers.IO).launch {  logout() }
         }
-        findViewById<TextView>(R.id.officer_name).text = profile.getString("username")
+
+        findViewById<ImageView>(R.id.add_passenger_statistics).setOnClickListener {
+            val intent = Intent(this, PassengerStatistics::class.java)
+            intent.putExtra("mode", Mode.NEW_FORM)
+            startActivity(intent)
+        }
+        findViewById<Button>(R.id.search_passenger_statistics).setOnClickListener {
+            val intent = Intent(this, PassengerStatistics::class.java)
+            intent.putExtra("mode", Mode.SEARCH_FORM)
+            startActivity(intent)
+        }
+
     }
     private fun logout() {
         Handler(Looper.getMainLooper()).post {
