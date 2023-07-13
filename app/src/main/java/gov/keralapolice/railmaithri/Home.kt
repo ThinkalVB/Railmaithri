@@ -47,6 +47,16 @@ class Home : AppCompatActivity() {
             startActivity(intent)
         }
 
+        findViewById<ImageView>(R.id.add_stranger_check).setOnClickListener {
+            val intent = Intent(this, StrangerCheck::class.java)
+            intent.putExtra("mode", Mode.NEW_FORM)
+            startActivity(intent)
+        }
+        findViewById<Button>(R.id.search_stranger_check).setOnClickListener {
+            val intent = Intent(this, StrangerCheck::class.java)
+            intent.putExtra("mode", Mode.SEARCH_FORM)
+            startActivity(intent)
+        }
     }
     private fun logout() {
         Handler(Looper.getMainLooper()).post {

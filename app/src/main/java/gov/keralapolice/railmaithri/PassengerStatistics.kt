@@ -34,23 +34,15 @@ class PassengerStatistics : AppCompatActivity() {
         mode        = intent.getStringExtra("mode")!!
         progressPB  = findViewById(R.id.progress_bar)
         actionBT    = findViewById(R.id.action)
-
-        if(mode == Mode.NEW_FORM){
-            formData      = JSONObject()
-            actionBT.text = "Save"
-            formData.put("utc_timestamp", Helper.getUTC())
-            formData.put("last_updated",  Helper.getUTC())
-        }
-        if(mode == Mode.UPDATE_FORM){
-            actionBT.text = "Update"
-        }
-        if(mode == Mode.VIEW_FORM){
-            actionBT.visibility = View.GONE
-        }
-        if(mode == Mode.SEARCH_FORM){
-            actionBT.text = "Search"
+        actionBT.setOnClickListener {
+            if(extractData()) {
+                progressPB.visibility = View.VISIBLE
+                actionBT.isClickable  = false
+                CoroutineScope(Dispatchers.IO).launch {  sendFormData()  }
+            }
         }
 
+        prepareForm()
         train = FieldSpinner(this,
             JSONArray(Helper.getData(this, Storage.TRAINS_LIST)!!),
             "train",
@@ -81,14 +73,6 @@ class PassengerStatistics : AppCompatActivity() {
         form.addView(coachNumber.getLayout())
         form.addView(density.getLayout())
         form.addView(compartmentType.getLayout())
-
-        actionBT.setOnClickListener {
-            if(extractData()) {
-                progressPB.visibility = View.VISIBLE
-                actionBT.isClickable  = false
-                CoroutineScope(Dispatchers.IO).launch {  sendFormData()  }
-            }
-        }
     }
 
     private fun sendFormData() {
@@ -107,6 +91,10 @@ class PassengerStatistics : AppCompatActivity() {
                 Helper.showToast(this, errorMessage, Toast.LENGTH_LONG)
             }
         } catch (e: Exception) {
+            val message = "Server unreachable, data saved in phone memory"
+            Helper.showToast(this, message, Toast.LENGTH_LONG)
+            finish()
+
             Log.d("RailMaithri", e.stackTraceToString())
             Helper.saveFormData(this, formData, Storage.PASSENGER_STATISTICS)
         } finally {
@@ -114,6 +102,24 @@ class PassengerStatistics : AppCompatActivity() {
                 actionBT.isClickable  = true
                 progressPB.visibility = View.GONE
             }
+        }
+    }
+
+    private fun prepareForm() {
+        if(mode == Mode.NEW_FORM){
+            formData      = JSONObject()
+            actionBT.text = "Save"
+            formData.put("utc_timestamp", Helper.getUTC())
+            formData.put("last_updated",  Helper.getUTC())
+        }
+        if(mode == Mode.UPDATE_FORM) {
+            actionBT.text = "Update"
+        }
+        if(mode == Mode.VIEW_FORM) {
+            actionBT.visibility = View.GONE
+        }
+        if(mode == Mode.SEARCH_FORM) {
+            actionBT.text = "Search"
         }
     }
 
