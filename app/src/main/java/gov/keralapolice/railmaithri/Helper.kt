@@ -18,6 +18,9 @@ import android.location.Location
 import android.location.LocationManager
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
+import android.util.Log
+import android.view.View
+import okhttp3.OkHttpClient
 
 
 class Helper {
@@ -125,6 +128,24 @@ class Helper {
                 fusedLocation.lastLocation.addOnSuccessListener { location : Location? ->
                     callback(location)
                 }
+            }
+        }
+
+        // Send form data
+        fun sendFormData(url: String, formData: JSONObject, token: String): Pair<Int, String> {
+            return try {
+                val clientNT  = OkHttpClient().newBuilder().build()
+                val request   = API.post(url, formData, token)
+                val response  = clientNT.newCall(request).execute()
+                if (response.isSuccessful) {
+                    Pair(ResponseType.SUCCESS, "Success")
+                } else {
+                    val errorMessage = getError(response.body!!.string())
+                    Pair(ResponseType.API_ERROR, errorMessage)
+                }
+            } catch (e: Exception) {
+                Log.d("RailMaithri", e.stackTraceToString())
+                Pair(ResponseType.NETWORK_ERROR, "Server unreachable, data will be saved")
             }
         }
 

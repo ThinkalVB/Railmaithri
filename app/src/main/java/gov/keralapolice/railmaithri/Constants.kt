@@ -133,3 +133,11 @@ class FormState {
         const val FORM_TO_UPDATE            = "FORM_TO_UPDATE"
     }
 }
+
+class ResponseType {
+    companion object{
+        const val SUCCESS                   = 0
+        const val NETWORK_ERROR             = 1
+        const val API_ERROR                 = 2
+    }
+}

@@ -99,32 +99,22 @@ class PassengerStatistics : AppCompatActivity() {
     }
 
     private fun sendFormData(formData: JSONObject) {
-        try {
-            val clientNT  = OkHttpClient().newBuilder().build()
-            val token     = Helper.getData(this, Storage.TOKEN)!!
-            val request   = API.post(URL.PASSENGER_STATISTICS, formData, token)
-            val response  = clientNT.newCall(request).execute()
-            if (response.isSuccessful) {
-                val key = formData.getString("utc_timestamp")
-                Helper.removeFormData(this, key, Storage.PASSENGER_STATISTICS)
-                finish()
-            } else {
-                val apiResponse  = response.body!!.string()
-                val errorMessage = Helper.getError(apiResponse)
-                Helper.showToast(this, errorMessage, Toast.LENGTH_LONG)
-            }
-        } catch (e: Exception) {
-            val message = "Server unreachable, data saved in phone memory"
-            Helper.showToast(this, message, Toast.LENGTH_LONG)
-            finish()
+        val token    = Helper.getData(this, Storage.TOKEN)!!
+        val response = Helper.sendFormData(URL.PASSENGER_STATISTICS, formData, token)
 
-            Log.d("RailMaithri", e.stackTraceToString())
+        Helper.showToast(this, response.second)
+        if(response.first == ResponseType.SUCCESS){
+            val key = formData.getString("utc_timestamp")
+            Helper.removeFormData(this, key, Storage.PASSENGER_STATISTICS)
+            finish()
+        } else if (response.first == ResponseType.NETWORK_ERROR) {
             Helper.saveFormData(this, formData, Storage.PASSENGER_STATISTICS)
-        } finally {
-            Handler(Looper.getMainLooper()).post {
-                actionBT.isClickable  = true
-                progressPB.visibility = View.GONE
-            }
+            finish()
+        }
+
+        Handler(Looper.getMainLooper()).post {
+            actionBT.isClickable  = true
+            progressPB.visibility = View.GONE
         }
     }
 
