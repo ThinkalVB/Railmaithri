@@ -19,7 +19,6 @@ import android.location.LocationManager
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.util.Log
-import android.view.View
 import okhttp3.OkHttpClient
 
 

@@ -1,10 +1,12 @@
 package gov.keralapolice.railmaithri
 
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.view.Gravity
 import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
@@ -50,6 +52,17 @@ class PassengerStatistics : AppCompatActivity() {
 
         prepareActionButton()
         renderForm()
+        if(mode == Mode.VIEW_FORM || mode == Mode.UPDATE_FORM){
+            populateData()
+        }
+    }
+
+    private fun populateData(){
+        val formData = JSONObject(intent.getStringExtra("data"))
+        train.importData(formData)
+        density.importData(formData)
+        compartmentType.importData(formData)
+        coachNumber.importData(formData)
     }
 
     private fun renderForm() {
@@ -148,5 +161,22 @@ class PassengerStatistics : AppCompatActivity() {
             return null
         }
         return formData
+    }
+
+    companion object{
+        fun generateButton(context: Context, formData: JSONObject): Button {
+            val button = Button(context)
+            button.isAllCaps = false
+            button.gravity = Gravity.START
+            button.text = "ID: ${formData.getString("id")}\n" +
+                    "Train: ${formData.getString("train_label")}\n"
+            button.setOnClickListener {
+                val intent = Intent(context, PassengerStatistics::class.java)
+                intent.putExtra("mode", Mode.VIEW_FORM)
+                intent.putExtra("data", formData.toString())
+                context.startActivity(intent)
+            }
+            return button
+        }
     }
 }

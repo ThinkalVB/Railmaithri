@@ -7,6 +7,7 @@ import android.os.Looper
 import android.util.Log
 import android.view.View
 import android.widget.Button
+import android.widget.LinearLayout
 import android.widget.ProgressBar
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -18,6 +19,7 @@ class SearchData : AppCompatActivity() {
     private lateinit var loadMoreBT:        Button
     private lateinit var searchURL:         String
     private lateinit var parameters:        JSONObject
+    private lateinit var resultLayout:      LinearLayout
     private var pageNumber                  = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,7 +56,7 @@ class SearchData : AppCompatActivity() {
             } else {
                 pageNumber ++
             }
-            renderFormData(formData)
+            Handler(Looper.getMainLooper()).post { renderFormData(formData) }
         } else {
             Helper.showToast(this, response.second)
         }
@@ -68,7 +70,13 @@ class SearchData : AppCompatActivity() {
         }
     }
 
-    private fun renderFormData(formData: JSONObject){
-        Log.e("Railmaithri", formData.toString())
+    private fun renderFormData(response: JSONObject) {
+        resultLayout = findViewById(R.id.form_data_list)
+        val formData = response.getJSONArray("results")
+        for (i in 0 until formData.length()) {
+            val formDatum = formData.getJSONObject(i)
+            val button    = PassengerStatistics.generateButton(this, formDatum)
+            resultLayout.addView(button)
+        }
     }
 }
