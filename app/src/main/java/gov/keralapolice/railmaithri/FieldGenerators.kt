@@ -189,6 +189,7 @@ class FieldSpinner(context: Context,
                    fieldLabel: String = "",
                    fieldName: String = "",
                    fieldHeight: Int = 48,
+                   addEmptyValue: Boolean = false,
                    isRequired: Boolean = false,
                    isReadOnly: Boolean = false) {
     private var _fieldLabel = fieldLabel
@@ -201,6 +202,9 @@ class FieldSpinner(context: Context,
 
     init {
         val valuesList = ArrayList<String>()
+        if(addEmptyValue){
+            valuesList.add("")
+        }
         for (i in 0 until _fieldData.length()) {
             val arrayElement = _fieldData.getJSONObject(i)
             val value        = arrayElement.getString("name")

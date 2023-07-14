@@ -178,5 +178,14 @@ class Helper {
                 defaultValue
             }
         }
+
+        // Resolve the value of addEmptyValue attribute based on the mode
+        fun resolveAddEmptyValue(defaultValue: Boolean, mode: String) : Boolean {
+            return if(mode == Mode.SEARCH_FORM){
+                true
+            }else{
+                defaultValue
+            }
+        }
     }
 }

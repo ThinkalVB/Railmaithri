@@ -1,5 +1,6 @@
 package gov.keralapolice.railmaithri
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
@@ -30,16 +31,26 @@ class PassengerStatistics : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.passenger_statistics)
+        supportActionBar!!.hide()
+
         mode        = intent.getStringExtra("mode")!!
         progressPB  = findViewById(R.id.progress_bar)
         actionBT    = findViewById(R.id.action)
 
         actionBT.setOnClickListener {
             val formData = getFormData()
-            if(formData != null) {
-                progressPB.visibility = View.VISIBLE
-                actionBT.isClickable  = false
-                CoroutineScope(Dispatchers.IO).launch {  sendFormData(formData)  }
+
+            if (formData != null) {
+                if(mode == Mode.NEW_FORM) {
+                    progressPB.visibility = View.VISIBLE
+                    actionBT.isClickable  = false
+                    CoroutineScope(Dispatchers.IO).launch {  sendFormData(formData)  }
+                } else if(mode == Mode.SEARCH_FORM) {
+                    val intent = Intent(this, SearchData::class.java)
+                    intent.putExtra("search_url", URL.PASSENGER_STATISTICS)
+                    intent.putExtra("parameters", formData.toString())
+                    startActivity(intent)
+                }
             }
         }
 
@@ -52,6 +63,7 @@ class PassengerStatistics : AppCompatActivity() {
             JSONArray(Helper.getData(this, Storage.TRAINS_LIST)!!),
             "train",
             "Train",
+            addEmptyValue = Helper.resolveAddEmptyValue(false, mode),
             isRequired = Helper.resolveIsRequired(true, mode),
             isReadOnly = Helper.resolveIsReadonly(false, mode)
         )
@@ -66,6 +78,7 @@ class PassengerStatistics : AppCompatActivity() {
             JSONArray(Helper.getData(this, Storage.DENSITY_TYPES)!!),
             "density",
             "Density",
+            addEmptyValue = Helper.resolveAddEmptyValue(false, mode),
             isRequired = Helper.resolveIsRequired(true, mode),
             isReadOnly = Helper.resolveIsReadonly(false, mode)
         )
@@ -73,6 +86,7 @@ class PassengerStatistics : AppCompatActivity() {
             JSONArray(Helper.getData(this, Storage.COMPARTMENT_TYPES)!!),
             "compartment_type",
             "Compartment type",
+            addEmptyValue = Helper.resolveAddEmptyValue(false, mode),
             isRequired = Helper.resolveIsRequired(true, mode),
             isReadOnly = Helper.resolveIsReadonly(false, mode)
         )
