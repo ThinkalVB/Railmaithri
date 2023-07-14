@@ -1,5 +1,6 @@
 package gov.keralapolice.railmaithri
 
+import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.MultipartBody
 import okhttp3.Request
 import org.json.JSONObject
@@ -20,12 +21,18 @@ class API {
             return request.url(url).method("POST", body.build()).build()
         }
 
-        fun get(url: String, token: String?): Request {
+        fun get(url: String, token: String? = null, parameters: JSONObject? = null): Request {
+            val queryURL = url.toHttpUrl().newBuilder()
+            if (parameters != null) {
+                for (key in parameters.keys()) {
+                    queryURL.addQueryParameter(key, parameters.get(key).toString())
+                }
+            }
             val request = Request.Builder()
             if(token != null){
                 request.addHeader("Authorization", "Token $token")
             }
-            return request.url(url).build()
+            return request.url(queryURL.build()).build()
         }
     }
 

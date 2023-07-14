@@ -85,15 +85,15 @@ class FieldEditText(context: Context,
                 // No specific class is available hence simple text is used
                 _editText.inputType = InputType.TYPE_CLASS_TEXT
                 _editText.setOnClickListener {
-                    val calendar    = Calendar.getInstance()
-                    val year        = calendar.get(Calendar.YEAR)
-                    val month       = calendar.get(Calendar.MONTH)
-                    val day         = calendar.get(Calendar.DAY_OF_MONTH)
+                    val calendar = Calendar.getInstance()
+                    val yearNow  = calendar.get(Calendar.YEAR)
+                    val monthNow = calendar.get(Calendar.MONTH)
+                    val dayNow   = calendar.get(Calendar.DAY_OF_MONTH)
                     val datePickerDialog = DatePickerDialog(context,
                         { _, year, monthOfYear, dayOfMonth ->
                             val date = "$year-${monthOfYear+1}-$dayOfMonth"
                             _editText.setText(date)
-                        }, year, month, day)
+                        }, yearNow, monthNow, dayNow)
                     datePickerDialog.show()
                 }
             }
@@ -291,7 +291,7 @@ class FieldSpinner(context: Context,
             }
         }
 
-        if (_linearLayout.visibility == View.VISIBLE) {
+        if (_linearLayout.visibility == View.VISIBLE && selectedID != 0) {
             jsonObject.put(actualLabel, selectedID)
         }
     }

@@ -5,16 +5,13 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.ProgressBar
-import android.widget.Toast
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import okhttp3.OkHttpClient
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -39,11 +36,8 @@ class PassengerStatistics : AppCompatActivity() {
 
         actionBT.setOnClickListener {
             val formData = getFormData()
-
             if (formData != null) {
                 if(mode == Mode.NEW_FORM) {
-                    progressPB.visibility = View.VISIBLE
-                    actionBT.isClickable  = false
                     CoroutineScope(Dispatchers.IO).launch {  sendFormData(formData)  }
                 } else if(mode == Mode.SEARCH_FORM) {
                     val intent = Intent(this, SearchData::class.java)
@@ -99,6 +93,11 @@ class PassengerStatistics : AppCompatActivity() {
     }
 
     private fun sendFormData(formData: JSONObject) {
+        Handler(Looper.getMainLooper()).post {
+            actionBT.isClickable  = false
+            progressPB.visibility = View.VISIBLE
+        }
+
         val token    = Helper.getData(this, Storage.TOKEN)!!
         val response = Helper.sendFormData(URL.PASSENGER_STATISTICS, formData, token)
 

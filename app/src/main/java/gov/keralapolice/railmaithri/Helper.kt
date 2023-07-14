@@ -131,6 +131,23 @@ class Helper {
             }
         }
 
+        fun getFormData(url: String, parameters: JSONObject, token: String): Pair<Int, String> {
+            return try {
+                val clientNT  = OkHttpClient().newBuilder().build()
+                val request   = API.get(url, token, parameters)
+                val response  = clientNT.newCall(request).execute()
+                if (response.isSuccessful) {
+                    Pair(ResponseType.SUCCESS, response.body!!.string())
+                } else {
+                    val errorMessage = getError(response.body!!.string())
+                    Pair(ResponseType.API_ERROR, errorMessage)
+                }
+            } catch (e: Exception) {
+                Log.d("RailMaithri", e.stackTraceToString())
+                Pair(ResponseType.NETWORK_ERROR, "Server unreachable, please try after sometimes")
+            }
+        }
+
         // Send form data
         fun sendFormData(url: String, formData: JSONObject, token: String): Pair<Int, String> {
             return try {
