@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.widget.Button
@@ -58,7 +59,7 @@ class PassengerStatistics : AppCompatActivity() {
     }
 
     private fun populateData(){
-        val formData = JSONObject(intent.getStringExtra("data"))
+        val formData = JSONObject(intent.getStringExtra("data")!!)
         train.importData(formData)
         density.importData(formData)
         compartmentType.importData(formData)
@@ -71,31 +72,27 @@ class PassengerStatistics : AppCompatActivity() {
             "train",
             "Train",
             addEmptyValue = Helper.resolveAddEmptyValue(false, mode),
-            isRequired = Helper.resolveIsRequired(true, mode),
-            isReadOnly = Helper.resolveIsReadonly(false, mode)
+            isRequired = Helper.resolveIsRequired(true, mode)
         )
         coachNumber = FieldEditText(this,
             fieldType = "text",
             fieldLabel = "coach",
             fieldName = "Coach number",
-            isRequired = Helper.resolveIsRequired(true, mode),
-            isReadOnly = Helper.resolveIsReadonly(false, mode)
+            isRequired = Helper.resolveIsRequired(true, mode)
         )
         density = FieldSpinner(this,
             JSONArray(Helper.getData(this, Storage.DENSITY_TYPES)!!),
             "density",
             "Density",
             addEmptyValue = Helper.resolveAddEmptyValue(false, mode),
-            isRequired = Helper.resolveIsRequired(true, mode),
-            isReadOnly = Helper.resolveIsReadonly(false, mode)
+            isRequired = Helper.resolveIsRequired(true, mode)
         )
         compartmentType = FieldSpinner(this,
             JSONArray(Helper.getData(this, Storage.COMPARTMENT_TYPES)!!),
             "compartment_type",
             "Compartment type",
             addEmptyValue = Helper.resolveAddEmptyValue(false, mode),
-            isRequired = Helper.resolveIsRequired(true, mode),
-            isReadOnly = Helper.resolveIsReadonly(false, mode)
+            isRequired = Helper.resolveIsRequired(true, mode)
         )
 
         val form = findViewById<LinearLayout>(R.id.form)
@@ -116,7 +113,7 @@ class PassengerStatistics : AppCompatActivity() {
 
         Helper.showToast(this, response.second)
         if(response.first == ResponseType.SUCCESS){
-            val key = formData.getString("utc_timestamp")
+            val key = formData.getString("last_updated")
             Helper.removeFormData(this, key, Storage.PASSENGER_STATISTICS)
             finish()
         } else if (response.first == ResponseType.NETWORK_ERROR) {
@@ -149,7 +146,6 @@ class PassengerStatistics : AppCompatActivity() {
         val formData = JSONObject()
         try{
             if(mode == Mode.NEW_FORM){
-                formData.put("utc_timestamp", Helper.getUTC())
                 formData.put("last_updated",  Helper.getUTC())
             }
             train.exportData(formData)
@@ -165,13 +161,18 @@ class PassengerStatistics : AppCompatActivity() {
 
     companion object{
         fun generateButton(context: Context, formData: JSONObject): Button {
+            val formID    = formData.optString("id", "Not assigned")
+            val train     = formData.getString("train_label")
+            val createdOn = formData.getString("last_updated")
+                .take(16).replace("T", "\t")
+            val shortData = "ID ${formID}\nTrain: ${train}\nDate: $createdOn"
+
             val button = Button(context)
             button.isAllCaps = false
             button.gravity = Gravity.START
-            button.text = "ID: ${formData.getString("id")}\n" +
-                    "Train: ${formData.getString("train_label")}\n"
+            button.text = shortData
             button.setOnClickListener {
-                val intent = Intent(context, PassengerStatistics::class.java)
+                val intent = Intent(context,  PassengerStatistics::class.java)
                 intent.putExtra("mode", Mode.VIEW_FORM)
                 intent.putExtra("data", formData.toString())
                 context.startActivity(intent)
