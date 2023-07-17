@@ -4,14 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".PassengerStatistics">
+    tools:context=".SavedData">
 
     <TextView
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="Passenger Statistics"
+        android:text="Saved Data"
         android:textColor="@color/RoyalBlue"
         android:textSize="18sp"
         android:textStyle="bold"
@@ -33,7 +33,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textView2">
 
         <LinearLayout
-            android:id="@+id/form"
+            android:id="@+id/form_data_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -50,8 +50,9 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
         <Button
-            android:id="@+id/action"
+            android:id="@+id/load_more"
             android:layout_width="160dp"
+            android:text="Sync"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/CornflowerBlue"
             app:layout_constraintEnd_toEndOf="parent"

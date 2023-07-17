@@ -198,6 +198,15 @@ class Helper {
             return JSONObject()
         }
 
+        // Load form data (full)
+        fun loadFormData(context: Context, formType: String): JSONObject {
+            val savedStr = getData(context, formType)
+            if(!savedStr.isNullOrEmpty()) {
+                return JSONObject(savedStr)
+            }
+            return JSONObject()
+        }
+
         // Resolve the value of isRequired attribute based on the mode
         fun resolveIsRequired(defaultValue: Boolean, mode: String) : Boolean {
             return if(mode == Mode.SEARCH_FORM || mode == Mode.VIEW_FORM){

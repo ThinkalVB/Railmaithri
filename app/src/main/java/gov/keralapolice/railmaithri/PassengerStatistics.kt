@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.widget.Button
@@ -40,13 +39,20 @@ class PassengerStatistics : AppCompatActivity() {
         actionBT.setOnClickListener {
             val formData = getFormData()
             if (formData != null) {
-                if(mode == Mode.NEW_FORM) {
-                    CoroutineScope(Dispatchers.IO).launch {  sendFormData(formData)  }
-                } else if(mode == Mode.SEARCH_FORM) {
-                    val intent = Intent(this, SearchData::class.java)
-                    intent.putExtra("search_url", URL.PASSENGER_STATISTICS)
-                    intent.putExtra("parameters", formData.toString())
-                    startActivity(intent)
+                when (mode) {
+                    Mode.NEW_FORM -> {
+                        CoroutineScope(Dispatchers.IO).launch {  sendFormData(formData)  }
+                    }
+                    Mode.SEARCH_FORM -> {
+                        val intent = Intent(this, SearchData::class.java)
+                        intent.putExtra("search_url", URL.PASSENGER_STATISTICS)
+                        intent.putExtra("parameters", formData.toString())
+                        startActivity(intent)
+                    }
+                    Mode.UPDATE_FORM -> {
+                        Helper.saveFormData(this, formData, Storage.PASSENGER_STATISTICS)
+                        finish()
+                    }
                 }
             }
         }
@@ -113,7 +119,7 @@ class PassengerStatistics : AppCompatActivity() {
 
         Helper.showToast(this, response.second)
         if(response.first == ResponseType.SUCCESS){
-            val key = formData.getString("last_updated")
+            val key = formData.getString("utc_timestamp")
             Helper.removeFormData(this, key, Storage.PASSENGER_STATISTICS)
             finish()
         } else if (response.first == ResponseType.NETWORK_ERROR) {
@@ -146,7 +152,9 @@ class PassengerStatistics : AppCompatActivity() {
         val formData = JSONObject()
         try{
             if(mode == Mode.NEW_FORM){
-                formData.put("last_updated",  Helper.getUTC())
+                val utcTime = Helper.getUTC()
+                formData.put("utc_timestamp", utcTime)
+                formData.put("last_updated",  utcTime)
             }
             train.exportData(formData)
             density.exportData(formData)
@@ -160,9 +168,9 @@ class PassengerStatistics : AppCompatActivity() {
     }
 
     companion object{
-        fun generateButton(context: Context, formData: JSONObject): Button {
+        fun generateButton(context: Context, formData: JSONObject, mode: String? = Mode.VIEW_FORM): Button {
             val formID    = formData.optString("id", "Not assigned")
-            val train     = formData.getString("train_label")
+            val train     = formData.getString("train")
             val createdOn = formData.getString("last_updated")
                 .take(16).replace("T", "\t")
             val shortData = "ID ${formID}\nTrain: ${train}\nDate: $createdOn"
@@ -173,7 +181,7 @@ class PassengerStatistics : AppCompatActivity() {
             button.text = shortData
             button.setOnClickListener {
                 val intent = Intent(context,  PassengerStatistics::class.java)
-                intent.putExtra("mode", Mode.VIEW_FORM)
+                intent.putExtra("mode", mode)
                 intent.putExtra("data", formData.toString())
                 context.startActivity(intent)
             }

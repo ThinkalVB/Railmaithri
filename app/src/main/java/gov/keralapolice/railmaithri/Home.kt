@@ -21,6 +21,7 @@ class Home : AppCompatActivity() {
     private lateinit var profile:       JSONObject
     private lateinit var clientNT:      OkHttpClient
     private lateinit var logoutBT:      ImageView
+    private lateinit var savedDataBT:   ImageView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.home)
@@ -29,13 +30,19 @@ class Home : AppCompatActivity() {
         clientNT  = OkHttpClient().newBuilder().build()
         profile   = JSONObject(Helper.getData(this, Storage.PROFILE)!!)
         token     = Helper.getData(this, Storage.TOKEN)!!
-        logoutBT  = findViewById<ImageView>(R.id.logout)
-        findViewById<TextView>(R.id.officer_name).text = profile.getString("username")
+        logoutBT  = findViewById(R.id.logout)
+        savedDataBT = findViewById(R.id.saved_data)
 
+        findViewById<TextView>(R.id.officer_name).text = profile.getString("username")
+        savedDataBT.setOnClickListener {
+            val intent = Intent(this, SavedData::class.java)
+            startActivity(intent)
+        }
         logoutBT.setOnClickListener {
             CoroutineScope(Dispatchers.IO).launch {  logout() }
         }
 
+        // Passenger statistics
         findViewById<ImageView>(R.id.add_passenger_statistics).setOnClickListener {
             val intent = Intent(this, PassengerStatistics::class.java)
             intent.putExtra("mode", Mode.NEW_FORM)
@@ -47,6 +54,7 @@ class Home : AppCompatActivity() {
             startActivity(intent)
         }
 
+        // Stranger check
         findViewById<ImageView>(R.id.add_stranger_check).setOnClickListener {
             val intent = Intent(this, StrangerCheck::class.java)
             intent.putExtra("mode", Mode.NEW_FORM)

@@ -4,7 +4,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
@@ -27,10 +26,11 @@ class SearchData : AppCompatActivity() {
         setContentView(R.layout.search_data)
         supportActionBar!!.hide()
 
-        progressPB = findViewById(R.id.progress_bar)
-        loadMoreBT = findViewById(R.id.load_more)
-        searchURL  = intent.getStringExtra("search_url")!!
-        parameters = JSONObject(intent.getStringExtra("parameters")!!)
+        progressPB    = findViewById(R.id.progress_bar)
+        loadMoreBT    = findViewById(R.id.load_more)
+        searchURL     = intent.getStringExtra("search_url")!!
+        parameters    = JSONObject(intent.getStringExtra("parameters")!!)
+        resultLayout  = findViewById(R.id.form_data_list)
 
         CoroutineScope(Dispatchers.IO).launch {  searchFormData()  }
         loadMoreBT.setOnClickListener {
@@ -71,11 +71,13 @@ class SearchData : AppCompatActivity() {
     }
 
     private fun renderFormData(response: JSONObject) {
-        resultLayout = findViewById(R.id.form_data_list)
         val formData = response.getJSONArray("results")
         for (i in 0 until formData.length()) {
-            val formDatum = formData.getJSONObject(i)
-            val button    = PassengerStatistics.generateButton(this, formDatum)
+            val formDatum       = formData.getJSONObject(i)
+            var button: Button? = null
+            if (searchURL == URL.PASSENGER_STATISTICS) {
+                button = PassengerStatistics.generateButton(this, formDatum)
+            }
             resultLayout.addView(button)
         }
     }
