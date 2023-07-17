@@ -36,40 +36,41 @@ class PassengerStatistics : AppCompatActivity() {
         progressPB  = findViewById(R.id.progress_bar)
         actionBT    = findViewById(R.id.action)
 
-        actionBT.setOnClickListener {
-            val formData = getFormData()
-            if (formData != null) {
-                when (mode) {
-                    Mode.NEW_FORM -> {
-                        CoroutineScope(Dispatchers.IO).launch {  sendFormData(formData)  }
-                    }
-                    Mode.SEARCH_FORM -> {
-                        val intent = Intent(this, SearchData::class.java)
-                        intent.putExtra("search_url", URL.PASSENGER_STATISTICS)
-                        intent.putExtra("parameters", formData.toString())
-                        startActivity(intent)
-                    }
-                    Mode.UPDATE_FORM -> {
-                        Helper.saveFormData(this, formData, Storage.PASSENGER_STATISTICS)
-                        finish()
-                    }
-                }
-            }
-        }
-
         prepareActionButton()
         renderForm()
-        if(mode == Mode.VIEW_FORM || mode == Mode.UPDATE_FORM){
-            populateData()
+        actionBT.setOnClickListener { performAction() }
+
+        if (mode == Mode.VIEW_FORM || mode == Mode.UPDATE_FORM) {
+            val key = intent.getStringExtra("key")!!
+            val formData = JSONObject()
+            loadFormData(formData)
         }
     }
 
-    private fun populateData(){
-        val formData = JSONObject(intent.getStringExtra("data")!!)
-        train.importData(formData)
-        density.importData(formData)
-        compartmentType.importData(formData)
-        coachNumber.importData(formData)
+    private fun performAction() {
+        if (mode == Mode.NEW_FORM){
+            val formData = getFormData()
+            if (formData != null) {
+                val utcTime = Helper.getUTC()
+                formData.put("utc_timestamp", utcTime)
+                formData.put("last_updated",  utcTime)
+                CoroutineScope(Dispatchers.IO).launch {  sendFormData(formData)  }
+            }
+        } else if (mode == Mode.SEARCH_FORM) {
+            var formData = getFormData()
+            if (formData == null){
+                formData = JSONObject()
+            }
+            val intent = Intent(this, SearchData::class.java)
+            intent.putExtra("search_url", URL.PASSENGER_STATISTICS)
+            intent.putExtra("parameters", formData.toString())
+            startActivity(intent)
+        } else if (mode == Mode.UPDATE_FORM){
+            val formData = JSONObject(intent.getStringExtra("data")!!)
+            getFormData(formData)
+            Helper.saveFormData(this, formData, Storage.PASSENGER_STATISTICS)
+            finish()
+        }
     }
 
     private fun renderForm() {
@@ -118,7 +119,7 @@ class PassengerStatistics : AppCompatActivity() {
         val response = Helper.sendFormData(URL.PASSENGER_STATISTICS, formData, token)
 
         Helper.showToast(this, response.second)
-        if(response.first == ResponseType.SUCCESS){
+        if(response.first == ResponseType.SUCCESS) {
             val key = formData.getString("utc_timestamp")
             Helper.removeFormData(this, key, Storage.PASSENGER_STATISTICS)
             finish()
@@ -148,23 +149,24 @@ class PassengerStatistics : AppCompatActivity() {
         }
     }
 
-    private fun getFormData(): JSONObject? {
-        val formData = JSONObject()
-        try{
-            if(mode == Mode.NEW_FORM){
-                val utcTime = Helper.getUTC()
-                formData.put("utc_timestamp", utcTime)
-                formData.put("last_updated",  utcTime)
-            }
+    private fun getFormData(formData: JSONObject = JSONObject()): JSONObject? {
+        return try{
             train.exportData(formData)
             density.exportData(formData)
             compartmentType.exportData(formData)
             coachNumber.exportData(formData)
+            formData
         }catch (e: Exception){
             Helper.showToast(this, e.message!!)
-            return null
+            null
         }
-        return formData
+    }
+
+    private fun loadFormData(formData: JSONObject) {
+        train.importData(formData)
+        density.importData(formData)
+        compartmentType.importData(formData)
+        coachNumber.importData(formData)
     }
 
     companion object{

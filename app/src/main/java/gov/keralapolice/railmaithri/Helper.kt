@@ -19,6 +19,8 @@ import android.location.LocationManager
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.util.Log
+import android.widget.Button
+import android.widget.LinearLayout
 import okhttp3.OkHttpClient
 
 
@@ -196,6 +198,15 @@ class Helper {
                 return savedObj.getJSONObject(key)
             }
             return JSONObject()
+        }
+
+        // Generate button based on form data
+        fun generateButton(context: Context, formData: JSONObject, formType: String): Button {
+            return if (formType == Storage.PASSENGER_STATISTICS) {
+                PassengerStatistics.generateButton(context, formData)
+            } else {
+                PassengerStatistics.generateButton(context, formData)
+            }
         }
 
         // Load form data (full)
