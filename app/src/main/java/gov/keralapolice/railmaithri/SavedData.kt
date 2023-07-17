@@ -22,7 +22,15 @@ class SavedData : AppCompatActivity() {
         progressPB    = findViewById(R.id.progress_bar)
         syncBT        = findViewById(R.id.load_more)
         resultLayout  = findViewById(R.id.form_data_list)
+    }
 
+    override fun onResume() {
+        super.onResume()
+        loadDataToSync()
+    }
+
+    fun loadDataToSync() {
+        resultLayout.removeAllViews()
         val passengerStatistics = loadFormData(this, Storage.PASSENGER_STATISTICS)
         val psKeys              = passengerStatistics.keys()
         while (psKeys.hasNext()) {

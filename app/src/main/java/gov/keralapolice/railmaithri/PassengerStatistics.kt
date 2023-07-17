@@ -41,8 +41,7 @@ class PassengerStatistics : AppCompatActivity() {
         actionBT.setOnClickListener { performAction() }
 
         if (mode == Mode.VIEW_FORM || mode == Mode.UPDATE_FORM) {
-            val key = intent.getStringExtra("key")!!
-            val formData = JSONObject()
+            val formData = JSONObject(intent.getStringExtra("data")!!)
             loadFormData(formData)
         }
     }
