@@ -11,7 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 
 
-class FileUtil(_activity: AppCompatActivity, _locationLY: ConstraintLayout, _uuid: String) {
+class FileUtil(_activity: AppCompatActivity, _locationLY: ConstraintLayout, _uuid: String = Helper.getUTC()) {
     private var file:     ByteArray? = null
     private var fileName: String?    = null
 
@@ -88,5 +88,9 @@ class FileUtil(_activity: AppCompatActivity, _locationLY: ConstraintLayout, _uui
 
     fun getFileName(): String? {
         return fileName
+    }
+
+    fun getUUID(): String {
+        return  uuid
     }
 }

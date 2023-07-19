@@ -52,7 +52,7 @@ class LocationUtil(_activity: Activity, _locationLY: ConstraintLayout) {
     }
 
     @SuppressLint("MissingPermission")
-    private fun fetchLocation(context: Context) {
+    fun fetchLocation(context: Context) {
         if (Helper.haveLocationPermission(context)) {
             disableUpdate()
 
