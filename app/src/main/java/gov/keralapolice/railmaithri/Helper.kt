@@ -174,8 +174,7 @@ class Helper {
         }
 
         // Save form data
-        fun saveFormData(context: Context, formData: JSONObject, formType: String) {
-            val key      = formData.getString("utc_timestamp")
+        fun saveFormData(context: Context, formData: JSONObject, formType: String, key: String) {
             val savedStr = getData(context, formType)
             var savedObj = JSONObject()
             if(!savedStr.isNullOrEmpty()){

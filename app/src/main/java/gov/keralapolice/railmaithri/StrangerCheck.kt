@@ -81,8 +81,10 @@ class StrangerCheck : AppCompatActivity() {
             startActivity(intent)
         } else if (mode == Mode.UPDATE_FORM){
             val formData = JSONObject(intent.getStringExtra("data")!!)
+            val uuid     = formData.getString("checking_date_time")
             getFormData(formData)
-            Helper.saveFormData(this, formData, Storage.STRANGER_CHECK)
+            storeFile(formData, uuid)
+            Helper.saveFormData(this, formData, Storage.STRANGER_CHECK, uuid)
             finish()
         }
     }
@@ -192,7 +194,7 @@ class StrangerCheck : AppCompatActivity() {
         form.addView(nativeAddress.getLayout())
         form.addView(idCardDetails.getLayout())
         form.addView(remarks.getLayout())
-        
+
         if (mode == Mode.SEARCH_FORM){
             findViewById<ConstraintLayout>(R.id.ly_file).visibility = View.GONE
             findViewById<ConstraintLayout>(R.id.ly_location).visibility = View.GONE
@@ -214,21 +216,25 @@ class StrangerCheck : AppCompatActivity() {
             Helper.removeFormData(this, uuid, Storage.STRANGER_CHECK)
             finish()
         } else if (response.first == ResponseType.NETWORK_ERROR) {
-            if (fileUtil.haveFile()) {
-                formData.put("__have_file", true)
-                formData.put("__file_name", fileUtil.getFileName())
-                fileUtil.saveFile(this, uuid)
-            } else {
-                formData.put("__have_file", false)
-                formData.put("__file_name", "No file")
-            }
-            Helper.saveFormData(this, formData, Storage.STRANGER_CHECK)
+            storeFile(formData, uuid)
+            Helper.saveFormData(this, formData, Storage.STRANGER_CHECK, uuid)
             finish()
         }
 
         Handler(Looper.getMainLooper()).post {
             actionBT.isClickable  = true
             progressPB.visibility = View.GONE
+        }
+    }
+
+    private fun storeFile(formData: JSONObject, uuid: String) {
+        if (fileUtil.haveFile()) {
+            formData.put("__have_file", true)
+            formData.put("__file_name", fileUtil.getFileName())
+            fileUtil.saveFile(this, uuid)
+        } else {
+            formData.put("__have_file", false)
+            formData.put("__file_name", "No file")
         }
     }
 

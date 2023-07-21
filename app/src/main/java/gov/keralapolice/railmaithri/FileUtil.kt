@@ -52,6 +52,7 @@ class FileUtil(_activity: AppCompatActivity, _locationLY: ConstraintLayout, _fie
         deleteFileBT.setOnClickListener {
             deleteFileBT.isClickable = false
             fileNameTV.text          = "No file selected"
+            file                     = null
         }
     }
 

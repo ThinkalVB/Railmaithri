@@ -29,7 +29,7 @@ class SavedData : AppCompatActivity() {
         loadDataToSync()
     }
 
-    fun loadDataToSync() {
+    private fun loadDataToSync() {
         resultLayout.removeAllViews()
         val passengerStatistics = loadFormData(this, Storage.PASSENGER_STATISTICS)
         val psKeys              = passengerStatistics.keys()
@@ -37,6 +37,15 @@ class SavedData : AppCompatActivity() {
             val psKeys = psKeys.next()
             val value  = passengerStatistics.getJSONObject(psKeys)
             val button = PassengerStatistics.generateButton(this, value, Mode.UPDATE_FORM)
+            resultLayout.addView(button)
+        }
+
+        val strangerCheck = loadFormData(this, Storage.STRANGER_CHECK)
+        val scKeys        = strangerCheck.keys()
+        while (scKeys.hasNext()) {
+            val scKeys = scKeys.next()
+            val value  = strangerCheck.getJSONObject(scKeys)
+            val button = StrangerCheck.generateButton(this, value, Mode.UPDATE_FORM)
             resultLayout.addView(button)
         }
     }

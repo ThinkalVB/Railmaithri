@@ -65,8 +65,9 @@ class PassengerStatistics : AppCompatActivity() {
             startActivity(intent)
         } else if (mode == Mode.UPDATE_FORM){
             val formData = JSONObject(intent.getStringExtra("data")!!)
+            val uuid     = formData.getString("last_updated")
             getFormData(formData)
-            Helper.saveFormData(this, formData, Storage.PASSENGER_STATISTICS)
+            Helper.saveFormData(this, formData, Storage.PASSENGER_STATISTICS, uuid)
             finish()
         }
     }
@@ -115,14 +116,14 @@ class PassengerStatistics : AppCompatActivity() {
 
         val token    = Helper.getData(this, Storage.TOKEN)!!
         val response = Helper.sendFormData(URL.PASSENGER_STATISTICS, formData, token)
-
         Helper.showToast(this, response.second)
+
+        val uuid = formData.getString("last_updated")
         if(response.first == ResponseType.SUCCESS) {
-            val key = formData.getString("last_updated")
-            Helper.removeFormData(this, key, Storage.PASSENGER_STATISTICS)
+            Helper.removeFormData(this, uuid, Storage.PASSENGER_STATISTICS)
             finish()
         } else if (response.first == ResponseType.NETWORK_ERROR) {
-            Helper.saveFormData(this, formData, Storage.PASSENGER_STATISTICS)
+            Helper.saveFormData(this, formData, Storage.PASSENGER_STATISTICS, uuid)
             finish()
         }
 
