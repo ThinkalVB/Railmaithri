@@ -11,16 +11,19 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 
 
-class FileUtil(_activity: AppCompatActivity, _locationLY: ConstraintLayout, _uuid: String = Helper.getUTC()) {
-    private var file:     ByteArray? = null
-    private var fileName: String?    = null
+class FileUtil(_activity: AppCompatActivity, _locationLY: ConstraintLayout,
+               _fieldLabel: String, _uuid: String = Helper.getUTC()) {
+    private var file:         ByteArray? = null
+    private var fileName:     String?    = null
 
+    private var fieldLabel:   String
     private var uuid:         String
     private var selectFileBT: Button
     private var deleteFileBT: Button
     private var fileNameTV:   TextView
 
     init {
+        fieldLabel   = _fieldLabel
         uuid         = _uuid
         selectFileBT = _locationLY.findViewById(R.id.select_file)
         deleteFileBT = _locationLY.findViewById(R.id.delete_file)
@@ -92,5 +95,9 @@ class FileUtil(_activity: AppCompatActivity, _locationLY: ConstraintLayout, _uui
 
     fun getUUID(): String {
         return  uuid
+    }
+
+    fun getFieldLabel(): String {
+        return fieldLabel
     }
 }

@@ -22,6 +22,7 @@ import android.util.Log
 import android.widget.Button
 import android.widget.LinearLayout
 import okhttp3.OkHttpClient
+import okhttp3.Request
 
 
 class Helper {
@@ -150,10 +151,15 @@ class Helper {
         }
 
         // Send form data
-        fun sendFormData(url: String, formData: JSONObject, token: String): Pair<Int, String> {
+        fun sendFormData(url: String, formData: JSONObject, token: String, fileUtil: FileUtil? = null): Pair<Int, String> {
             return try {
+                var request: Request = if (fileUtil != null && fileUtil.haveFile()){
+                    API.post(url, formData, token, fileUtil.getFile(), fileUtil.getFileName(), fileUtil.getFieldLabel())
+                } else {
+                    API.post(url, formData, token)
+                }
+
                 val clientNT  = OkHttpClient().newBuilder().build()
-                val request   = API.post(url, formData, token)
                 val response  = clientNT.newCall(request).execute()
                 if (response.isSuccessful) {
                     Pair(ResponseType.SUCCESS, "Success")

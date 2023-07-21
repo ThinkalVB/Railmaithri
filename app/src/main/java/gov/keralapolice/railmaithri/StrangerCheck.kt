@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.widget.Button
@@ -45,12 +44,12 @@ class StrangerCheck : AppCompatActivity() {
         setContentView(R.layout.stranger_check)
         supportActionBar!!.hide()
 
-        mode        = intent.getStringExtra("mode")!!
-        progressPB  = findViewById(R.id.progress_bar)
-        actionBT    = findViewById(R.id.action)
+        mode         = intent.getStringExtra("mode")!!
+        progressPB   = findViewById(R.id.progress_bar)
+        actionBT     = findViewById(R.id.action)
 
         locationUtil = LocationUtil(this, findViewById(R.id.ly_location))
-        fileUtil     = FileUtil(this, findViewById(R.id.ly_file))
+        fileUtil     = FileUtil(this, findViewById(R.id.ly_file), "photo")
 
         prepareActionButton()
         renderForm()
@@ -202,7 +201,7 @@ class StrangerCheck : AppCompatActivity() {
         }
 
         val token    = Helper.getData(this, Storage.TOKEN)!!
-        val response = Helper.sendFormData(URL.STRANGER_CHECK, formData, token)
+        val response = Helper.sendFormData(URL.STRANGER_CHECK, formData, token, fileUtil)
 
         Helper.showToast(this, response.second)
         if(response.first == ResponseType.SUCCESS) {
