@@ -51,7 +51,6 @@ class PassengerStatistics : AppCompatActivity() {
             val formData = getFormData()
             if (formData != null) {
                 val utcTime = Helper.getUTC()
-                formData.put("utc_timestamp", utcTime)
                 formData.put("last_updated",  utcTime)
                 CoroutineScope(Dispatchers.IO).launch {  sendFormData(formData)  }
             }
@@ -119,7 +118,7 @@ class PassengerStatistics : AppCompatActivity() {
 
         Helper.showToast(this, response.second)
         if(response.first == ResponseType.SUCCESS) {
-            val key = formData.getString("utc_timestamp")
+            val key = formData.getString("last_updated")
             Helper.removeFormData(this, key, Storage.PASSENGER_STATISTICS)
             finish()
         } else if (response.first == ResponseType.NETWORK_ERROR) {

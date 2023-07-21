@@ -11,20 +11,18 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 
 
-class FileUtil(_activity: AppCompatActivity, _locationLY: ConstraintLayout,
-               _fieldLabel: String, _uuid: String = Helper.getUTC()) {
+class FileUtil(_activity: AppCompatActivity, _locationLY: ConstraintLayout, _fieldLabel: String) {
     private var file:         ByteArray? = null
     private var fileName:     String?    = null
+    private var fieldLabel:   String?    = null
+    private var uuid:         String?    = null
 
-    private var fieldLabel:   String
-    private var uuid:         String
     private var selectFileBT: Button
     private var deleteFileBT: Button
     private var fileNameTV:   TextView
 
     init {
         fieldLabel   = _fieldLabel
-        uuid         = _uuid
         selectFileBT = _locationLY.findViewById(R.id.select_file)
         deleteFileBT = _locationLY.findViewById(R.id.delete_file)
         fileNameTV   = _locationLY.findViewById(R.id.file_name)
@@ -71,18 +69,19 @@ class FileUtil(_activity: AppCompatActivity, _locationLY: ConstraintLayout,
         selectFileBT.isClickable = false
     }
 
-    fun loadFile(context: Context, _fileName: String) {
-        file            = Helper.loadFile(context, uuid)
+    fun loadFile(context: Context, _uuid: String, _fileName: String) {
+        file            = Helper.loadFile(context, _uuid)
         fileName        = _fileName
         fileNameTV.text = fileName
     }
 
     fun removeFile(context: Context) {
-        Helper.purgeFile(context, uuid)
+        Helper.purgeFile(context, uuid!!)
     }
 
-    fun saveFile(context: Context) {
-        Helper.saveFile(context, file!!, uuid)
+    fun saveFile(context: Context, _uuid: String) {
+        uuid = _uuid
+        Helper.saveFile(context, file!!, uuid!!)
     }
 
     fun getFile(): ByteArray? {
@@ -93,11 +92,8 @@ class FileUtil(_activity: AppCompatActivity, _locationLY: ConstraintLayout,
         return fileName
     }
 
-    fun getUUID(): String {
-        return  uuid
-    }
-
-    fun getFieldLabel(): String {
+    fun getFieldLabel(): String? {
         return fieldLabel
     }
+
 }

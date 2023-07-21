@@ -11,6 +11,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.ProgressBar
+import androidx.constraintlayout.widget.ConstraintLayout
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -67,7 +68,6 @@ class StrangerCheck : AppCompatActivity() {
             if (formData != null) {
                 val utcTime = Helper.getUTC()
                 formData.put("checking_date_time", utcTime)
-                formData.put("utc_timestamp",      utcTime)
                 CoroutineScope(Dispatchers.IO).launch {  sendFormData(formData)  }
             }
         } else if (mode == Mode.SEARCH_FORM) {
@@ -192,6 +192,11 @@ class StrangerCheck : AppCompatActivity() {
         form.addView(nativeAddress.getLayout())
         form.addView(idCardDetails.getLayout())
         form.addView(remarks.getLayout())
+        
+        if (mode == Mode.SEARCH_FORM){
+            findViewById<ConstraintLayout>(R.id.ly_file).visibility = View.GONE
+            findViewById<ConstraintLayout>(R.id.ly_location).visibility = View.GONE
+        }
     }
 
     private fun sendFormData(formData: JSONObject) {
@@ -202,13 +207,21 @@ class StrangerCheck : AppCompatActivity() {
 
         val token    = Helper.getData(this, Storage.TOKEN)!!
         val response = Helper.sendFormData(URL.STRANGER_CHECK, formData, token, fileUtil)
-
         Helper.showToast(this, response.second)
-        if(response.first == ResponseType.SUCCESS) {
-            val key = formData.getString("utc_timestamp")
-            Helper.removeFormData(this, key, Storage.STRANGER_CHECK)
+
+        val uuid = formData.getString("checking_date_time")
+        if (response.first == ResponseType.SUCCESS) {
+            Helper.removeFormData(this, uuid, Storage.STRANGER_CHECK)
             finish()
         } else if (response.first == ResponseType.NETWORK_ERROR) {
+            if (fileUtil.haveFile()) {
+                formData.put("__have_file", true)
+                formData.put("__file_name", fileUtil.getFileName())
+                fileUtil.saveFile(this, uuid)
+            } else {
+                formData.put("__have_file", false)
+                formData.put("__file_name", "No file")
+            }
             Helper.saveFormData(this, formData, Storage.STRANGER_CHECK)
             finish()
         }
@@ -236,11 +249,13 @@ class StrangerCheck : AppCompatActivity() {
     }
 
     private fun getFormData(formData: JSONObject = JSONObject()): JSONObject? {
-        if (!locationUtil.haveLocation()) {
-            Helper.showToast(this, "Location is mandatory")
-            return null
-        } else {
-            locationUtil.exportLocation(formData)
+        if (mode == Mode.NEW_FORM){
+            if (!locationUtil.haveLocation()) {
+                Helper.showToast(this, "Location is mandatory")
+                return null
+            } else {
+                locationUtil.exportLocation(formData)
+            }
         }
 
         try{
@@ -284,22 +299,39 @@ class StrangerCheck : AppCompatActivity() {
         nativeAddress.importData(formData)
         idCardDetails.importData(formData)
         remarks.importData(formData)
+
+        val latitude  = formData.getDouble("latitude")
+        val longitude = formData.getDouble("longitude")
+        var accuracy  = 0.0f
+        if (mode == Mode.UPDATE_FORM) {
+            accuracy = formData.getDouble("accuracy").toFloat()
+        }
+        locationUtil.importLocation(latitude, longitude, accuracy)
+        if(mode == Mode.VIEW_FORM){
+            locationUtil.disableUpdate()
+        }
+
+        if (mode == Mode.UPDATE_FORM && formData.getBoolean("__have_file")){
+            val uuid     = formData.getString("checking_date_time")
+            val fileName = formData.getString("__file_name")
+            fileUtil.loadFile(this, uuid , fileName)
+        }
     }
 
     companion object{
         fun generateButton(context: Context, formData: JSONObject, mode: String? = Mode.VIEW_FORM): Button {
             val formID    = formData.optString("id", "Not assigned")
-            val train     = formData.getString("train")
-            val createdOn = formData.getString("last_updated")
+            val name      = formData.getString("name")
+            val createdOn = formData.getString("checking_date_time")
                 .take(16).replace("T", "\t")
-            val shortData = "ID ${formID}\nTrain: ${train}\nDate: $createdOn"
+            val shortData = "ID ${formID}\nName: ${name}\nDate: $createdOn"
 
             val button = Button(context)
             button.isAllCaps = false
             button.gravity = Gravity.START
             button.text = shortData
             button.setOnClickListener {
-                val intent = Intent(context,  PassengerStatistics::class.java)
+                val intent = Intent(context,  StrangerCheck::class.java)
                 intent.putExtra("mode", mode)
                 intent.putExtra("data", formData.toString())
                 context.startActivity(intent)
