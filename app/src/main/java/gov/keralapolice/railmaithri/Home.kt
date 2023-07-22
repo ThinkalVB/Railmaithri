@@ -3,6 +3,7 @@ package gov.keralapolice.railmaithri
 import android.Manifest
 import android.app.ActivityManager
 import android.content.BroadcastReceiver
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
@@ -19,6 +20,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.google.android.gms.location.LocationServices
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.messaging.FirebaseMessaging
 import gov.keralapolice.railmaithri.services.TrackingService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -38,6 +41,15 @@ class Home : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.home)
         supportActionBar!!.hide()
+
+        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                return@OnCompleteListener
+            }
+            // Get new FCM registration token
+            val token = task.result
+            Toast.makeText(baseContext, token, Toast.LENGTH_SHORT).show()
+        })
 
         clientNT = OkHttpClient().newBuilder().build()
         profile = JSONObject(Helper.getData(this, Storage.PROFILE)!!)

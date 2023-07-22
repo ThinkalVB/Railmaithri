@@ -144,13 +144,16 @@ public class TrackingService extends Service {
                 currentBestLocation.getProvider());
 
         // Determine location quality using a combination of timeliness and accuracy
-        if (isMoreAccurate) {
-            return true;
-        } else if (isNewer && !isLessAccurate) {
-            return true;
-        } else if (isNewer && !isSignificantlyLessAccurate && isFromSameProvider) {
-            return true;
+        if (location.getAccuracy() <= 30) {
+            if (isMoreAccurate) {
+                return true;
+            } else if (isNewer && !isLessAccurate) {
+                return true;
+            } else if (isNewer && !isSignificantlyLessAccurate && isFromSameProvider) {
+                return true;
+            }
         }
+
         return false;
     }
 
