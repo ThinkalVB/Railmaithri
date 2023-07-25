@@ -3,7 +3,6 @@ package gov.keralapolice.railmaithri
 import android.Manifest
 import android.app.ActivityManager
 import android.content.BroadcastReceiver
-import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
@@ -88,6 +87,126 @@ class Home : AppCompatActivity() {
         }
         findViewById<Button>(R.id.search_stranger_check).setOnClickListener {
             val intent = Intent(this, StrangerCheck::class.java)
+            intent.putExtra("mode", Mode.SEARCH_FORM)
+            startActivity(intent)
+        }
+
+        // Intelligence information
+        findViewById<ImageView>(R.id.add_intelligence_information).setOnClickListener {
+            val intent = Intent(this, IntelligenceInformation::class.java)
+            intent.putExtra("mode", Mode.NEW_FORM)
+            startActivity(intent)
+        }
+        findViewById<Button>(R.id.search_intelligence_information).setOnClickListener {
+            val intent = Intent(this, IntelligenceInformation::class.java)
+            intent.putExtra("mode", Mode.SEARCH_FORM)
+            startActivity(intent)
+        }
+
+        // Lost property
+        findViewById<ImageView>(R.id.add_lost_property).setOnClickListener {
+            val intent = Intent(this, LostProperty::class.java)
+            intent.putExtra("mode", Mode.NEW_FORM)
+            startActivity(intent)
+        }
+        findViewById<Button>(R.id.search_lost_property).setOnClickListener {
+            val intent = Intent(this, LostProperty::class.java)
+            intent.putExtra("mode", Mode.SEARCH_FORM)
+            startActivity(intent)
+        }
+
+        // Abandoned property
+        findViewById<ImageView>(R.id.add_abandoned_property).setOnClickListener {
+            val intent = Intent(this, AbandonedProperty::class.java)
+            intent.putExtra("mode", Mode.NEW_FORM)
+            startActivity(intent)
+        }
+        findViewById<Button>(R.id.search_abandoned_property).setOnClickListener {
+            val intent = Intent(this, AbandonedProperty::class.java)
+            intent.putExtra("mode", Mode.SEARCH_FORM)
+            startActivity(intent)
+        }
+
+        // Reliable person
+        findViewById<ImageView>(R.id.add_reliable_person).setOnClickListener {
+            val intent = Intent(this, ReliablePerson::class.java)
+            intent.putExtra("mode", Mode.NEW_FORM)
+            startActivity(intent)
+        }
+        findViewById<Button>(R.id.search_reliable_person).setOnClickListener {
+            val intent = Intent(this, ReliablePerson::class.java)
+            intent.putExtra("mode", Mode.SEARCH_FORM)
+            startActivity(intent)
+        }
+
+        // Emergency contact
+        findViewById<ImageView>(R.id.add_emergency_contact).setOnClickListener {
+            val intent = Intent(this, EmergencyContact::class.java)
+            intent.putExtra("mode", Mode.NEW_FORM)
+            startActivity(intent)
+        }
+        findViewById<Button>(R.id.search_emergency_contact).setOnClickListener {
+            val intent = Intent(this, EmergencyContact::class.java)
+            intent.putExtra("mode", Mode.SEARCH_FORM)
+            startActivity(intent)
+        }
+
+        // POI
+        findViewById<ImageView>(R.id.add_poi).setOnClickListener {
+            val intent = Intent(this, POI::class.java)
+            intent.putExtra("mode", Mode.NEW_FORM)
+            startActivity(intent)
+        }
+        findViewById<Button>(R.id.search_poi).setOnClickListener {
+            val intent = Intent(this, POI::class.java)
+            intent.putExtra("mode", Mode.SEARCH_FORM)
+            startActivity(intent)
+        }
+
+        // Unauthorized person
+        findViewById<ImageView>(R.id.add_unauthorized_person).setOnClickListener {
+            val intent = Intent(this, UnauthorizedPerson::class.java)
+            intent.putExtra("mode", Mode.NEW_FORM)
+            startActivity(intent)
+        }
+        findViewById<Button>(R.id.search_unauthorized_person).setOnClickListener {
+            val intent = Intent(this, UnauthorizedPerson::class.java)
+            intent.putExtra("mode", Mode.SEARCH_FORM)
+            startActivity(intent)
+        }
+
+        // Crime memo
+        findViewById<ImageView>(R.id.add_crime_memo).setOnClickListener {
+            val intent = Intent(this, CrimeMemo::class.java)
+            intent.putExtra("mode", Mode.NEW_FORM)
+            startActivity(intent)
+        }
+        findViewById<Button>(R.id.search_crime_memo).setOnClickListener {
+            val intent = Intent(this, CrimeMemo::class.java)
+            intent.putExtra("mode", Mode.SEARCH_FORM)
+            startActivity(intent)
+        }
+
+        // Suraksha samithi member
+        findViewById<ImageView>(R.id.add_suraksha_samithi_member).setOnClickListener {
+            val intent = Intent(this, SurakshaSamithiMember::class.java)
+            intent.putExtra("mode", Mode.NEW_FORM)
+            startActivity(intent)
+        }
+        findViewById<Button>(R.id.search_suraksha_samithi_member).setOnClickListener {
+            val intent = Intent(this, SurakshaSamithiMember::class.java)
+            intent.putExtra("mode", Mode.SEARCH_FORM)
+            startActivity(intent)
+        }
+
+        // Rail volunteer
+        findViewById<ImageView>(R.id.add_rail_volunteer).setOnClickListener {
+            val intent = Intent(this, RailVolunteer::class.java)
+            intent.putExtra("mode", Mode.NEW_FORM)
+            startActivity(intent)
+        }
+        findViewById<Button>(R.id.search_rail_volunteer).setOnClickListener {
+            val intent = Intent(this, RailVolunteer::class.java)
             intent.putExtra("mode", Mode.SEARCH_FORM)
             startActivity(intent)
         }

@@ -19,8 +19,8 @@
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <uses-permission android:name="com.android.alarm.permission.SET_ALARM"/>
-    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS"/>
+    <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
 
     <application
         android:allowBackup="true"
@@ -33,6 +33,36 @@
         android:theme="@style/Theme.Railmaithri"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+        <activity
+            android:name=".RailVolunteer"
+            android:exported="false" />
+        <activity
+            android:name=".SurakshaSamithiMember"
+            android:exported="false" />
+        <activity
+            android:name=".CrimeMemo"
+            android:exported="false" />
+        <activity
+            android:name=".UnauthorizedPerson"
+            android:exported="false" />
+        <activity
+            android:name=".POI"
+            android:exported="false" />
+        <activity
+            android:name=".EmergencyContact"
+            android:exported="false" />
+        <activity
+            android:name=".ReliablePerson"
+            android:exported="false" />
+        <activity
+            android:name=".AbandonedProperty"
+            android:exported="false" />
+        <activity
+            android:name=".LostProperty"
+            android:exported="false" />
+        <activity
+            android:name=".IntelligenceInformation"
+            android:exported="false" />
         <activity
             android:name=".SavedData"
             android:exported="false" />
@@ -57,12 +87,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <service
             android:name=".services.TrackingService"
             android:enabled="true"
-            android:foregroundServiceType="location"
-            android:exported="false"/>
-
+            android:exported="false"
+            android:foregroundServiceType="location" />
         <service
             android:name=".services.FirebaseMessageReceiver"
             android:exported="false">
@@ -70,7 +100,6 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-
     </application>
 
 </manifest>

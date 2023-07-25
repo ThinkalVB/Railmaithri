@@ -2,12 +2,10 @@ package gov.keralapolice.railmaithri
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import gov.keralapolice.railmaithri.Helper.Companion.loadFormData
-import org.json.JSONObject
 
 class SavedData : AppCompatActivity() {
     private lateinit var progressPB:        ProgressBar
