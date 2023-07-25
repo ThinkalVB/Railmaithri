@@ -81,6 +81,8 @@ class SearchData : AppCompatActivity() {
                 button = StrangerCheck.generateButton(this, formDatum)
             } else if (searchURL == URL.INTELLIGENCE_INFORMATION){
                 button = IntelligenceInformation.generateButton(this, formDatum)
+            } else if (searchURL == URL.LOST_PROPERTY){
+                button = LostProperty.generateButton(this, formDatum)
             }
             resultLayout.addView(button)
         }

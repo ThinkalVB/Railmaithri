@@ -55,5 +55,14 @@ class SavedData : AppCompatActivity() {
             val button = IntelligenceInformation.generateButton(this, value, Mode.UPDATE_FORM)
             resultLayout.addView(button)
         }
+
+        val lostProperty = loadFormData(this, Storage.LOST_PROPERTY)
+        val lpKeys       = lostProperty.keys()
+        while (lpKeys.hasNext()) {
+            val lpKeys = lpKeys.next()
+            val value  = lostProperty.getJSONObject(lpKeys)
+            val button = LostProperty.generateButton(this, value, Mode.UPDATE_FORM)
+            resultLayout.addView(button)
+        }
     }
 }
