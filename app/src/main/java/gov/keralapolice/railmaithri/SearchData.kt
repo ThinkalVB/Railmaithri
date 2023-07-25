@@ -79,6 +79,8 @@ class SearchData : AppCompatActivity() {
                 button = PassengerStatistics.generateButton(this, formDatum)
             } else if (searchURL == URL.STRANGER_CHECK){
                 button = StrangerCheck.generateButton(this, formDatum)
+            } else if (searchURL == URL.INTELLIGENCE_INFORMATION){
+                button = IntelligenceInformation.generateButton(this, formDatum)
             }
             resultLayout.addView(button)
         }

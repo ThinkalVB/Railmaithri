@@ -213,7 +213,6 @@ class StrangerCheck : AppCompatActivity() {
 
         val uuid = formData.getString("checking_date_time")
         if (response.first == ResponseType.SUCCESS) {
-            Helper.removeFormData(this, uuid, Storage.STRANGER_CHECK)
             finish()
         } else if (response.first == ResponseType.NETWORK_ERROR) {
             storeFile(formData, uuid)

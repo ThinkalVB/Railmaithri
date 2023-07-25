@@ -111,10 +111,10 @@ class Storage {
 
 class Mode {
     companion object{
-        const val SEARCH_FORM                 = "SEARCH_FORM"
-        const val NEW_FORM                    = "NEW_FORM"
-        const val UPDATE_FORM                 = "UPDATE_FORM"
-        const val VIEW_FORM                   = "VIEW_FORM"
+        const val SEARCH_FORM              = "SEARCH_FORM"
+        const val NEW_FORM                 = "NEW_FORM"
+        const val UPDATE_FORM              = "UPDATE_FORM"
+        const val VIEW_FORM                = "VIEW_FORM"
     }
 }
 

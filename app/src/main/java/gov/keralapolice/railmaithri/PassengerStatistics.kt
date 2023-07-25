@@ -120,7 +120,6 @@ class PassengerStatistics : AppCompatActivity() {
 
         val uuid = formData.getString("last_updated")
         if(response.first == ResponseType.SUCCESS) {
-            Helper.removeFormData(this, uuid, Storage.PASSENGER_STATISTICS)
             finish()
         } else if (response.first == ResponseType.NETWORK_ERROR) {
             Helper.saveFormData(this, formData, Storage.PASSENGER_STATISTICS, uuid)

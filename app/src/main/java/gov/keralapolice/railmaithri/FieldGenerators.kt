@@ -281,17 +281,17 @@ class FieldSpinner(context: Context,
             actualLabel = filedLabel
         }
 
-        var selectedID = 0
+        var selectedID: Any? = null
         for (i in 0 until _fieldData.length()) {
             val arrayElement = _fieldData.getJSONObject(i)
             val value        = arrayElement.getString("name")
             if (value == _spinner.selectedItem){
-                selectedID = arrayElement.getInt("id")
+                selectedID = arrayElement.get("id")
                 break
             }
         }
 
-        if (_linearLayout.visibility == View.VISIBLE && selectedID != 0) {
+        if (_linearLayout.visibility == View.VISIBLE && selectedID != null) {
             jsonObject.put(actualLabel, selectedID)
         }
     }

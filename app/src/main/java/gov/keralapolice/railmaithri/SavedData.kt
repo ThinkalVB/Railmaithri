@@ -46,5 +46,14 @@ class SavedData : AppCompatActivity() {
             val button = StrangerCheck.generateButton(this, value, Mode.UPDATE_FORM)
             resultLayout.addView(button)
         }
+
+        val intelligenceInformation = loadFormData(this, Storage.INTELLIGENCE_INFORMATION)
+        val ifKeys                  = intelligenceInformation.keys()
+        while (ifKeys.hasNext()) {
+            val ifKeys = ifKeys.next()
+            val value  = intelligenceInformation.getJSONObject(ifKeys)
+            val button = IntelligenceInformation.generateButton(this, value, Mode.UPDATE_FORM)
+            resultLayout.addView(button)
+        }
     }
 }
