@@ -14,11 +14,11 @@ class ReliablePerson : AppCompatActivity() {
     private lateinit var progressPB:        ProgressBar
     private lateinit var actionBT:          Button
 
-    private lateinit var name:                  FieldEditText
-    private lateinit var mobileNumber:          FieldEditText
-    private lateinit var policeStation:         FieldSpinner
-    private lateinit var place:                 FieldEditText
-    private lateinit var description:           FieldEditText
+    private lateinit var name:              FieldEditText
+    private lateinit var mobileNumber:      FieldEditText
+    private lateinit var policeStation:     FieldSpinner
+    private lateinit var place:             FieldEditText
+    private lateinit var description:       FieldEditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,7 +31,6 @@ class ReliablePerson : AppCompatActivity() {
 
         prepareActionButton()
         renderForm()
-
     }
     private fun prepareActionButton() {
         if(mode == Mode.NEW_FORM){
@@ -49,7 +48,6 @@ class ReliablePerson : AppCompatActivity() {
     }
 
     private fun renderForm() {
-
         name = FieldEditText(this,
             fieldType = "text",
             fieldLabel = "name",
@@ -90,10 +88,5 @@ class ReliablePerson : AppCompatActivity() {
         form.addView(policeStation.getLayout())
         form.addView(place.getLayout())
         form.addView(description.getLayout())
-
-        if (mode == Mode.SEARCH_FORM){
-            findViewById<ConstraintLayout>(R.id.ly_file).visibility = View.GONE
-            findViewById<ConstraintLayout>(R.id.ly_location).visibility = View.GONE
-        }
     }
 }

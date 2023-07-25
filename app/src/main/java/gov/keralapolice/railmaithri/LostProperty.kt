@@ -103,9 +103,7 @@ class LostProperty : AppCompatActivity() {
             isRequired = Helper.resolveIsRequired(false, mode)
         )
 
-
         val form = findViewById<LinearLayout>(R.id.form)
-
         form.addView(lostProperty.getLayout())
         form.addView(keptInPoliceStation.getLayout())
         form.addView(descrption.getLayout())
@@ -113,10 +111,8 @@ class LostProperty : AppCompatActivity() {
         form.addView(foundOn.getLayout())
         form.addView(remarks.getLayout())
 
-
         if (mode == Mode.SEARCH_FORM){
             findViewById<ConstraintLayout>(R.id.ly_file).visibility = View.GONE
-            findViewById<ConstraintLayout>(R.id.ly_location).visibility = View.GONE
         }
     }
 

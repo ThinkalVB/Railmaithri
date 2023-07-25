@@ -14,10 +14,10 @@ class CrimeMemo : AppCompatActivity() {
     private lateinit var progressPB:        ProgressBar
     private lateinit var actionBT:          Button
 
-    private lateinit var fileUtil:              FileUtil
-    private lateinit var category:              FieldSpinner
-    private lateinit var memoDetails:           FieldEditText
-    private lateinit var policeStation:         FieldSpinner
+    private lateinit var fileUtil:          FileUtil
+    private lateinit var category:          FieldSpinner
+    private lateinit var memoDetails:       FieldEditText
+    private lateinit var policeStation:     FieldSpinner
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,7 +28,6 @@ class CrimeMemo : AppCompatActivity() {
         progressPB   = findViewById(R.id.progress_bar)
         actionBT     = findViewById(R.id.action)
 
-
         fileUtil     = FileUtil(this, findViewById(R.id.ly_file), "photo")
 
         prepareActionButton()
@@ -37,7 +36,6 @@ class CrimeMemo : AppCompatActivity() {
     private fun prepareActionButton() {
         if(mode == Mode.NEW_FORM){
             actionBT.text = "Save"
-
         }
         if(mode == Mode.UPDATE_FORM) {
             actionBT.text = "Update"
@@ -51,7 +49,6 @@ class CrimeMemo : AppCompatActivity() {
     }
 
     private fun renderForm() {
-
         category = FieldSpinner(this,
             JSONArray(Helper.getData(this, Storage.CRIME_MEMO_TYPES)!!),
             "crime_memo_category",
@@ -81,7 +78,6 @@ class CrimeMemo : AppCompatActivity() {
 
         if (mode == Mode.SEARCH_FORM){
             findViewById<ConstraintLayout>(R.id.ly_file).visibility = View.GONE
-            findViewById<ConstraintLayout>(R.id.ly_location).visibility = View.GONE
         }
     }
 }

@@ -14,15 +14,15 @@ class EmergencyContact : AppCompatActivity() {
     private lateinit var progressPB:        ProgressBar
     private lateinit var actionBT:          Button
 
-    private lateinit var locationUtil:          LocationUtil
-    private lateinit var policeStation:         FieldSpinner
-    private lateinit var district:              FieldSpinner
-    private lateinit var railwayStation:        FieldSpinner
-    private lateinit var category:              FieldSpinner
-    private lateinit var name:                  FieldEditText
-    private lateinit var mobileNumber:          FieldEditText
-    private lateinit var email:                 FieldEditText
-    private lateinit var remarks:               FieldEditText
+    private lateinit var locationUtil:      LocationUtil
+    private lateinit var policeStation:     FieldSpinner
+    private lateinit var district:          FieldSpinner
+    private lateinit var railwayStation:    FieldSpinner
+    private lateinit var category:          FieldSpinner
+    private lateinit var name:              FieldEditText
+    private lateinit var mobileNumber:      FieldEditText
+    private lateinit var email:             FieldEditText
+    private lateinit var remarks:           FieldEditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,10 +35,8 @@ class EmergencyContact : AppCompatActivity() {
 
         locationUtil = LocationUtil(this, findViewById(R.id.ly_location))
 
-
         prepareActionButton()
         renderForm()
-
     }
     private fun prepareActionButton() {
         if(mode == Mode.NEW_FORM){
@@ -57,7 +55,6 @@ class EmergencyContact : AppCompatActivity() {
     }
 
     private fun renderForm() {
-
         policeStation = FieldSpinner(this,
             JSONArray(Helper.getData(this, Storage.POLICE_STATIONS_LIST)!!),
             "police_station",
@@ -112,7 +109,6 @@ class EmergencyContact : AppCompatActivity() {
             isRequired = Helper.resolveIsRequired(true, mode)
         )
 
-
         val form = findViewById<LinearLayout>(R.id.form)
         form.addView(policeStation.getLayout())
         form.addView(district.getLayout())
@@ -123,9 +119,7 @@ class EmergencyContact : AppCompatActivity() {
         form.addView(email.getLayout())
         form.addView(remarks.getLayout())
 
-
         if (mode == Mode.SEARCH_FORM){
-            findViewById<ConstraintLayout>(R.id.ly_file).visibility = View.GONE
             findViewById<ConstraintLayout>(R.id.ly_location).visibility = View.GONE
         }
     }

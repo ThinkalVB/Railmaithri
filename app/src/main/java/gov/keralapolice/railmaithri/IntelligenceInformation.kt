@@ -15,13 +15,13 @@ class IntelligenceInformation : AppCompatActivity() {
     private lateinit var progressPB:        ProgressBar
     private lateinit var actionBT:          Button
 
-    private lateinit var locationUtil:          LocationUtil
-    private lateinit var fileUtil:              FileUtil
-    private lateinit var intelligenceType:      FieldSpinner
-    private lateinit var severity:              FieldSpinner
-    private lateinit var mobileNumber:          FieldEditText
-    private lateinit var information:           FieldEditText
-    private lateinit var remarks:               FieldEditText
+    private lateinit var locationUtil:      LocationUtil
+    private lateinit var fileUtil:          FileUtil
+    private lateinit var intelligenceType:  FieldSpinner
+    private lateinit var severity:          FieldSpinner
+    private lateinit var mobileNumber:      FieldEditText
+    private lateinit var information:       FieldEditText
+    private lateinit var remarks:           FieldEditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,7 +37,6 @@ class IntelligenceInformation : AppCompatActivity() {
 
         prepareActionButton()
         renderForm()
-
     }
 
     private fun prepareActionButton() {
@@ -57,7 +56,6 @@ class IntelligenceInformation : AppCompatActivity() {
     }
 
     private fun renderForm() {
-
         intelligenceType = FieldSpinner(this,
             JSONArray(Helper.getData(this, Storage.INTELLIGENCE_TYPES)!!),
             "intelligence_type",

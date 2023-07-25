@@ -31,7 +31,6 @@ class AbandonedProperty : AppCompatActivity() {
         progressPB   = findViewById(R.id.progress_bar)
         actionBT     = findViewById(R.id.action)
 
-
         fileUtil     = FileUtil(this, findViewById(R.id.ly_file), "photo")
 
         prepareActionButton()
@@ -96,8 +95,6 @@ class AbandonedProperty : AppCompatActivity() {
 
         if (mode == Mode.SEARCH_FORM){
             findViewById<ConstraintLayout>(R.id.ly_file).visibility = View.GONE
-            findViewById<ConstraintLayout>(R.id.ly_location).visibility = View.GONE
-
         }
     }
 }

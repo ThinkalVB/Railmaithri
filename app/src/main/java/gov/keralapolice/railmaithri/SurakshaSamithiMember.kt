@@ -14,11 +14,11 @@ class SurakshaSamithiMember : AppCompatActivity() {
     private lateinit var progressPB:        ProgressBar
     private lateinit var actionBT:          Button
 
-    private lateinit var surakshaSamithi:       FieldSpinner
-    private lateinit var name:                  FieldEditText
-    private lateinit var address:               FieldEditText
-    private lateinit var mobileNumber:          FieldEditText
-    private lateinit var email:                 FieldEditText
+    private lateinit var surakshaSamithi:   FieldSpinner
+    private lateinit var name:              FieldEditText
+    private lateinit var address:           FieldEditText
+    private lateinit var mobileNumber:      FieldEditText
+    private lateinit var email:             FieldEditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,7 +31,6 @@ class SurakshaSamithiMember : AppCompatActivity() {
 
         prepareActionButton()
         renderForm()
-
     }
     private fun prepareActionButton() {
         if(mode == Mode.NEW_FORM){
@@ -49,7 +48,6 @@ class SurakshaSamithiMember : AppCompatActivity() {
     }
 
     private fun renderForm() {
-
         surakshaSamithi = FieldSpinner(this,
             JSONArray(Helper.getData(this, Storage.SURAKSHA_SAMITHI_LIST)!!),
             "suraksha_samithi",
@@ -77,7 +75,7 @@ class SurakshaSamithiMember : AppCompatActivity() {
             isRequired = Helper.resolveIsRequired(true, mode)
         )
         email = FieldEditText(this,
-            fieldType = "text",
+            fieldType = "email",
             fieldLabel = "email",
             fieldName = "E-mail",
             isRequired = Helper.resolveIsRequired(false, mode)
@@ -89,10 +87,5 @@ class SurakshaSamithiMember : AppCompatActivity() {
         form.addView(address.getLayout())
         form.addView(mobileNumber.getLayout())
         form.addView(email.getLayout())
-
-        if (mode == Mode.SEARCH_FORM){
-            findViewById<ConstraintLayout>(R.id.ly_file).visibility = View.GONE
-            findViewById<ConstraintLayout>(R.id.ly_location).visibility = View.GONE
-        }
     }
 }
