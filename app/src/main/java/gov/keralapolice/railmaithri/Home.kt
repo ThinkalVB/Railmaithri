@@ -1,13 +1,10 @@
 package gov.keralapolice.railmaithri
 
-import android.Manifest
 import android.app.ActivityManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.content.pm.PackageManager
-import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -17,7 +14,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.messaging.FirebaseMessaging
@@ -225,28 +221,8 @@ class Home : AppCompatActivity() {
     }
 
     private fun handleLocationUpdates() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            if (ActivityCompat.checkSelfPermission(
-                    this,
-                    Manifest.permission.ACCESS_BACKGROUND_LOCATION
-                ) != PackageManager.PERMISSION_GRANTED
-            ) {
-            } else {
-                startLocationService()
-            }
-        } else {
-            if (ActivityCompat.checkSelfPermission(
-                    this,
-                    Manifest.permission.ACCESS_FINE_LOCATION
-                ) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(
-                    this,
-                    Manifest.permission.ACCESS_COARSE_LOCATION
-                ) != PackageManager.PERMISSION_GRANTED
-            ) {
-            } else {
-                startLocationService()
-            }
+        if (Helper.haveLocationPermission(this)){
+            startLocationService()
         }
     }
 
@@ -349,14 +325,12 @@ class Home : AppCompatActivity() {
                 } catch (_: Exception) {
                 }
             }
-
         } catch (_: Exception) {
         }
     }
 
     private val locationStateReceiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
-
             saveLocationDataToServer(
                 intent.getDoubleExtra("latitude",0.0).toString()!!,
                 intent.getDoubleExtra("longitude",0.0).toString()!!,
