@@ -19,10 +19,11 @@ import android.location.LocationManager
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.util.Log
-import android.widget.Button
+import android.widget.ArrayAdapter
 import okhttp3.OkHttpClient
 import okhttp3.Request
-
+import org.json.JSONArray
+import android.R.layout
 
 class Helper {
     companion object {
@@ -209,15 +210,6 @@ class Helper {
             return JSONObject()
         }
 
-        // Generate button based on form data
-        fun generateButton(context: Context, formData: JSONObject, formType: String): Button {
-            return if (formType == Storage.PASSENGER_STATISTICS) {
-                PassengerStatistics.generateButton(context, formData)
-            } else {
-                PassengerStatistics.generateButton(context, formData)
-            }
-        }
-
         // Load form data (full)
         fun loadFormData(context: Context, formType: String): JSONObject {
             val savedStr = getData(context, formType)
@@ -252,6 +244,17 @@ class Helper {
             }else{
                 defaultValue
             }
+        }
+
+        fun makeArrayAdapter(jsonArray: JSONArray, context: Context): ArrayAdapter<String> {
+            val arrayList = ArrayList<String>()
+            for (i in 0 until jsonArray.length()) {
+                val arrayElement = jsonArray.getJSONObject(i)
+                arrayList.add(arrayElement.getString("name"))
+            }
+            val arrayAdapter = ArrayAdapter(context, layout.simple_spinner_item, arrayList)
+            arrayAdapter.setDropDownViewResource(layout.simple_spinner_dropdown_item)
+            return arrayAdapter
         }
     }
 }

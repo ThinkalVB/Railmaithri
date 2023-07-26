@@ -211,6 +211,12 @@ class Home : AppCompatActivity() {
             startActivity(intent)
         }
 
+        // Close communication
+        findViewById<ImageView>(R.id.close_communication).setOnClickListener {
+            val intent = Intent(this, Chat::class.java)
+            startActivity(intent)
+        }
+
         startTracking()
     }
 
