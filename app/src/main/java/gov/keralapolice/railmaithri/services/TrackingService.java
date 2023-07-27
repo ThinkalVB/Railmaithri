@@ -15,11 +15,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.widget.Toast;
-
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
-
 import gov.keralapolice.railmaithri.Home;
 import gov.keralapolice.railmaithri.R;
 
@@ -34,7 +32,6 @@ public class TrackingService extends Service {
     public void onCreate() {
         super.onCreate();
     }
-
 
     @Nullable
     @Override
@@ -110,7 +107,6 @@ public class TrackingService extends Service {
         }
         return super.onStartCommand(intent, flags, startId);
     }
-
 
     protected boolean isBetterLocation(Location location, Location currentBestLocation) {
         if (currentBestLocation == null) {
@@ -196,5 +192,4 @@ public class TrackingService extends Service {
             Toast.makeText(getApplicationContext(), "Gps Enabled", Toast.LENGTH_SHORT).show();
         }
     }
-
 }

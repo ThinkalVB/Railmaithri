@@ -21,7 +21,6 @@ import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient
 import org.json.JSONObject
 
-
 class Login : AppCompatActivity() {
     private lateinit var token:         String
     private lateinit var profile:       JSONObject
@@ -113,7 +112,7 @@ class Login : AppCompatActivity() {
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.INTERNET,
             Manifest.permission.CALL_PHONE,
-            Manifest.permission.ACCESS_WIFI_STATE
+            Manifest.permission.POST_NOTIFICATIONS
         )
         val neededPermissions = ArrayList<String>()
         for (permission in appPermissions) {
