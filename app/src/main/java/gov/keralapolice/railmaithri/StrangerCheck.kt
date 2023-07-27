@@ -284,8 +284,8 @@ class StrangerCheck : AppCompatActivity() {
         }
 
         val profile   = JSONObject(Helper.getData(this, Storage.PROFILE)!!)
-        val officerID = profile.getJSONArray("user_group_detail").getJSONObject(0).getInt("boundary")
-        formData.put("police_station", officerID)
+        val stationID = profile.getJSONArray("user_group_detail").getJSONObject(0).getInt("boundary")
+        formData.put("police_station", stationID)
         return formData
     }
 

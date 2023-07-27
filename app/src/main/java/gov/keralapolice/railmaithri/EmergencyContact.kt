@@ -1,13 +1,22 @@
 package gov.keralapolice.railmaithri
 
+import android.content.Context
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.view.Gravity
 import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import androidx.constraintlayout.widget.ConstraintLayout
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.json.JSONArray
+import org.json.JSONObject
 
 class EmergencyContact : AppCompatActivity() {
     private lateinit var mode:              String
@@ -37,20 +46,37 @@ class EmergencyContact : AppCompatActivity() {
 
         prepareActionButton()
         renderForm()
+        actionBT.setOnClickListener { performAction() }
+
+        if (mode == Mode.VIEW_FORM || mode == Mode.UPDATE_FORM) {
+            val formData = JSONObject(intent.getStringExtra("data")!!)
+            loadFormData(formData)
+        }
     }
-    private fun prepareActionButton() {
-        if(mode == Mode.NEW_FORM){
-            actionBT.text = "Save"
-            locationUtil.fetchLocation(this)
-        }
-        if(mode == Mode.UPDATE_FORM) {
-            actionBT.text = "Update"
-        }
-        if(mode == Mode.VIEW_FORM) {
-            actionBT.visibility = View.GONE
-        }
-        if(mode == Mode.SEARCH_FORM) {
-            actionBT.text = "Search"
+
+    private fun performAction() {
+        if (mode == Mode.NEW_FORM){
+            val formData = getFormData()
+            if (formData != null) {
+                val utcTime = Helper.getUTC()
+                formData.put("utc_timestamp", utcTime)
+                CoroutineScope(Dispatchers.IO).launch {  sendFormData(formData)  }
+            }
+        } else if (mode == Mode.SEARCH_FORM) {
+            var formData = getFormData()
+            if (formData == null){
+                formData = JSONObject()
+            }
+            val intent = Intent(this, SearchData::class.java)
+            intent.putExtra("search_url", URL.EMERGENCY_CONTACTS)
+            intent.putExtra("parameters", formData.toString())
+            startActivity(intent)
+        } else if (mode == Mode.UPDATE_FORM){
+            val formData = JSONObject(intent.getStringExtra("data")!!)
+            val uuid     = formData.getString("utc_timestamp")
+            getFormData(formData)
+            Helper.saveFormData(this, formData, Storage.EMERGENCY_CONTACTS, uuid)
+            finish()
         }
     }
 
@@ -121,6 +147,120 @@ class EmergencyContact : AppCompatActivity() {
 
         if (mode == Mode.SEARCH_FORM){
             findViewById<ConstraintLayout>(R.id.ly_location).visibility = View.GONE
+        }
+    }
+
+    private fun sendFormData(formData: JSONObject) {
+        Handler(Looper.getMainLooper()).post {
+            actionBT.isClickable  = false
+            progressPB.visibility = View.VISIBLE
+        }
+
+        val token    = Helper.getData(this, Storage.TOKEN)!!
+        val response = Helper.sendFormData(URL.EMERGENCY_CONTACTS, formData, token)
+        Helper.showToast(this, response.second)
+
+        val uuid = formData.getString("utc_timestamp")
+        if (response.first == ResponseType.SUCCESS) {
+            finish()
+        } else if (response.first == ResponseType.NETWORK_ERROR) {
+            Helper.saveFormData(this, formData, Storage.EMERGENCY_CONTACTS, uuid)
+            finish()
+        }
+
+        Handler(Looper.getMainLooper()).post {
+            actionBT.isClickable  = true
+            progressPB.visibility = View.GONE
+        }
+    }
+
+    private fun prepareActionButton() {
+        if(mode == Mode.NEW_FORM){
+            actionBT.text = "Save"
+            locationUtil.fetchLocation(this)
+        }
+        if(mode == Mode.UPDATE_FORM) {
+            actionBT.text = "Update"
+        }
+        if(mode == Mode.VIEW_FORM) {
+            actionBT.visibility = View.GONE
+        }
+        if(mode == Mode.SEARCH_FORM) {
+            actionBT.text = "Search"
+        }
+    }
+
+    private fun getFormData(formData: JSONObject = JSONObject()): JSONObject? {
+        if (mode == Mode.NEW_FORM){
+            if (!locationUtil.haveLocation()) {
+                Helper.showToast(this, "Location is mandatory")
+                return null
+            } else {
+                locationUtil.exportLocation(formData)
+            }
+        }
+
+        try {
+            policeStation.exportData(formData)
+            district.exportData(formData)
+            railwayStation.exportData(formData)
+            category.exportData(formData)
+            name.exportData(formData)
+            mobileNumber.exportData(formData)
+            email.exportData(formData)
+            remarks.exportData(formData)
+        } catch (e: Exception){
+            Helper.showToast(this, e.message!!)
+            return null
+        }
+
+        val profile   = JSONObject(Helper.getData(this, Storage.PROFILE)!!)
+        val stationID = profile.getJSONArray("user_group_detail").getJSONObject(0).getInt("boundary")
+        formData.put("police_station", stationID)
+        return formData
+    }
+
+    private fun loadFormData(formData: JSONObject) {
+        policeStation.importData(formData)
+        district.importData(formData)
+        railwayStation.importData(formData)
+        category.importData(formData)
+        name.importData(formData)
+        mobileNumber.importData(formData)
+        email.importData(formData)
+        remarks.importData(formData)
+
+        val latitude  = formData.getDouble("latitude")
+        val longitude = formData.getDouble("longitude")
+        var accuracy  = 0.0f
+        if (mode == Mode.UPDATE_FORM) {
+            accuracy = formData.getDouble("accuracy").toFloat()
+        }
+        locationUtil.importLocation(latitude, longitude, accuracy)
+        if(mode == Mode.VIEW_FORM){
+            locationUtil.disableUpdate()
+        }
+    }
+
+    companion object{
+        fun generateButton(context: Context, formData: JSONObject, mode: String? = Mode.VIEW_FORM): Button {
+            val formID    = formData.optString("id", "Not assigned")
+            val name      = formData.getString("name")
+            val createdOn = formData.getString("utc_timestamp")
+                .take(16).replace("T", "\t")
+            val shortData = "ID ${formID}\nName: ${name}\nDate: $createdOn"
+
+            val button = Button(context)
+            button.isAllCaps = false
+            button.gravity = Gravity.START
+            button.text = shortData
+            button.setOnClickListener {
+                val intent = Intent(context,  EmergencyContact::class.java)
+                intent.putExtra("mode", mode)
+                intent.putExtra("data", formData.toString())
+                context.startActivity(intent)
+            }
+            return button
         }
     }
 }

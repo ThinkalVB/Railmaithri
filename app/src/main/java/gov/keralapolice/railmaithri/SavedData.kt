@@ -74,6 +74,87 @@ class SavedData : AppCompatActivity() {
             val button = LostProperty.generateButton(this, value, Mode.UPDATE_FORM)
             resultLayout.addView(button)
         }
+
+        val abandonedProperty = loadFormData(this, Storage.ABANDONED_PROPERTY)
+        val apKeys            = abandonedProperty.keys()
+        while (apKeys.hasNext()) {
+            val apKeys = apKeys.next()
+            val value  = abandonedProperty.getJSONObject(apKeys)
+            val button = AbandonedProperty.generateButton(this, value, Mode.UPDATE_FORM)
+            resultLayout.addView(button)
+        }
+
+        val reliablePerson = loadFormData(this, Storage.RELIABLE_PERSON)
+        val rpKeys         = reliablePerson.keys()
+        while (rpKeys.hasNext()) {
+            val rpKeys = rpKeys.next()
+            val value  = reliablePerson.getJSONObject(rpKeys)
+            val button = ReliablePerson.generateButton(this, value, Mode.UPDATE_FORM)
+            resultLayout.addView(button)
+        }
+
+        val emergencyContact = loadFormData(this, Storage.EMERGENCY_CONTACTS)
+        val ecKeys           = emergencyContact.keys()
+        while (ecKeys.hasNext()) {
+            val ecKeys = ecKeys.next()
+            val value  = emergencyContact.getJSONObject(ecKeys)
+            val button = EmergencyContact.generateButton(this, value, Mode.UPDATE_FORM)
+            resultLayout.addView(button)
+        }
+
+        val poi   = loadFormData(this, Storage.POI)
+        val pKeys = poi.keys()
+        while (pKeys.hasNext()) {
+            val pKeys  = pKeys.next()
+            val value  = poi.getJSONObject(pKeys)
+            val button = POI.generateButton(this, value, Mode.UPDATE_FORM)
+            resultLayout.addView(button)
+        }
+
+        val unauthorizedPerson  = loadFormData(this, Storage.UNAUTHORIZED_PEOPLE)
+        val upKeys              = unauthorizedPerson.keys()
+        while (upKeys.hasNext()) {
+            val upKeys  = upKeys.next()
+            val value  = unauthorizedPerson.getJSONObject(upKeys)
+            val button = UnauthorizedPerson.generateButton(this, value, Mode.UPDATE_FORM)
+            resultLayout.addView(button)
+        }
+
+        val crimeMemo   = loadFormData(this, Storage.CRIME_MEMO)
+        val cmKeys      = crimeMemo.keys()
+        while (cmKeys.hasNext()) {
+            val cmKeys  = cmKeys.next()
+            val value   = crimeMemo.getJSONObject(cmKeys)
+            val button  = CrimeMemo.generateButton(this, value, Mode.UPDATE_FORM)
+            resultLayout.addView(button)
+        }
+
+        val surakshaSamithiMember = loadFormData(this, Storage.SURAKSHA_SAMITHI_MEMBERS)
+        val ssKeys                = surakshaSamithiMember.keys()
+        while (ssKeys.hasNext()) {
+            val ssKeys  = ssKeys.next()
+            val value  = surakshaSamithiMember.getJSONObject(ssKeys)
+            val button = SurakshaSamithiMember.generateButton(this, value, Mode.UPDATE_FORM)
+            resultLayout.addView(button)
+        }
+
+        val railVolunteer = loadFormData(this, Storage.RAIL_VOLUNTEER)
+        val rvKeys        = railVolunteer.keys()
+        while (rvKeys.hasNext()) {
+            val rvKeys  = rvKeys.next()
+            val value  = railVolunteer.getJSONObject(rvKeys)
+            val button = RailVolunteer.generateButton(this, value, Mode.UPDATE_FORM)
+            resultLayout.addView(button)
+        }
+
+        val railMaithriMeeting = loadFormData(this, Storage.RAILMAITHRI_MEETING)
+        val rmKeys             = railMaithriMeeting.keys()
+        while (rmKeys.hasNext()) {
+            val rmKeys  = rmKeys.next()
+            val value   = railMaithriMeeting.getJSONObject(rmKeys)
+            val button  = RailMaithriMeeting.generateButton(this, value, Mode.UPDATE_FORM)
+            resultLayout.addView(button)
+        }
     }
 
     private fun syncData() {

@@ -213,6 +213,18 @@ class Home : AppCompatActivity() {
             startActivity(intent)
         }
 
+        // RailMaithri meeting
+        findViewById<ImageView>(R.id.add_railmaithri_meeting).setOnClickListener {
+            val intent = Intent(this, RailMaithriMeeting::class.java)
+            intent.putExtra("mode", Mode.NEW_FORM)
+            startActivity(intent)
+        }
+        findViewById<Button>(R.id.search_railmaithri_meeting).setOnClickListener {
+            val intent = Intent(this, RailMaithriMeeting::class.java)
+            intent.putExtra("mode", Mode.SEARCH_FORM)
+            startActivity(intent)
+        }
+
         startTracking()
     }
 
