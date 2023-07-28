@@ -229,6 +229,19 @@ class Home : AppCompatActivity() {
             startActivity(intent)
         }
 
+        // Beat diary
+        findViewById<ImageView>(R.id.add_beat_diary).setOnClickListener {
+            val intent = Intent(this, BeatDiary::class.java)
+            intent.putExtra("mode", Mode.NEW_FORM)
+            startActivity(intent)
+        }
+        findViewById<Button>(R.id.search_beat_diary).setOnClickListener {
+            val intent = Intent(this, SearchData::class.java)
+            intent.putExtra("search_url", URL.BEAT_DIARY)
+            intent.putExtra("parameters", JSONObject().toString())
+            startActivity(intent)
+        }
+
         startTracking()
     }
 
@@ -300,7 +313,6 @@ class Home : AppCompatActivity() {
             val intent = Intent(applicationContext, TrackingService::class.java)
             intent.action = "stopLocationService"
             startService(intent)
-            Toast.makeText(this, "Location service stopped", Toast.LENGTH_SHORT).show()
         }
     }
 

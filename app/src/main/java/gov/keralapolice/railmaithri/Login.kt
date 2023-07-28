@@ -73,6 +73,7 @@ class Login : AppCompatActivity() {
         data.put("password", password)
         data.put("device_id", deviceID.toString())
         data.put("app_version", App.APP_VERSION)
+        data.put("fcm_token", "no_token")
 
         try {
             val request  = API.post(URL.MOBILE_LOGIN, data, null)

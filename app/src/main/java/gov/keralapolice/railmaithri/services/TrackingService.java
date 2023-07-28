@@ -88,7 +88,9 @@ public class TrackingService extends Service {
     }
 
     private void stopLocationService() {
-        locationManager.removeUpdates(listener);
+        if (locationManager != null){
+            locationManager.removeUpdates(listener);
+        }
         stopForeground(true);
         stopSelf();
     }

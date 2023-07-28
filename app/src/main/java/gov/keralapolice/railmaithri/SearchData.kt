@@ -110,6 +110,8 @@ class SearchData : AppCompatActivity() {
                 button = RailVolunteer.generateButton(this, formDatum)
             }else if (searchURL == URL.RAILMAITHRI_MEETING){
                 button = RailMaithriMeeting.generateButton(this, formDatum)
+            } else if (searchURL == URL.BEAT_DIARY){
+                button = BeatDiary.generateButton(this, formDatum)
             }
             resultLayout.addView(button)
         }

@@ -76,7 +76,7 @@ class RailMaithriMeeting : AppCompatActivity() {
     private fun renderForm() {
         meetingType = FieldSpinner(
             this,
-            JSONArray(Helper.getData(this, Storage.RAILMAITHRI_MEETING)!!),
+            JSONArray(Helper.getData(this, Storage.MEETING_TYPES)!!),
             "meeting_type",
             "Meeting type",
             addEmptyValue = Helper.resolveAddEmptyValue(false, mode),

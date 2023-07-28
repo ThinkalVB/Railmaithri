@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
@@ -155,6 +156,15 @@ class SavedData : AppCompatActivity() {
             val button  = RailMaithriMeeting.generateButton(this, value, Mode.UPDATE_FORM)
             resultLayout.addView(button)
         }
+
+        val beatDiary = loadFormData(this, Storage.BEAT_DIARY)
+        val bdKeys    = beatDiary.keys()
+        while (bdKeys.hasNext()) {
+            val bdKeys  = bdKeys.next()
+            val value   = beatDiary.getJSONObject(bdKeys)
+            val button  = BeatDiary.generateButton(this, value, Mode.UPDATE_FORM)
+            resultLayout.addView(button)
+        }
     }
 
     private fun syncData() {
@@ -184,7 +194,139 @@ class SavedData : AppCompatActivity() {
             }
         }
 
-        if (dataCount == 0){
+        val intelligenceInformation = loadFormData(this, Storage.INTELLIGENCE_INFORMATION)
+        val ifKeys                  = intelligenceInformation.keys()
+        while (ifKeys.hasNext()) {
+            dataCount++
+            val ifKeys    = ifKeys.next()
+            val formData  = intelligenceInformation.getJSONObject(ifKeys)
+            CoroutineScope(Dispatchers.IO).launch {
+                sendFormData(URL.INTELLIGENCE_INFORMATION, Storage.INTELLIGENCE_INFORMATION, formData, token)
+            }
+        }
+
+        val lostProperty = loadFormData(this, Storage.LOST_PROPERTY)
+        val lpKeys       = lostProperty.keys()
+        while (lpKeys.hasNext()) {
+            dataCount++
+            val lpKeys    = lpKeys.next()
+            val formData  = lostProperty.getJSONObject(lpKeys)
+            CoroutineScope(Dispatchers.IO).launch {
+                sendFormData(URL.LOST_PROPERTY, Storage.LOST_PROPERTY, formData, token)
+            }
+        }
+
+        val abandonedProperty = loadFormData(this, Storage.ABANDONED_PROPERTY)
+        val apKeys            = abandonedProperty.keys()
+        while (apKeys.hasNext()) {
+            dataCount++
+            val apKeys    = apKeys.next()
+            val formData  = abandonedProperty.getJSONObject(apKeys)
+            CoroutineScope(Dispatchers.IO).launch {
+                sendFormData(URL.ABANDONED_PROPERTY, Storage.ABANDONED_PROPERTY, formData, token)
+            }
+        }
+
+        val reliablePerson = loadFormData(this, Storage.RELIABLE_PERSON)
+        val rpKeys         = reliablePerson.keys()
+        while (rpKeys.hasNext()) {
+            dataCount++
+            val rpKeys    = rpKeys.next()
+            val formData  = reliablePerson.getJSONObject(rpKeys)
+            CoroutineScope(Dispatchers.IO).launch {
+                sendFormData(URL.RELIABLE_PERSON, Storage.RELIABLE_PERSON, formData, token)
+            }
+        }
+
+        val emergencyContact = loadFormData(this, Storage.EMERGENCY_CONTACTS)
+        val ecKeys           = emergencyContact.keys()
+        while (ecKeys.hasNext()) {
+            dataCount++
+            val ecKeys    = ecKeys.next()
+            val formData  = emergencyContact.getJSONObject(ecKeys)
+            CoroutineScope(Dispatchers.IO).launch {
+                sendFormData(URL.EMERGENCY_CONTACTS, Storage.EMERGENCY_CONTACTS, formData, token)
+            }
+        }
+
+        val poi   = loadFormData(this, Storage.POI)
+        val pKeys = poi.keys()
+        while (pKeys.hasNext()) {
+            dataCount++
+            val pKeys     = pKeys.next()
+            val formData  = poi.getJSONObject(pKeys)
+            CoroutineScope(Dispatchers.IO).launch {
+                sendFormData(URL.POI, Storage.POI, formData, token)
+            }
+        }
+
+        val unauthorizedPerson  = loadFormData(this, Storage.UNAUTHORIZED_PEOPLE)
+        val upKeys              = unauthorizedPerson.keys()
+        while (upKeys.hasNext()) {
+            dataCount++
+            val upKeys    = upKeys.next()
+            val formData  = unauthorizedPerson.getJSONObject(upKeys)
+            CoroutineScope(Dispatchers.IO).launch {
+                sendFormData(URL.UNAUTHORIZED_PEOPLE, Storage.UNAUTHORIZED_PEOPLE, formData, token)
+            }
+        }
+
+        val crimeMemo   = loadFormData(this, Storage.CRIME_MEMO)
+        val cmKeys      = crimeMemo.keys()
+        while (cmKeys.hasNext()) {
+            dataCount++
+            val cmKeys     = cmKeys.next()
+            val formData   = crimeMemo.getJSONObject(cmKeys)
+            CoroutineScope(Dispatchers.IO).launch {
+                sendFormData(URL.CRIME_MEMO, Storage.CRIME_MEMO, formData, token)
+            }
+        }
+
+        val surakshaSamithiMember = loadFormData(this, Storage.SURAKSHA_SAMITHI_MEMBERS)
+        val ssKeys                = surakshaSamithiMember.keys()
+        while (ssKeys.hasNext()) {
+            dataCount++
+            val ssKeys    = ssKeys.next()
+            val formData  = surakshaSamithiMember.getJSONObject(ssKeys)
+            CoroutineScope(Dispatchers.IO).launch {
+                sendFormData(URL.SURAKSHA_SAMITHI_MEMBERS, Storage.SURAKSHA_SAMITHI_MEMBERS, formData, token)
+            }
+        }
+
+        val railVolunteer = loadFormData(this, Storage.RAIL_VOLUNTEER)
+        val rvKeys        = railVolunteer.keys()
+        while (rvKeys.hasNext()) {
+            dataCount++
+            val rvKeys    = rvKeys.next()
+            val formData  = railVolunteer.getJSONObject(rvKeys)
+            CoroutineScope(Dispatchers.IO).launch {
+                sendFormData(URL.RAIL_VOLUNTEER, Storage.RAIL_VOLUNTEER, formData, token)
+            }
+        }
+
+        val railMaithriMeeting = loadFormData(this, Storage.RAILMAITHRI_MEETING)
+        val rmKeys             = railMaithriMeeting.keys()
+        while (rmKeys.hasNext()) {
+            dataCount++
+            val rmKeys    = rmKeys.next()
+            val formData  = railMaithriMeeting.getJSONObject(rmKeys)
+            CoroutineScope(Dispatchers.IO).launch {
+                sendFormData(URL.RAILMAITHRI_MEETING, Storage.RAILMAITHRI_MEETING, formData, token)
+            }
+        }
+
+        val beatDiary = loadFormData(this, Storage.BEAT_DIARY)
+        val bdKeys    = beatDiary.keys()
+        while (bdKeys.hasNext()) {
+            dataCount++
+            val bdKeys    = bdKeys.next()
+            val formData  = beatDiary.getJSONObject(bdKeys)
+            CoroutineScope(Dispatchers.IO).launch {
+                sendFormData(URL.BEAT_DIARY, Storage.BEAT_DIARY, formData, token)
+            }
+        }
+
+        if (dataCount == 0) {
             syncBT.isClickable    = true
             progressPB.visibility = View.GONE
         }
@@ -207,7 +349,8 @@ class SavedData : AppCompatActivity() {
                 fieldLabel = "photo"
             }
             else -> {
-                return false
+                uuid       = formData.getString("utc_timestamp")
+                fieldLabel = "photo"
             }
         }
 
