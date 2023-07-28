@@ -242,6 +242,19 @@ class Home : AppCompatActivity() {
             startActivity(intent)
         }
 
+        // Shop and labours
+        findViewById<ImageView>(R.id.add_shop_and_labours).setOnClickListener {
+            val intent = Intent(this, ShopAndLabours::class.java)
+            intent.putExtra("mode", Mode.NEW_FORM)
+            startActivity(intent)
+        }
+        findViewById<Button>(R.id.search_shop_and_labours).setOnClickListener {
+            val intent = Intent(this, SearchData::class.java)
+            intent.putExtra("search_url", URL.SHOPS)
+            intent.putExtra("parameters", JSONObject().toString())
+            startActivity(intent)
+        }
+
         // Watch zone
         findViewById<ImageView>(R.id.watch_zone).setOnClickListener {
             val intent = Intent(this, WatchZone::class.java)
