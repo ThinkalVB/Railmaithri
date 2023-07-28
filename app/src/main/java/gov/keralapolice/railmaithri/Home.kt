@@ -242,6 +242,12 @@ class Home : AppCompatActivity() {
             startActivity(intent)
         }
 
+        // Watch zone
+        findViewById<ImageView>(R.id.watch_zone).setOnClickListener {
+            val intent = Intent(this, WatchZone::class.java)
+            startActivity(intent)
+        }
+
         startTracking()
     }
 
