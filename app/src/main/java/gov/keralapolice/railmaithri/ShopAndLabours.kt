@@ -2,7 +2,6 @@ package gov.keralapolice.railmaithri
 
 import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -11,6 +10,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.ProgressBar
+import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -49,6 +49,11 @@ class ShopAndLabours : AppCompatActivity() {
         prepareActionButton()
         renderForm()
         actionBT.setOnClickListener { performAction() }
+        addLaboursBT.setOnClickListener {
+            val intent = Intent(this, Labour::class.java)
+            intent.putExtra("mode", Mode.NEW_FORM)
+            startActivityForResult(intent, 1000)
+        }
 
         if (mode == Mode.VIEW_FORM || mode == Mode.UPDATE_FORM) {
             val formData = JSONObject(intent.getStringExtra("data")!!)
@@ -194,32 +199,32 @@ class ShopAndLabours : AppCompatActivity() {
         aadhaarNumber = FieldEditText(this,
             fieldType = "number",
             fieldLabel = "aadhar_number",
-            fieldName = "Aadhaar Number",
+            fieldName = "Aadhaar number",
             isRequired = Helper.resolveIsRequired(true, mode)
         )
         mobileNumber = FieldEditText(this,
             fieldType = "number",
             fieldLabel = "contact_number",
-            fieldName = "Mobile Number",
+            fieldName = "Mobile number",
             isRequired = Helper.resolveIsRequired(true, mode)
         )
         licenseNumber = FieldEditText(this,
             fieldType = "number",
             fieldLabel = "licence_number",
-            fieldName = "License Number",
+            fieldName = "License number",
             isRequired = Helper.resolveIsRequired(true, mode)
         )
         railwayStation = FieldSpinner(this,
             JSONArray(Helper.getData(this, Storage.RAILWAY_STATIONS_LIST)!!),
             "railway_station",
-            "Railway Station",
+            "Railway station",
             addEmptyValue = Helper.resolveAddEmptyValue(false, mode),
             isRequired = Helper.resolveIsRequired(true, mode)
         )
         platformNumber = FieldEditText(this,
             fieldType = "number",
             fieldLabel = "platform_number",
-            fieldName = "Platform Number",
+            fieldName = "Platform number",
             isRequired = Helper.resolveIsRequired(true, mode)
         )
 
@@ -258,6 +263,16 @@ class ShopAndLabours : AppCompatActivity() {
                 context.startActivity(intent)
             }
             return button
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, resultIntent: Intent?) {
+        super.onActivityResult(requestCode, resultCode, intent)
+
+        if (requestCode == 1000 && resultCode == RESULT_OK) {
+            val labourDatum = JSONObject(resultIntent!!.getStringExtra("data")!!)
+            val form        = findViewById<LinearLayout>(R.id.form)
+            form.addView(Labour.generateButton(this, labourDatum, Mode.VIEW_FORM))
         }
     }
 }
