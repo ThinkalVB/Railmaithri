@@ -8,11 +8,9 @@ import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.ProgressBar
+import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -29,7 +27,10 @@ class Labour : AppCompatActivity() {
     private lateinit var address:               FieldEditText
     private lateinit var nativePoliceStation:   FieldEditText
     private lateinit var nativeState:           FieldSpinner
-    private lateinit var migrantOrNot:          FieldEditText
+    private lateinit var migrantOrNot:          Spinner
+
+    private val YES = 0
+    private val NO  = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,6 +40,7 @@ class Labour : AppCompatActivity() {
         mode         = intent.getStringExtra("mode")!!
         progressPB   = findViewById(R.id.progress_bar)
         actionBT     = findViewById(R.id.action)
+        migrantOrNot = findViewById(R.id.is_migrant_labour)
 
         fileUtil     = FileUtil(this, findViewById(R.id.ly_file), "photo")
 
@@ -94,7 +96,14 @@ class Labour : AppCompatActivity() {
         address.importData(formData)
         nativePoliceStation.importData(formData)
         nativeState.importData(formData)
-        migrantOrNot.importData(formData)
+        when (formData.getBoolean("migrant_or_not")) {
+            true -> {
+                migrantOrNot.setSelection(YES)
+            }
+            false -> {
+                migrantOrNot.setSelection(NO)
+            }
+        }
 
         if (mode == Mode.VIEW_FORM && formData.getBoolean("__have_file")){
             val uuid     = formData.getString("utc_timestamp")
@@ -112,7 +121,14 @@ class Labour : AppCompatActivity() {
             address.exportData(formData)
             nativePoliceStation.exportData(formData)
             nativeState.exportData(formData)
-            migrantOrNot.exportData(formData)
+            when (migrantOrNot.selectedItemPosition) {
+                YES -> {
+                    formData.put("migrant_or_not", true)
+                }
+                NO -> {
+                    formData.put("migrant_or_not", false)
+                }
+            }
         } catch (e: Exception){
             Helper.showToast(this, e.message!!)
             return null
@@ -155,7 +171,7 @@ class Labour : AppCompatActivity() {
         )
         nativeState = FieldSpinner(this,
             JSONArray(Helper.getData(this, Storage.STATES_LIST)!!),
-            "native_police_station",
+            "native_state",
             "Native state",
             addEmptyValue = Helper.resolveAddEmptyValue(false, mode),
             isRequired = Helper.resolveIsRequired(true, mode)
@@ -164,12 +180,6 @@ class Labour : AppCompatActivity() {
             fieldType  = "text",
             fieldLabel = "native_police_station",
             fieldName  = "Native police station",
-            isRequired = Helper.resolveIsRequired(true, mode)
-        )
-        migrantOrNot = FieldEditText(this,
-            fieldType = "boolean",
-            fieldLabel = "migrant_or_not",
-            fieldName = "Migrant or not",
             isRequired = Helper.resolveIsRequired(true, mode)
         )
 
@@ -181,7 +191,6 @@ class Labour : AppCompatActivity() {
         form.addView(address.getLayout())
         form.addView(nativePoliceStation.getLayout())
         form.addView(nativeState.getLayout())
-        form.addView(migrantOrNot.getLayout())
 
         if (mode == Mode.SEARCH_FORM){
             findViewById<ConstraintLayout>(R.id.ly_location).visibility = View.GONE

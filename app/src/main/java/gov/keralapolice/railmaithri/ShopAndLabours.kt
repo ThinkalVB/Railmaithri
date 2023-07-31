@@ -16,8 +16,6 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import okhttp3.OkHttpClient
-import okhttp3.Request
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -103,6 +101,8 @@ class ShopAndLabours : AppCompatActivity() {
 
         val uuid = formData.getString("utc_timestamp")
         if (response.first == ResponseType.SUCCESS) {
+            val shopID = JSONObject(response.second).getInt("id")
+            sendLabourData(shopID, token)
             Helper.showToast(this, "success")
             finish()
         } else if (response.first == ResponseType.NETWORK_ERROR) {
@@ -113,6 +113,24 @@ class ShopAndLabours : AppCompatActivity() {
         Handler(Looper.getMainLooper()).post {
             actionBT.isClickable  = true
             progressPB.visibility = View.GONE
+        }
+    }
+
+    private fun sendLabourData(shopID: Int, token: String) {
+        for (i in 0 until labourData.length()) {
+            val labourDatum = labourData.getJSONObject(i)
+            labourDatum.put("shop", shopID)
+
+            if (labourDatum.getBoolean("__have_file")){
+                val uuid     = labourDatum.getString("utc_timestamp")
+                val fileName = labourDatum.getString("__file_name")
+                val file     = Helper.loadFile(this, uuid)
+                val response = Helper.sendFormData(URL.LABOURS, labourDatum, token, null, file, fileName, "photo")
+                Log.e("Railmaithri", response.toString())
+            } else {
+                val response = Helper.sendFormData(URL.LABOURS, labourDatum, token)
+                Log.e("Railmaithri", response.toString())
+            }
         }
     }
 
