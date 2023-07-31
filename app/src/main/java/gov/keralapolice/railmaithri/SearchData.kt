@@ -114,6 +114,8 @@ class SearchData : AppCompatActivity() {
                 button = BeatDiary.generateButton(this, formDatum)
             }  else if (searchURL == URL.INCIDENT_REPORT){
                 button = IncidentReport.generateButton(this, formDatum)
+            } else if (searchURL == URL.SHOPS){
+                button = ShopAndLabours.generateButton(this, formDatum)
             }
             resultLayout.addView(button)
         }

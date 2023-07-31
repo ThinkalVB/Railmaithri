@@ -249,9 +249,8 @@ class Home : AppCompatActivity() {
             startActivity(intent)
         }
         findViewById<Button>(R.id.search_shop_and_labours).setOnClickListener {
-            val intent = Intent(this, SearchData::class.java)
-            intent.putExtra("search_url", URL.SHOPS)
-            intent.putExtra("parameters", JSONObject().toString())
+            val intent = Intent(this, ShopAndLabours::class.java)
+            intent.putExtra("mode", Mode.SEARCH_FORM)
             startActivity(intent)
         }
 

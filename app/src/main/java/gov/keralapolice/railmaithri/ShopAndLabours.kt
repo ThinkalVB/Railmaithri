@@ -1,8 +1,12 @@
 package gov.keralapolice.railmaithri
 
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.view.Gravity
 import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
@@ -18,6 +22,7 @@ class ShopAndLabours : AppCompatActivity() {
     private lateinit var mode:              String
     private lateinit var progressPB:        ProgressBar
     private lateinit var actionBT:          Button
+    private lateinit var addLaboursBT:      Button
 
     private lateinit var locationUtil:      LocationUtil
     private lateinit var shopCategory:      FieldSpinner
@@ -37,17 +42,117 @@ class ShopAndLabours : AppCompatActivity() {
         mode         = intent.getStringExtra("mode")!!
         progressPB   = findViewById(R.id.progress_bar)
         actionBT     = findViewById(R.id.action)
+        addLaboursBT = findViewById(R.id.add_labours)
 
         locationUtil = LocationUtil(this, findViewById(R.id.ly_location))
 
         prepareActionButton()
         renderForm()
-//        actionBT.setOnClickListener { performAction() }
-//
-//        if (mode == Mode.VIEW_FORM || mode == Mode.UPDATE_FORM) {
-//            val formData = JSONObject(intent.getStringExtra("data")!!)
-//            loadFormData(formData)
-//        }
+        actionBT.setOnClickListener { performAction() }
+
+        if (mode == Mode.VIEW_FORM || mode == Mode.UPDATE_FORM) {
+            val formData = JSONObject(intent.getStringExtra("data")!!)
+            loadFormData(formData)
+        }
+    }
+
+    private fun performAction() {
+        if (mode == Mode.NEW_FORM){
+            val formData = getFormData()
+            if (formData != null) {
+                val utcTime = Helper.getUTC()
+                formData.put("utc_timestamp", utcTime)
+                formData.put("data_from", "Beat Officer")
+                CoroutineScope(Dispatchers.IO).launch {  sendFormData(formData)  }
+            }
+        } else if (mode == Mode.SEARCH_FORM) {
+            var formData = getFormData()
+            if (formData == null) {
+                formData = JSONObject()
+            }
+            val intent = Intent(this, SearchData::class.java)
+            intent.putExtra("search_url", URL.SHOPS)
+            intent.putExtra("parameters", formData.toString())
+            startActivity(intent)
+        } else if (mode == Mode.UPDATE_FORM){
+            val formData = JSONObject(intent.getStringExtra("data")!!)
+            val uuid     = formData.getString("utc_timestamp")
+            getFormData(formData)
+            Helper.saveFormData(this, formData, Storage.SHOPS, uuid)
+            finish()
+        }
+    }
+
+    private fun sendFormData(formData: JSONObject) {
+        Handler(Looper.getMainLooper()).post {
+            actionBT.isClickable  = false
+            progressPB.visibility = View.VISIBLE
+        }
+
+        val token    = Helper.getData(this, Storage.TOKEN)!!
+        val response = Helper.sendFormData(URL.SHOPS, formData, token)
+        Helper.showToast(this, response.second)
+
+        val uuid = formData.getString("utc_timestamp")
+        if (response.first == ResponseType.SUCCESS) {
+            finish()
+        } else if (response.first == ResponseType.NETWORK_ERROR) {
+            Helper.saveFormData(this, formData, Storage.SHOPS, uuid)
+            finish()
+        }
+
+        Handler(Looper.getMainLooper()).post {
+            actionBT.isClickable  = true
+            progressPB.visibility = View.GONE
+        }
+    }
+
+    private fun getFormData(formData: JSONObject = JSONObject()): JSONObject? {
+        if (mode == Mode.NEW_FORM){
+            if (!locationUtil.haveLocation()) {
+                Helper.showToast(this, "Location is mandatory")
+                return null
+            } else {
+                locationUtil.exportLocation(formData)
+            }
+        }
+
+        try{
+            shopCategory.exportData(formData)
+            shopName.exportData(formData)
+            ownerName.exportData(formData)
+            aadhaarNumber.exportData(formData)
+            mobileNumber.exportData(formData)
+            licenseNumber.exportData(formData)
+            railwayStation.exportData(formData)
+            platformNumber.exportData(formData)
+        } catch (e: Exception){
+            Helper.showToast(this, e.message!!)
+            return null
+        }
+        return formData
+    }
+
+    private fun loadFormData(formData: JSONObject) {
+        shopCategory.importData(formData)
+        shopName.importData(formData)
+        ownerName.importData(formData)
+        aadhaarNumber.importData(formData)
+        mobileNumber.importData(formData)
+        licenseNumber.importData(formData)
+        railwayStation.importData(formData)
+        platformNumber.importData(formData)
+
+        val latitude  = formData.getDouble("latitude")
+        val longitude = formData.getDouble("longitude")
+        var accuracy  = 0.0f
+        if (mode == Mode.UPDATE_FORM) {
+            accuracy = formData.getDouble("accuracy").toFloat()
+        }
+        locationUtil.importLocation(latitude, longitude, accuracy)
+        if(mode == Mode.VIEW_FORM){
+            locationUtil.disableUpdate()
+        }
     }
 
     private fun prepareActionButton() {
@@ -130,6 +235,29 @@ class ShopAndLabours : AppCompatActivity() {
 
         if (mode == Mode.SEARCH_FORM){
             findViewById<ConstraintLayout>(R.id.ly_location).visibility = View.GONE
+            addLaboursBT.visibility = View.GONE
+        }
+    }
+
+    companion object{
+        fun generateButton(context: Context, formData: JSONObject, mode: String? = Mode.VIEW_FORM): Button {
+            val formID      = formData.optString("id", "Not assigned")
+            val shopName    = formData.getString("name")
+            val createdOn   = formData.getString("utc_timestamp")
+                .take(16).replace("T", "\t")
+            val shortData = "ID ${formID}\nName: ${shopName}\nDate: $createdOn"
+
+            val button = Button(context)
+            button.isAllCaps = false
+            button.gravity = Gravity.START
+            button.text = shortData
+            button.setOnClickListener {
+                val intent = Intent(context,  ShopAndLabours::class.java)
+                intent.putExtra("mode", mode)
+                intent.putExtra("data", formData.toString())
+                context.startActivity(intent)
+            }
+            return button
         }
     }
 }

@@ -4,7 +4,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
@@ -172,6 +171,15 @@ class SavedData : AppCompatActivity() {
             val irKeys  = irKeys.next()
             val value   = incidentReport.getJSONObject(irKeys)
             val button  = IncidentReport.generateButton(this, value, Mode.UPDATE_FORM)
+            resultLayout.addView(button)
+        }
+
+        val shopAndLabours  = loadFormData(this, Storage.SHOPS)
+        val shKeys          = shopAndLabours.keys()
+        while (shKeys.hasNext()) {
+            val shKeys  = shKeys.next()
+            val value   = shopAndLabours.getJSONObject(shKeys)
+            val button  = ShopAndLabours.generateButton(this, value, Mode.UPDATE_FORM)
             resultLayout.addView(button)
         }
     }
@@ -343,6 +351,17 @@ class SavedData : AppCompatActivity() {
             val formData  = incidentReport.getJSONObject(irKeys)
             CoroutineScope(Dispatchers.IO).launch {
                 sendFormData(URL.INCIDENT_REPORT, Storage.INCIDENT_REPORT, formData, token)
+            }
+        }
+
+        val shopAndLabours  = loadFormData(this, Storage.SHOPS)
+        val shKeys          = shopAndLabours.keys()
+        while (shKeys.hasNext()) {
+            dataCount++
+            val shKeys    = shKeys.next()
+            val formData  = shopAndLabours.getJSONObject(shKeys)
+            CoroutineScope(Dispatchers.IO).launch {
+                sendFormData(URL.SHOPS, Storage.SHOPS, formData, token)
             }
         }
 
