@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.widget.AdapterView
@@ -71,7 +70,6 @@ class IncidentReport : AppCompatActivity() {
     }
 
     private fun loadFormData(formData: JSONObject) {
-        Log.e("Railmaithri", formData.toString())
         when (formData.getString("incident_type")) {
             "Platform" -> {
                 incidentType.setSelection(PLATFORM)

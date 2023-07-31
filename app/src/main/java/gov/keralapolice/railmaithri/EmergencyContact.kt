@@ -215,7 +215,7 @@ class EmergencyContact : AppCompatActivity() {
         }
 
         val profile   = JSONObject(Helper.getData(this, Storage.PROFILE)!!)
-        val stationID = profile.getJSONArray("user_group_detail").getJSONObject(0).getInt("boundary")
+        val stationID = profile.getJSONArray("police_station").getJSONObject(0).getInt("id")
         formData.put("police_station", stationID)
         return formData
     }
