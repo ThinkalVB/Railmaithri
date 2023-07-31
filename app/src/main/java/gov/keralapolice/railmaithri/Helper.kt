@@ -167,7 +167,7 @@ class Helper {
                 val clientNT  = OkHttpClient().newBuilder().build()
                 val response  = clientNT.newCall(request).execute()
                 if (response.isSuccessful) {
-                    Pair(ResponseType.SUCCESS, "Success")
+                    Pair(ResponseType.SUCCESS, response.body!!.string())
                 } else {
                     val errorMessage = getError(response.body!!.string())
                     Pair(ResponseType.API_ERROR, errorMessage)

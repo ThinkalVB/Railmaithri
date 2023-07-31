@@ -124,10 +124,10 @@ class ReliablePerson : AppCompatActivity() {
 
         val token    = Helper.getData(this, Storage.TOKEN)!!
         val response = Helper.sendFormData(URL.RELIABLE_PERSON, formData, token)
-        Helper.showToast(this, response.second)
 
         val uuid = formData.getString("utc_timestamp")
         if (response.first == ResponseType.SUCCESS) {
+            Helper.showToast(this, "success")
             finish()
         } else if (response.first == ResponseType.NETWORK_ERROR) {
             Helper.saveFormData(this, formData, Storage.RELIABLE_PERSON, uuid)

@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.widget.Button
@@ -15,6 +16,8 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import okhttp3.OkHttpClient
+import okhttp3.Request
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -33,6 +36,7 @@ class ShopAndLabours : AppCompatActivity() {
     private lateinit var licenseNumber:     FieldEditText
     private lateinit var railwayStation:    FieldSpinner
     private lateinit var platformNumber:    FieldEditText
+    private var labourData                  = JSONArray()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -96,10 +100,10 @@ class ShopAndLabours : AppCompatActivity() {
 
         val token    = Helper.getData(this, Storage.TOKEN)!!
         val response = Helper.sendFormData(URL.SHOPS, formData, token)
-        Helper.showToast(this, response.second)
 
         val uuid = formData.getString("utc_timestamp")
         if (response.first == ResponseType.SUCCESS) {
+            Helper.showToast(this, "success")
             finish()
         } else if (response.first == ResponseType.NETWORK_ERROR) {
             Helper.saveFormData(this, formData, Storage.SHOPS, uuid)
@@ -273,6 +277,7 @@ class ShopAndLabours : AppCompatActivity() {
             val labourDatum = JSONObject(resultIntent!!.getStringExtra("data")!!)
             val form        = findViewById<LinearLayout>(R.id.form)
             form.addView(Labour.generateButton(this, labourDatum, Mode.VIEW_FORM))
+            labourData.put(labourDatum)
         }
     }
 }

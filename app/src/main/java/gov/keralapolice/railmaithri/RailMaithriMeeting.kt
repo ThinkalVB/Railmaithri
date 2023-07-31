@@ -129,10 +129,10 @@ class RailMaithriMeeting : AppCompatActivity() {
 
         val token    = Helper.getData(this, Storage.TOKEN)!!
         val response = Helper.sendFormData(URL.RAILMAITHRI_MEETING, formData, token)
-        Helper.showToast(this, response.second)
 
         val uuid = formData.getString("utc_timestamp")
         if (response.first == ResponseType.SUCCESS) {
+            Helper.showToast(this, "success")
             finish()
         } else if (response.first == ResponseType.NETWORK_ERROR) {
             Helper.saveFormData(this, formData, Storage.RAILMAITHRI_MEETING, uuid)
