@@ -1,6 +1,5 @@
 package gov.keralapolice.railmaithri
 
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -8,30 +7,27 @@ import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import androidx.constraintlayout.widget.ConstraintLayout
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import org.json.JSONArray
-import org.json.JSONObject
 
-class ShopAndLabours : AppCompatActivity() {
+class IncidentReport : AppCompatActivity() {
     private lateinit var mode:              String
     private lateinit var progressPB:        ProgressBar
     private lateinit var actionBT:          Button
 
     private lateinit var locationUtil:      LocationUtil
-    private lateinit var shopCategory:      FieldSpinner
-    private lateinit var shopName:          FieldEditText
-    private lateinit var ownerName:         FieldEditText
-    private lateinit var aadhaarNumber:     FieldEditText
-    private lateinit var mobileNumber:      FieldEditText
-    private lateinit var licenseNumber:     FieldEditText
+    private lateinit var fileUtil:          FileUtil
+    private lateinit var incidentType:      FieldSpinner
     private lateinit var railwayStation:    FieldSpinner
     private lateinit var platformNumber:    FieldEditText
+    private lateinit var tracklocation:     FieldEditText
+    private lateinit var train:             FieldSpinner
+    private lateinit var coachNumber:       FieldEditText
+    private lateinit var contactNumber:     FieldEditText
+    private lateinit var details:           FieldEditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.shop_and_labours)
+        setContentView(R.layout.incident_report)
         supportActionBar!!.hide()
 
         mode         = intent.getStringExtra("mode")!!
@@ -39,15 +35,10 @@ class ShopAndLabours : AppCompatActivity() {
         actionBT     = findViewById(R.id.action)
 
         locationUtil = LocationUtil(this, findViewById(R.id.ly_location))
+        fileUtil     = FileUtil(this, findViewById(R.id.ly_file), "photo")
 
         prepareActionButton()
         renderForm()
-//        actionBT.setOnClickListener { performAction() }
-//
-//        if (mode == Mode.VIEW_FORM || mode == Mode.UPDATE_FORM) {
-//            val formData = JSONObject(intent.getStringExtra("data")!!)
-//            loadFormData(formData)
-//        }
     }
 
     private fun prepareActionButton() {
@@ -67,41 +58,11 @@ class ShopAndLabours : AppCompatActivity() {
     }
 
     private fun renderForm() {
-        shopCategory = FieldSpinner(this,
-            JSONArray(Helper.getData(this, Storage.SHOP_TYPES)!!),
-            "shop_category",
-            "Shop category",
+        incidentType = FieldSpinner(this,
+            JSONArray(Helper.getData(this, Storage.INCIDENT_REPORT)!!),
+            "incident_type",
+            "Incident Type",
             addEmptyValue = Helper.resolveAddEmptyValue(false, mode),
-            isRequired = Helper.resolveIsRequired(true, mode)
-        )
-        shopName = FieldEditText(this,
-            fieldType = "text",
-            fieldLabel = "name",
-            fieldName = "Shop name",
-            isRequired = Helper.resolveIsRequired(true, mode)
-        )
-        ownerName = FieldEditText(this,
-            fieldType = "text",
-            fieldLabel = "owner_name",
-            fieldName = "Owner name",
-            isRequired = Helper.resolveIsRequired(true, mode)
-        )
-        aadhaarNumber = FieldEditText(this,
-            fieldType = "number",
-            fieldLabel = "aadhar_number",
-            fieldName = "Aadhaar Number",
-            isRequired = Helper.resolveIsRequired(true, mode)
-        )
-        mobileNumber = FieldEditText(this,
-            fieldType = "number",
-            fieldLabel = "contact_number",
-            fieldName = "Mobile Number",
-            isRequired = Helper.resolveIsRequired(true, mode)
-        )
-        licenseNumber = FieldEditText(this,
-            fieldType = "number",
-            fieldLabel = "licence_number",
-            fieldName = "License Number",
             isRequired = Helper.resolveIsRequired(true, mode)
         )
         railwayStation = FieldSpinner(this,
@@ -117,16 +78,49 @@ class ShopAndLabours : AppCompatActivity() {
             fieldName = "Platform Number",
             isRequired = Helper.resolveIsRequired(true, mode)
         )
+        tracklocation = FieldEditText(this,
+            fieldType = "text",
+            fieldLabel = "track_location",
+            fieldName = "Track Location",
+            isRequired = Helper.resolveIsRequired(true, mode)
+        )
+        train = FieldSpinner(this,
+            JSONArray(Helper.getData(this, Storage.TRAINS_LIST)!!),
+            "train",
+            "Train",
+            addEmptyValue = Helper.resolveAddEmptyValue(false, mode),
+            isRequired = Helper.resolveIsRequired(true, mode)
+        )
+        coachNumber = FieldEditText(this,
+            fieldType = "number",
+            fieldLabel = "coach_number",
+            fieldName = "Coach Number",
+            isRequired = Helper.resolveIsRequired(true, mode)
+        )
+        contactNumber = FieldEditText(this,
+            fieldType = "number",
+            fieldLabel = "coach_number",
+            fieldName = "mobile_number",
+            isRequired = Helper.resolveIsRequired(true, mode)
+        )
+        details = FieldEditText(this,
+            fieldType = "multiline",
+            fieldLabel = "platform_number",
+            fieldHeight= 98,
+            fieldName = "details",
+
+            isRequired = Helper.resolveIsRequired(true, mode)
+        )
 
         val form = findViewById<LinearLayout>(R.id.form)
-        form.addView(shopCategory.getLayout())
-        form.addView(shopName.getLayout())
-        form.addView(ownerName.getLayout())
-        form.addView(aadhaarNumber.getLayout())
-        form.addView(mobileNumber.getLayout())
-        form.addView(licenseNumber.getLayout())
+        form.addView(incidentType.getLayout())
         form.addView(railwayStation.getLayout())
         form.addView(platformNumber.getLayout())
+        form.addView(tracklocation.getLayout())
+        form.addView(train.getLayout())
+        form.addView(coachNumber.getLayout())
+        form.addView(contactNumber.getLayout())
+        form.addView(details.getLayout())
 
         if (mode == Mode.SEARCH_FORM){
             findViewById<ConstraintLayout>(R.id.ly_location).visibility = View.GONE

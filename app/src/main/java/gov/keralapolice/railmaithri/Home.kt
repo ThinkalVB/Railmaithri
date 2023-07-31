@@ -255,6 +255,20 @@ class Home : AppCompatActivity() {
             startActivity(intent)
         }
 
+        //Incident Report
+        findViewById<ImageView>(R.id.add_incident_report).setOnClickListener {
+            val intent = Intent(this, IncidentReport::class.java)
+            intent.putExtra("mode", Mode.NEW_FORM)
+            startActivity(intent)
+        }
+        findViewById<Button>(R.id.search_incident_report).setOnClickListener {
+            val intent = Intent(this, SearchData::class.java)
+            intent.putExtra("search_url", URL.INCIDENT_REPORT)
+            intent.putExtra("parameters", JSONObject().toString())
+            startActivity(intent)
+        }
+
+
         // Watch zone
         findViewById<ImageView>(R.id.watch_zone).setOnClickListener {
             val intent = Intent(this, WatchZone::class.java)
