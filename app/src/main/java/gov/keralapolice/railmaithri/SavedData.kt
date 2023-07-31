@@ -165,6 +165,15 @@ class SavedData : AppCompatActivity() {
             val button  = BeatDiary.generateButton(this, value, Mode.UPDATE_FORM)
             resultLayout.addView(button)
         }
+
+        val incidentReport = loadFormData(this, Storage.INCIDENT_REPORT)
+        val irKeys         = incidentReport.keys()
+        while (irKeys.hasNext()) {
+            val irKeys  = irKeys.next()
+            val value   = incidentReport.getJSONObject(irKeys)
+            val button  = IncidentReport.generateButton(this, value, Mode.UPDATE_FORM)
+            resultLayout.addView(button)
+        }
     }
 
     private fun syncData() {
@@ -323,6 +332,17 @@ class SavedData : AppCompatActivity() {
             val formData  = beatDiary.getJSONObject(bdKeys)
             CoroutineScope(Dispatchers.IO).launch {
                 sendFormData(URL.BEAT_DIARY, Storage.BEAT_DIARY, formData, token)
+            }
+        }
+
+        val incidentReport = loadFormData(this, Storage.INCIDENT_REPORT)
+        val irKeys         = incidentReport.keys()
+        while (irKeys.hasNext()) {
+            dataCount++
+            val irKeys    = irKeys.next()
+            val formData  = incidentReport.getJSONObject(irKeys)
+            CoroutineScope(Dispatchers.IO).launch {
+                sendFormData(URL.INCIDENT_REPORT, Storage.INCIDENT_REPORT, formData, token)
             }
         }
 
