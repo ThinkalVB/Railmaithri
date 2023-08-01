@@ -77,7 +77,7 @@ class ViewTask : AppCompatActivity() {
                         findViewById<TextView>(R.id.val_pnr_number).text = lonelyPassenger.optString("pnr_number")
                         findViewById<LinearLayout>(R.id.ly_dress_code).visibility = View.VISIBLE
                         findViewById<TextView>(R.id.val_dress_code).text = lonelyPassenger.optString("dress_code")
-                        updateLocation(lonelyPassenger)
+                        locationUtil.hideLayout()
                     }
                 }
             }

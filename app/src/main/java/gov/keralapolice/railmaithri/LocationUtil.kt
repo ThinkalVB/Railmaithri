@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.location.Location
 import android.net.Uri
+import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
@@ -108,5 +109,9 @@ class LocationUtil(_activity: Activity, _locationLY: ConstraintLayout) {
         data.put("longitude", longitude)
         data.put("accuracy",  accuracy)
         return data
+    }
+
+    fun hideLayout() {
+        locationLY.visibility = View.GONE
     }
 }
