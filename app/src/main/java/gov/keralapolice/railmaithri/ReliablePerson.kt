@@ -129,7 +129,9 @@ class ReliablePerson : AppCompatActivity() {
         if (response.first == ResponseType.SUCCESS) {
             Helper.showToast(this, "success")
             finish()
-        } else if (response.first == ResponseType.NETWORK_ERROR) {
+        }
+        Helper.showToast(this, response.second)
+        if (response.first == ResponseType.NETWORK_ERROR) {
             Helper.saveFormData(this, formData, Storage.RELIABLE_PERSON, uuid)
             finish()
         }

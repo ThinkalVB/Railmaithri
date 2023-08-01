@@ -133,7 +133,9 @@ class UnauthorizedPerson : AppCompatActivity() {
         if (response.first == ResponseType.SUCCESS) {
             Helper.showToast(this, "success")
             finish()
-        } else if (response.first == ResponseType.NETWORK_ERROR) {
+        }
+        Helper.showToast(this, response.second)
+        if (response.first == ResponseType.NETWORK_ERROR) {
             storeFile(formData, uuid)
             Helper.saveFormData(this, formData, Storage.UNAUTHORIZED_PEOPLE, uuid)
             finish()
