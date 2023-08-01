@@ -5,7 +5,7 @@ class URL {
         private const val DEVELOPMENT_URL     = "http://103.10.168.42:8000"
         private const val LOCAL_URL           = "http://192.168.4.63:8000"
         private const val DEPLOYMENT_URL      = "https://railmaithri.keralapolice.gov.in:8000"
-        private const val BASE_URL            = LOCAL_URL
+        private const val BASE_URL            = DEPLOYMENT_URL
 
         const val RAILWAY_STATIONS_LIST       = "$BASE_URL/railmaithri/dropdown/railway_station_list/"
         const val TRAINS_LIST                 = "$BASE_URL/railmaithri/dropdown/train_list/"
