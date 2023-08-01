@@ -51,6 +51,7 @@ class URL {
         const val LABOURS                     = "$BASE_URL/api/v1/shop_labour/"
         const val INTRUDER_ALERT              = "$BASE_URL/api/v1/intruder_report/"
         const val LONELY_PASSENGER            = "$BASE_URL/api/v1/lonely_passenger/"
+        const val SOS                         = "$BASE_URL/api/v1/sos_message/"
 
         const val OFFICERS_IN_PS              = "$BASE_URL/accounts/dropdown/beat_officers_in_ps/"
         const val COMMUNICATION_RECEIVER      = "$BASE_URL/api/v1/close_communication_receiver/"

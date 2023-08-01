@@ -272,6 +272,12 @@ class Home : AppCompatActivity() {
             startActivity(intent)
         }
 
+        // Task list
+        findViewById<ImageView>(R.id.task_list).setOnClickListener {
+            val intent = Intent(this, TaskList::class.java)
+            startActivity(intent)
+        }
+
         startTracking()
     }
 

@@ -34,6 +34,12 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".ViewTask"
+            android:exported="false" />
+        <activity
+            android:name=".TaskList"
+            android:exported="false" />
+        <activity
             android:name=".IncidentReport"
             android:exported="false" />
         <activity
