@@ -194,6 +194,13 @@ class LostProperty : AppCompatActivity() {
     }
 
     private fun getFormData(formData: JSONObject = JSONObject()): JSONObject? {
+        if (mode == Mode.NEW_FORM){
+            if (!fileUtil.haveFile()) {
+                Helper.showToast(this, "File is mandatory")
+                return null
+            }
+        }
+        
         try{
             lostPropertyCategory.exportData(formData)
             keptInPoliceStation.exportData(formData)

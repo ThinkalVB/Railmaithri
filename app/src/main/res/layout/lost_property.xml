@@ -50,7 +50,7 @@
                     android:layout_marginHorizontal="8dp"
                     android:layout_weight="1"
                     android:text="File"
-                    android:textColor="@color/DarkGray"
+                    android:textColor="@color/Crimson"
                     android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
