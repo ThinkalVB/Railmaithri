@@ -190,9 +190,11 @@ class AbandonedProperty : AppCompatActivity() {
             return null
         }
 
-        val profile   = JSONObject(Helper.getData(this, Storage.PROFILE)!!)
-        val officerID = profile.getInt("id")
-        formData.put("added_by", officerID)
+        if (mode != Mode.NEW_FORM || mode == Mode.UPDATE_FORM) {
+            val profile   = JSONObject(Helper.getData(this, Storage.PROFILE)!!)
+            val officerID = profile.getInt("id")
+            formData.put("added_by", officerID)
+        }
         return formData
     }
 

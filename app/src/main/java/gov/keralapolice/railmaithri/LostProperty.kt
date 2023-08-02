@@ -152,7 +152,7 @@ class LostProperty : AppCompatActivity() {
         form.addView(foundOn.getLayout())
         form.addView(remarks.getLayout())
 
-        if (mode == Mode.SEARCH_FORM){
+        if (mode == Mode.SEARCH_FORM) {
             findViewById<ConstraintLayout>(R.id.ly_file).visibility = View.GONE
         }
     }
