@@ -45,6 +45,29 @@ class API {
             }
             return request.url(queryURL.build()).build()
         }
+
+        fun patch(url: String, data: JSONObject?, token: String?,
+                 file: ByteArray? = null, fileName: String? = null, fileLabel: String? = null): Request {
+            val body = MultipartBody.Builder().setType(MultipartBody.FORM)
+            if (file != null && fileName != null && fileLabel != null) {
+                body.addFormDataPart(
+                    fileLabel,
+                    fileName,
+                    RequestBody.create("application/octet-stream".toMediaType(), file)
+                )
+            }
+            if (data != null) {
+                for (key in data.keys()) {
+                    body.addFormDataPart(key, data.get(key).toString())
+                }
+            }
+
+            val request = Request.Builder()
+            if(token != null){
+                request.addHeader("Authorization", "Token $token")
+            }
+            return request.url(url).method("PATCH", body.build()).build()
+        }
     }
 
 }

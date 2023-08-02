@@ -2,7 +2,6 @@ package gov.keralapolice.railmaithri
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.*
 import kotlinx.coroutines.CoroutineScope
@@ -17,7 +16,8 @@ class ViewTask : AppCompatActivity() {
     private lateinit var locationUtil:  LocationUtil
     private lateinit var progressPB:    ProgressBar
     private lateinit var saveBT:        Button
-    private lateinit var remarkET:      FieldEditText
+    private lateinit var remarks:       FieldEditText
+    private lateinit var fetchURL:      String
     private lateinit var patchURL:      String
     private lateinit var taskType:      String
     private var taskID                  = 0
@@ -38,17 +38,19 @@ class ViewTask : AppCompatActivity() {
         saveBT          = findViewById(R.id.save)
         locationUtil.disableUpdate()
 
-        CoroutineScope(Dispatchers.IO).launch {
-            fetchAndPopulate()
+        saveBT.setOnClickListener {
+            CoroutineScope(Dispatchers.IO).launch { sendRemarks() }
         }
+        CoroutineScope(Dispatchers.IO).launch { fetchAndPopulate() }
     }
 
     private fun fetchAndPopulate() {
         when (taskType) {
             "Lonely Passenger" -> {
-                patchURL = URL.LONELY_PASSENGER + "?id=${taskID}"
+                patchURL = URL.LONELY_PASSENGER + "${taskID}/"
+                fetchURL = URL.LONELY_PASSENGER + "?id=${taskID}"
                 CoroutineScope(Dispatchers.IO).launch {
-                    val response        = Helper.getFormData(patchURL, JSONObject(), token)
+                    val response        = Helper.getFormData(fetchURL, JSONObject(), token)
                     val lonelyPassenger = JSONObject(response.second).getJSONArray("results").getJSONObject(0)
                     runOnUiThread {
                         findViewById<LinearLayout>(R.id.ly_train).visibility = View.VISIBLE
@@ -82,9 +84,10 @@ class ViewTask : AppCompatActivity() {
                 }
             }
             "Incident in Train" -> {
-                patchURL = URL.INCIDENT_REPORT + "?id=${taskID}"
+                patchURL = URL.INCIDENT_REPORT + "${taskID}/"
+                fetchURL = URL.INCIDENT_REPORT + "?id=${taskID}"
                 CoroutineScope(Dispatchers.IO).launch {
-                    val response = Helper.getFormData(patchURL, JSONObject(), token)
+                    val response = Helper.getFormData(fetchURL, JSONObject(), token)
                     val incidentInTrain = JSONObject(response.second).getJSONArray("results").getJSONObject(0)
                     runOnUiThread {
                         findViewById<LinearLayout>(R.id.ly_incident_type).visibility = View.VISIBLE
@@ -102,9 +105,10 @@ class ViewTask : AppCompatActivity() {
                 }
             }
             "Incident in Platform" -> {
-                patchURL = URL.INCIDENT_REPORT + "?id=${taskID}"
+                patchURL = URL.INCIDENT_REPORT + "${taskID}/"
+                fetchURL = URL.INCIDENT_REPORT + "?id=${taskID}"
                 CoroutineScope(Dispatchers.IO).launch {
-                    val response = Helper.getFormData(patchURL, JSONObject(), token)
+                    val response = Helper.getFormData(fetchURL, JSONObject(), token)
                     val incidentInPlatform = JSONObject(response.second).getJSONArray("results").getJSONObject(0)
                     runOnUiThread {
                         findViewById<LinearLayout>(R.id.ly_platform_number).visibility = View.VISIBLE
@@ -120,9 +124,10 @@ class ViewTask : AppCompatActivity() {
                 }
             }
             "Incident in Track" -> {
-                patchURL = URL.INCIDENT_REPORT + "?id=${taskID}"
+                patchURL = URL.INCIDENT_REPORT + "${taskID}/"
+                fetchURL = URL.INCIDENT_REPORT + "?id=${taskID}"
                 CoroutineScope(Dispatchers.IO).launch {
-                    val response = Helper.getFormData(patchURL, JSONObject(), token)
+                    val response = Helper.getFormData(fetchURL, JSONObject(), token)
                     val incidentInTrack = JSONObject(response.second).getJSONArray("results").getJSONObject(0)
                     runOnUiThread {
                         findViewById<LinearLayout>(R.id.ly_track_location).visibility = View.VISIBLE
@@ -136,9 +141,10 @@ class ViewTask : AppCompatActivity() {
                 }
             }
             "Intruder Alert" -> {
-                patchURL = URL.INTRUDER_ALERT + "?id=${taskID}"
+                patchURL = URL.INTRUDER_ALERT + "${taskID}/"
+                fetchURL = URL.INTRUDER_ALERT + "?id=${taskID}"
                 CoroutineScope(Dispatchers.IO).launch {
-                    val response = Helper.getFormData(patchURL, JSONObject(), token)
+                    val response = Helper.getFormData(fetchURL, JSONObject(), token)
                     val intruderAlert = JSONObject(response.second).getJSONArray("results").getJSONObject(0)
                     runOnUiThread {
                         findViewById<LinearLayout>(R.id.ly_train).visibility = View.VISIBLE
@@ -152,9 +158,10 @@ class ViewTask : AppCompatActivity() {
                 }
             }
             "Intelligence" -> {
-                patchURL = URL.INTELLIGENCE_INFORMATION + "?id=${taskID}"
+                patchURL = URL.INTELLIGENCE_INFORMATION + "${taskID}/"
+                fetchURL = URL.INTELLIGENCE_INFORMATION + "?id=${taskID}"
                 CoroutineScope(Dispatchers.IO).launch {
-                    val response = Helper.getFormData(patchURL, JSONObject(), token)
+                    val response = Helper.getFormData(fetchURL, JSONObject(), token)
                     val intelligenceInformation = JSONObject(response.second).getJSONArray("results").optJSONObject(0)
                     runOnUiThread {
                         findViewById<LinearLayout>(R.id.ly_severity).visibility = View.VISIBLE
@@ -172,9 +179,10 @@ class ViewTask : AppCompatActivity() {
                 }
             }
             "SOS Alert" -> {
-                patchURL = URL.SOS + "?id=${taskID}"
+                patchURL = URL.SOS + "${taskID}/"
+                fetchURL = URL.SOS + "?id=${taskID}"
                 CoroutineScope(Dispatchers.IO).launch {
-                    val response = Helper.getFormData(patchURL, JSONObject(), token)
+                    val response = Helper.getFormData(fetchURL, JSONObject(), token)
                     val sosAlert = JSONObject(response.second).getJSONArray("results").optJSONObject(0)
                     runOnUiThread {
                         findViewById<LinearLayout>(R.id.ly_sos_message).visibility = View.VISIBLE
@@ -183,6 +191,38 @@ class ViewTask : AppCompatActivity() {
                     }
                 }
             }
+        }
+
+        remarks = FieldEditText(
+            this,
+            fieldType = "multiline",
+            fieldLabel = "attended_remarks",
+            fieldName = "Closing remarks",
+            fieldHeight=98,
+            isRequired = Helper.resolveIsRequired(true, Mode.NEW_FORM)
+        )
+        val form = findViewById<LinearLayout>(R.id.form)
+        form.addView(remarks.getLayout())
+    }
+
+    private fun sendRemarks() {
+        val formData = JSONObject()
+        try{
+            remarks.exportData(formData)
+        } catch (e: Exception) {
+            Helper.showToast(this, e.message!!)
+            return
+        }
+
+        val profile   = JSONObject(Helper.getData(this, Storage.PROFILE)!!)
+        val officerID = profile.getInt("id")
+        formData.put("beat_officer_id", officerID)
+        formData.put("status", 5)
+        val response = Helper.patchFormData(patchURL, formData, token)
+        if (response.first == ResponseType.SUCCESS) {
+            finish()
+        } else {
+            Helper.showToast(this, response.second)
         }
     }
 

@@ -178,6 +178,33 @@ class Helper {
             }
         }
 
+        fun patchFormData(url: String, formData: JSONObject, token: String,
+                          fileUtil: FileUtil? = null,
+                          file: ByteArray? = null, fileName: String? = null,
+                          fieldLabel: String? = null): Pair<Int, String> {
+            return try {
+                val request: Request = if (fileUtil != null && fileUtil.haveFile()){
+                    API.patch(url, formData, token, fileUtil.getFile(), fileUtil.getFileName(), fileUtil.getFieldLabel())
+                } else if (file != null && fileName != null && fieldLabel != null) {
+                    API.patch(url, formData, token, file, fileName, fieldLabel)
+                } else {
+                    API.patch(url, formData, token)
+                }
+
+                val clientNT  = OkHttpClient().newBuilder().build()
+                val response  = clientNT.newCall(request).execute()
+                if (response.isSuccessful) {
+                    Pair(ResponseType.SUCCESS, response.body!!.string())
+                } else {
+                    val errorMessage = getError(response.body!!.string())
+                    Pair(ResponseType.API_ERROR, errorMessage)
+                }
+            } catch (e: Exception) {
+                Log.d("RailMaithri", e.stackTraceToString())
+                Pair(ResponseType.NETWORK_ERROR, "Server unreachable, data will be saved")
+            }
+        }
+
         // Save form data
         fun saveFormData(context: Context, formData: JSONObject, formType: String, key: String) {
             val savedStr = getData(context, formType)
