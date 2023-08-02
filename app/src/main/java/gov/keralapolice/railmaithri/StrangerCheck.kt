@@ -285,9 +285,11 @@ class StrangerCheck : AppCompatActivity() {
             return null
         }
 
-        val profile   = JSONObject(Helper.getData(this, Storage.PROFILE)!!)
-        val stationID = profile.getJSONArray("police_station").getJSONObject(0).getInt("id")
-        formData.put("police_station", stationID)
+        if (mode == Mode.NEW_FORM || mode == Mode.UPDATE_FORM){
+            val profile   = JSONObject(Helper.getData(this, Storage.PROFILE)!!)
+            val stationID = profile.getJSONArray("police_station").getJSONObject(0).getInt("id")
+            formData.put("police_station", stationID)
+        }
         return formData
     }
 
