@@ -21,6 +21,9 @@ import com.google.android.gms.location.GeofencingRequest
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.messaging.FirebaseMessaging
+import gov.keralapolice.railmaithri.models.LocationModel
+import gov.keralapolice.railmaithri.roomDB.DatabaseClient
+import gov.keralapolice.railmaithri.services.Network
 import gov.keralapolice.railmaithri.services.TrackingService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -389,10 +392,12 @@ class Home : AppCompatActivity() {
         accuracy: String,
         speed: String,
         heading: String,
-        altitude: String
+        altitude: String,
+        time: String,
+        isFromDB: Boolean,
+        task: LocationModel? = null
     ) {
         try {
-            Toast.makeText(this@Home, "API", Toast.LENGTH_SHORT).show()
             val locationData = JSONObject()
             locationData.put("beat_officer", officerID)
             locationData.put("latitude", latitude)
@@ -401,14 +406,19 @@ class Home : AppCompatActivity() {
             locationData.put("speed", speed)
             locationData.put("heading", heading)
             locationData.put("altitude", altitude)
-            locationData.put("utc_timestamp", Helper.getUTC())
+            locationData.put("utc_timestamp", time)
             CoroutineScope(Dispatchers.IO).launch {
                 try {
                     val clientNT = OkHttpClient().newBuilder().build()
                     val request  = API.post(URL.LOCATION_UPDATE, locationData, token)
                     val response = clientNT.newCall(request).execute()
                     if (response.isSuccessful) {
-                        Log.d("Railmaithri", altitude)
+                        if (isFromDB){
+                            //remove from DB
+                            DatabaseClient.getInstance(applicationContext).appDatabase
+                                .taskLocation()
+                                .delete(task)
+                        }
                     }
                 } catch (_: Exception) {
                 }
@@ -419,13 +429,60 @@ class Home : AppCompatActivity() {
 
     private val locationStateReceiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
+            if (Network.isAvailable(this@Home)) {
+                saveLocationDataToServer(
+                    intent.getDoubleExtra("latitude", 0.0).toString(),
+                    intent.getDoubleExtra("longitude", 0.0).toString(),
+                    intent.getDoubleExtra("accuracy", 0.0).toString(),
+                    intent.getDoubleExtra("speed", 0.0).toString(),
+                    intent.getDoubleExtra("heading", 0.0).toString(),
+                    intent.getDoubleExtra("altitude", 0.0).toString(),
+                    Helper.getUTC(),
+                    false,
+                )
+
+                val taskList = DatabaseClient
+                    .getInstance(applicationContext)
+                    .appDatabase
+                    .taskLocation()
+                    .all
+
+                if (taskList.isNotEmpty()){
+                    //offline syncing
+                    startOfflineSyncing(taskList)
+                }
+
+            } else {
+                //creating a task
+                val task = LocationModel()
+                task.latitude = intent.getDoubleExtra("latitude", 0.0).toString()
+                task.latitude = intent.getDoubleExtra("longitude", 0.0).toString()
+                task.latitude = intent.getDoubleExtra("accuracy", 0.0).toString()
+                task.latitude = intent.getDoubleExtra("speed", 0.0).toString()
+                task.latitude = intent.getDoubleExtra("heading", 0.0).toString()
+                task.latitude = intent.getDoubleExtra("altitude", 0.0).toString()
+                task.latitude = Helper.getUTC()
+
+                //adding to database
+                DatabaseClient.getInstance(applicationContext).getAppDatabase()
+                    .taskLocation()
+                    .insert(task)
+            }
+        }
+    }
+
+    private fun startOfflineSyncing(taskList: MutableList<LocationModel>) {
+        for (i in 0 until taskList.size){
             saveLocationDataToServer(
-                intent.getDoubleExtra("latitude",0.0).toString()!!,
-                intent.getDoubleExtra("longitude",0.0).toString()!!,
-                intent.getDoubleExtra("accuracy",0.0).toString()!!,
-                intent.getDoubleExtra("speed",0.0).toString()!!,
-                intent.getDoubleExtra("heading",0.0).toString()!!,
-                intent.getDoubleExtra("altitude",0.0).toString()!!,
+                taskList[i].latitude,
+                taskList[i].longitude,
+                taskList[i].accuracy,
+                taskList[i].speed,
+                taskList[i].heading,
+                taskList[i].altitude,
+                taskList[i].utc_timestamp,
+                true,
+                taskList[i]
             )
         }
     }

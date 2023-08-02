@@ -167,7 +167,6 @@ public class TrackingService extends Service {
         public void onLocationChanged(final Location loc) {
             if (isBetterLocation(loc, previousBestLocation)) {
                 //Send Coordinates to server
-                System.out.println(loc.getLatitude() + "|" + loc.getLongitude());
                 Toast.makeText(TrackingService.this, loc.getLatitude() + "|" + loc.getLongitude() + loc.getAccuracy() + loc.getSpeed() + loc.getBearing() + loc.getAltitude(), Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent("Location");
                 intent.putExtra("latitude", loc.getLatitude()).toString();
