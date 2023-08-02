@@ -219,7 +219,7 @@ class ViewTask : AppCompatActivity() {
         val beatID    = profile.getJSONObject("last_beat_assignment").getInt("id")
         val officerID = profile.getInt("id")
 
-        formData.put("beat_assignment_id", beatID)
+        formData.put("beat_assignment", beatID)
         formData.put("beat_officer_id", officerID)
         formData.put("status", 5)
         val response = Helper.patchFormData(patchURL, formData, token)

@@ -100,6 +100,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
                     <ImageView
+                        android:id="@+id/add_incident_report"
                         android:layout_width="125dp"
                         android:layout_height="125dp"
                         android:paddingBottom="24dp"
@@ -109,7 +110,6 @@
                         app:layout_constraintTop_toTopOf="parent"
                         app:srcCompat="@drawable/home_button" />
                     <ImageView
-                        android:id="@+id/add_incident_report"
                         android:layout_marginTop="24dp"
                         android:layout_marginEnd="24dp"
                         android:layout_width="40dp"
@@ -147,6 +147,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
                     <ImageView
+                        android:id="@+id/add_passenger_statistics"
                         android:layout_width="125dp"
                         android:layout_height="125dp"
                         android:paddingBottom="24dp"
@@ -156,7 +157,6 @@
                         app:layout_constraintTop_toTopOf="parent"
                         app:srcCompat="@drawable/home_button" />
                     <ImageView
-                        android:id="@+id/add_passenger_statistics"
                         android:layout_marginTop="24dp"
                         android:layout_marginEnd="24dp"
                         android:layout_width="40dp"
@@ -194,6 +194,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
                     <ImageView
+                        android:id="@+id/add_stranger_check"
                         android:layout_width="125dp"
                         android:layout_height="125dp"
                         android:paddingBottom="24dp"
@@ -203,7 +204,6 @@
                         app:layout_constraintTop_toTopOf="parent"
                         app:srcCompat="@drawable/home_button" />
                     <ImageView
-                        android:id="@+id/add_stranger_check"
                         android:layout_marginTop="24dp"
                         android:layout_marginEnd="24dp"
                         android:layout_width="40dp"
@@ -249,6 +249,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
                     <ImageView
+                        android:id="@+id/add_beat_diary"
                         android:layout_width="125dp"
                         android:layout_height="125dp"
                         android:paddingBottom="24dp"
@@ -258,7 +259,6 @@
                         app:layout_constraintTop_toTopOf="parent"
                         app:srcCompat="@drawable/home_button" />
                     <ImageView
-                        android:id="@+id/add_beat_diary"
                         android:layout_marginTop="24dp"
                         android:layout_marginEnd="24dp"
                         android:layout_width="40dp"
@@ -296,6 +296,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
                     <ImageView
+                        android:id="@+id/add_lost_property"
                         android:layout_width="125dp"
                         android:layout_height="125dp"
                         android:paddingBottom="24dp"
@@ -305,7 +306,6 @@
                         app:layout_constraintTop_toTopOf="parent"
                         app:srcCompat="@drawable/home_button" />
                     <ImageView
-                        android:id="@+id/add_lost_property"
                         android:layout_marginTop="24dp"
                         android:layout_marginEnd="24dp"
                         android:layout_width="40dp"
@@ -343,6 +343,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
                     <ImageView
+                        android:id="@+id/add_abandoned_property"
                         android:layout_width="125dp"
                         android:layout_height="125dp"
                         android:paddingBottom="24dp"
@@ -352,7 +353,6 @@
                         app:layout_constraintTop_toTopOf="parent"
                         app:srcCompat="@drawable/home_button" />
                     <ImageView
-                        android:id="@+id/add_abandoned_property"
                         android:layout_marginTop="24dp"
                         android:layout_marginEnd="24dp"
                         android:layout_width="40dp"
@@ -398,6 +398,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
                     <ImageView
+                        android:id="@+id/add_reliable_person"
                         android:layout_width="125dp"
                         android:layout_height="125dp"
                         android:paddingBottom="24dp"
@@ -407,7 +408,6 @@
                         app:layout_constraintTop_toTopOf="parent"
                         app:srcCompat="@drawable/home_button" />
                     <ImageView
-                        android:id="@+id/add_reliable_person"
                         android:layout_marginTop="24dp"
                         android:layout_marginEnd="24dp"
                         android:layout_width="40dp"
@@ -445,6 +445,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
                     <ImageView
+                        android:id="@+id/add_emergency_contact"
                         android:layout_width="125dp"
                         android:layout_height="125dp"
                         android:paddingBottom="24dp"
@@ -454,7 +455,6 @@
                         app:layout_constraintTop_toTopOf="parent"
                         app:srcCompat="@drawable/home_button" />
                     <ImageView
-                        android:id="@+id/add_emergency_contact"
                         android:layout_marginTop="24dp"
                         android:layout_marginEnd="24dp"
                         android:layout_width="40dp"
@@ -492,6 +492,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
                     <ImageView
+                        android:id="@+id/add_poi"
                         android:layout_width="125dp"
                         android:layout_height="125dp"
                         android:paddingBottom="24dp"
@@ -501,7 +502,6 @@
                         app:layout_constraintTop_toTopOf="parent"
                         app:srcCompat="@drawable/home_button" />
                     <ImageView
-                        android:id="@+id/add_poi"
                         android:layout_marginTop="24dp"
                         android:layout_marginEnd="24dp"
                         android:layout_width="40dp"
@@ -547,6 +547,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
                     <ImageView
+                        android:id="@+id/add_intelligence_information"
                         android:layout_width="125dp"
                         android:layout_height="125dp"
                         android:paddingBottom="24dp"
@@ -556,7 +557,6 @@
                         app:layout_constraintTop_toTopOf="parent"
                         app:srcCompat="@drawable/home_button" />
                     <ImageView
-                        android:id="@+id/add_intelligence_information"
                         android:layout_marginTop="24dp"
                         android:layout_marginEnd="24dp"
                         android:layout_width="40dp"
@@ -594,6 +594,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
                     <ImageView
+                        android:id="@+id/add_unauthorized_person"
                         android:layout_width="125dp"
                         android:layout_height="125dp"
                         android:paddingBottom="24dp"
@@ -603,7 +604,6 @@
                         app:layout_constraintTop_toTopOf="parent"
                         app:srcCompat="@drawable/home_button" />
                     <ImageView
-                        android:id="@+id/add_unauthorized_person"
                         android:layout_marginTop="24dp"
                         android:layout_marginEnd="24dp"
                         android:layout_width="40dp"
@@ -641,6 +641,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
                     <ImageView
+                        android:id="@+id/add_shop_and_labours"
                         android:layout_width="125dp"
                         android:layout_height="125dp"
                         android:paddingBottom="24dp"
@@ -650,7 +651,6 @@
                         app:layout_constraintTop_toTopOf="parent"
                         app:srcCompat="@drawable/home_button" />
                     <ImageView
-                        android:id="@+id/add_shop_and_labours"
                         android:layout_marginTop="24dp"
                         android:layout_marginEnd="24dp"
                         android:layout_width="40dp"
@@ -696,6 +696,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
                     <ImageView
+                        android:id="@+id/add_crime_memo"
                         android:layout_width="125dp"
                         android:layout_height="125dp"
                         android:paddingBottom="24dp"
@@ -705,7 +706,6 @@
                         app:layout_constraintTop_toTopOf="parent"
                         app:srcCompat="@drawable/home_button" />
                     <ImageView
-                        android:id="@+id/add_crime_memo"
                         android:layout_marginTop="24dp"
                         android:layout_marginEnd="24dp"
                         android:layout_width="40dp"
@@ -743,6 +743,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
                     <ImageView
+                        android:id="@+id/add_suraksha_samithi_member"
                         android:layout_width="125dp"
                         android:layout_height="125dp"
                         android:paddingBottom="24dp"
@@ -752,7 +753,6 @@
                         app:layout_constraintTop_toTopOf="parent"
                         app:srcCompat="@drawable/home_button" />
                     <ImageView
-                        android:id="@+id/add_suraksha_samithi_member"
                         android:layout_marginTop="24dp"
                         android:layout_marginEnd="24dp"
                         android:layout_width="40dp"
@@ -790,6 +790,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
                     <ImageView
+                        android:id="@+id/add_rail_volunteer"
                         android:layout_width="125dp"
                         android:layout_height="125dp"
                         android:paddingBottom="24dp"
@@ -799,7 +800,6 @@
                         app:layout_constraintTop_toTopOf="parent"
                         app:srcCompat="@drawable/home_button" />
                     <ImageView
-                        android:id="@+id/add_rail_volunteer"
                         android:layout_marginTop="24dp"
                         android:layout_marginEnd="24dp"
                         android:layout_width="40dp"
@@ -845,6 +845,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
                     <ImageView
+                        android:id="@+id/add_railmaithri_meeting"
                         android:layout_width="125dp"
                         android:layout_height="125dp"
                         android:paddingBottom="24dp"
@@ -854,7 +855,6 @@
                         app:layout_constraintTop_toTopOf="parent"
                         app:srcCompat="@drawable/home_button" />
                     <ImageView
-                        android:id="@+id/add_railmaithri_meeting"
                         android:layout_marginTop="24dp"
                         android:layout_marginEnd="24dp"
                         android:layout_width="40dp"
@@ -892,6 +892,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
                     <ImageView
+                        android:id="@+id/close_communication"
                         android:layout_width="125dp"
                         android:layout_height="125dp"
                         android:paddingBottom="24dp"
@@ -901,7 +902,6 @@
                         app:layout_constraintTop_toTopOf="parent"
                         app:srcCompat="@drawable/home_button" />
                     <ImageView
-                        android:id="@+id/close_communication"
                         android:layout_marginTop="24dp"
                         android:layout_marginEnd="24dp"
                         android:layout_width="40dp"
@@ -927,6 +927,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
                     <ImageView
+                        android:id="@+id/task_list"
                         android:layout_width="125dp"
                         android:layout_height="125dp"
                         android:paddingBottom="24dp"
@@ -936,7 +937,6 @@
                         app:layout_constraintTop_toTopOf="parent"
                         app:srcCompat="@drawable/home_button" />
                     <ImageView
-                        android:id="@+id/task_list"
                         android:layout_marginTop="24dp"
                         android:layout_marginEnd="24dp"
                         android:layout_width="40dp"
@@ -970,6 +970,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
                     <ImageView
+                        android:id="@+id/watch_zone"
                         android:layout_width="125dp"
                         android:layout_height="125dp"
                         android:paddingBottom="24dp"
@@ -979,7 +980,6 @@
                         app:layout_constraintTop_toTopOf="parent"
                         app:srcCompat="@drawable/home_button" />
                     <ImageView
-                        android:id="@+id/watch_zone"
                         android:layout_marginTop="24dp"
                         android:layout_marginEnd="24dp"
                         android:layout_width="40dp"
