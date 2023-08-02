@@ -2,6 +2,7 @@ package gov.keralapolice.railmaithri
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.*
 import kotlinx.coroutines.CoroutineScope
@@ -215,11 +216,15 @@ class ViewTask : AppCompatActivity() {
         }
 
         val profile   = JSONObject(Helper.getData(this, Storage.PROFILE)!!)
+        val beatID    = profile.getJSONObject("last_beat_assignment").getInt("id")
         val officerID = profile.getInt("id")
+
+        formData.put("beat_assignment_id", beatID)
         formData.put("beat_officer_id", officerID)
         formData.put("status", 5)
         val response = Helper.patchFormData(patchURL, formData, token)
         if (response.first == ResponseType.SUCCESS) {
+            Helper.showToast(this, "success")
             finish()
         } else {
             Helper.showToast(this, response.second)
