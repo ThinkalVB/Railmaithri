@@ -126,10 +126,10 @@ class IncidentReport : AppCompatActivity() {
             if (formData == null) {
                 formData = JSONObject()
             }
-            val intent = Intent(this, SearchData::class.java)
-            intent.putExtra("search_url", URL.INCIDENT_REPORT)
+            val intent = Intent()
             intent.putExtra("parameters", formData.toString())
-            startActivity(intent)
+            setResult(RESULT_OK, intent)
+            finish()
         } else if (mode == Mode.UPDATE_FORM){
             val formData = JSONObject(intent.getStringExtra("data")!!)
             val uuid     = formData.getString("utc_timestamp")
@@ -302,6 +302,10 @@ class IncidentReport : AppCompatActivity() {
             }
         }
         form.addView(details.getLayout())
+
+        if (mode == Mode.SEARCH_FORM){
+            findViewById<ConstraintLayout>(R.id.ly_file).visibility = View.GONE
+        }
     }
 
     companion object{

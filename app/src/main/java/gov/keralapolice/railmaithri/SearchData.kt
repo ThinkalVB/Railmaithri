@@ -1,11 +1,14 @@
 package gov.keralapolice.railmaithri
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.View
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import kotlinx.coroutines.CoroutineScope
@@ -20,6 +23,7 @@ class SearchData : AppCompatActivity() {
     private lateinit var searchURL:         String
     private lateinit var parameters:        JSONObject
     private lateinit var resultLayout:      LinearLayout
+    private lateinit var filterBT:          ImageButton
     private var pageNumber                  = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,10 +35,102 @@ class SearchData : AppCompatActivity() {
         loadMoreBT    = findViewById(R.id.load_more)
         searchURL     = intent.getStringExtra("base_url")!!
         resultLayout  = findViewById(R.id.form_data_list)
+        filterBT      = findViewById(R.id.filter_button)
         parameters    = JSONObject()
 
         CoroutineScope(Dispatchers.IO).launch {  searchFormData()  }
         loadMoreBT.setOnClickListener {
+            CoroutineScope(Dispatchers.IO).launch {  searchFormData()  }
+        }
+        filterBT.setOnClickListener {
+            when (searchURL) {
+                URL.PASSENGER_STATISTICS -> {
+                    val intent = Intent(this, PassengerStatistics::class.java)
+                    intent.putExtra("mode", Mode.SEARCH_FORM)
+                    startActivityForResult(intent, 1000)
+                }
+                URL.STRANGER_CHECK -> {
+                    val intent = Intent(this, StrangerCheck::class.java)
+                    intent.putExtra("mode", Mode.SEARCH_FORM)
+                    startActivityForResult(intent, 1000)
+                }
+                URL.INTELLIGENCE_INFORMATION -> {
+                    val intent = Intent(this, IntelligenceInformation::class.java)
+                    intent.putExtra("mode", Mode.SEARCH_FORM)
+                    startActivityForResult(intent, 1000)
+                }
+                URL.LOST_PROPERTY -> {
+                    val intent = Intent(this, LostProperty::class.java)
+                    intent.putExtra("mode", Mode.SEARCH_FORM)
+                    startActivityForResult(intent, 1000)
+                }
+                URL.ABANDONED_PROPERTY -> {
+                    val intent = Intent(this, AbandonedProperty::class.java)
+                    intent.putExtra("mode", Mode.SEARCH_FORM)
+                    startActivityForResult(intent, 1000)
+                }
+                URL.RELIABLE_PERSON -> {
+                    val intent = Intent(this, ReliablePerson::class.java)
+                    intent.putExtra("mode", Mode.SEARCH_FORM)
+                    startActivityForResult(intent, 1000)
+                }
+                URL.EMERGENCY_CONTACTS -> {
+                    val intent = Intent(this, EmergencyContact::class.java)
+                    intent.putExtra("mode", Mode.SEARCH_FORM)
+                    startActivityForResult(intent, 1000)
+                }
+                URL.POI -> {
+                    val intent = Intent(this, POI::class.java)
+                    intent.putExtra("mode", Mode.SEARCH_FORM)
+                    startActivityForResult(intent, 1000)
+                }
+                URL.UNAUTHORIZED_PEOPLE -> {
+                    val intent = Intent(this, UnauthorizedPerson::class.java)
+                    intent.putExtra("mode", Mode.SEARCH_FORM)
+                    startActivityForResult(intent, 1000)
+                }
+                URL.CRIME_MEMO -> {
+                    val intent = Intent(this, CrimeMemo::class.java)
+                    intent.putExtra("mode", Mode.SEARCH_FORM)
+                    startActivityForResult(intent, 1000)
+                }
+                URL.SURAKSHA_SAMITHI_MEMBERS -> {
+                    val intent = Intent(this, SurakshaSamithiMember::class.java)
+                    intent.putExtra("mode", Mode.SEARCH_FORM)
+                    startActivityForResult(intent, 1000)
+                }
+                URL.RAIL_VOLUNTEER -> {
+                    val intent = Intent(this, RailVolunteer::class.java)
+                    intent.putExtra("mode", Mode.SEARCH_FORM)
+                    startActivityForResult(intent, 1000)
+                }
+                URL.RAILMAITHRI_MEETING -> {
+                    val intent = Intent(this, RailMaithriMeeting::class.java)
+                    intent.putExtra("mode", Mode.SEARCH_FORM)
+                    startActivityForResult(intent, 1000)
+                }
+                URL.BEAT_DIARY -> {
+                    filterBT.isClickable = false
+                }
+                URL.INCIDENT_REPORT -> {
+                    val intent = Intent(this, IncidentReport::class.java)
+                    intent.putExtra("mode", Mode.SEARCH_FORM)
+                    startActivityForResult(intent, 1000)
+                }
+                URL.SHOPS -> {
+                    val intent = Intent(this, ShopAndLabours::class.java)
+                    intent.putExtra("mode", Mode.SEARCH_FORM)
+                    startActivityForResult(intent, 1000)
+                }
+            }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (parameters.keys().hasNext()){
+            resultLayout.removeAllViews()
+            pageNumber = 1
             CoroutineScope(Dispatchers.IO).launch {  searchFormData()  }
         }
     }
@@ -116,6 +212,15 @@ class SearchData : AppCompatActivity() {
                 button = ShopAndLabours.generateButton(this, formDatum)
             }
             resultLayout.addView(button)
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, resultIntent: Intent?) {
+        super.onActivityResult(requestCode, resultCode, intent)
+        if (requestCode == 1000 && resultCode == RESULT_OK) {
+            parameters = JSONObject(resultIntent!!.getStringExtra("parameters")!!)
+        } else {
+            parameters = JSONObject()
         }
     }
 }

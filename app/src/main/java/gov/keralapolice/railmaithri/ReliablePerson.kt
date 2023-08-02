@@ -60,10 +60,10 @@ class ReliablePerson : AppCompatActivity() {
             if (formData == null){
                 formData = JSONObject()
             }
-            val intent = Intent(this, SearchData::class.java)
-            intent.putExtra("search_url", URL.RELIABLE_PERSON)
+            val intent = Intent()
             intent.putExtra("parameters", formData.toString())
-            startActivity(intent)
+            setResult(RESULT_OK, intent)
+            finish()
         } else if (mode == Mode.UPDATE_FORM){
             val formData = JSONObject(intent.getStringExtra("data")!!)
             val uuid     = formData.getString("utc_timestamp")
