@@ -18,7 +18,6 @@ class SearchData : AppCompatActivity() {
     private lateinit var progressPB:        ProgressBar
     private lateinit var loadMoreBT:        Button
     private lateinit var searchURL:         String
-    private lateinit var baseURL:           String
     private lateinit var parameters:        JSONObject
     private lateinit var resultLayout:      LinearLayout
     private var pageNumber                  = 1
@@ -30,10 +29,9 @@ class SearchData : AppCompatActivity() {
 
         progressPB    = findViewById(R.id.progress_bar)
         loadMoreBT    = findViewById(R.id.load_more)
-        searchURL     = intent.getStringExtra("search_url")!!
-        baseURL       = searchURL
-        parameters    = JSONObject(intent.getStringExtra("parameters")!!)
+        searchURL     = intent.getStringExtra("base_url")!!
         resultLayout  = findViewById(R.id.form_data_list)
+        parameters    = JSONObject()
 
         CoroutineScope(Dispatchers.IO).launch {  searchFormData()  }
         loadMoreBT.setOnClickListener {
@@ -52,7 +50,7 @@ class SearchData : AppCompatActivity() {
         val token    = Helper.getData(this, Storage.TOKEN)!!
         val response = Helper.getFormData(searchURL, parameters, token)
         if (response.first == ResponseType.SUCCESS) {
-            if (baseURL == URL.SURAKSHA_SAMITHI_MEMBERS) {
+            if (searchURL == URL.SURAKSHA_SAMITHI_MEMBERS) {
                 isEndOfResult = true
                 val formData  = JSONArray(response.second)
                 Handler(Looper.getMainLooper()).post { renderFormData(formData) }
@@ -73,9 +71,9 @@ class SearchData : AppCompatActivity() {
 
         Handler(Looper.getMainLooper()).post {
             loadMoreBT.isClickable  = true
-            progressPB.visibility = View.GONE
+            progressPB.visibility   = View.GONE
             if (isEndOfResult) {
-                loadMoreBT.visibility = View.GONE
+                loadMoreBT.isClickable = false
             }
         }
     }

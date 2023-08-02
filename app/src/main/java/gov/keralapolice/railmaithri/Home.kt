@@ -74,8 +74,8 @@ class Home : AppCompatActivity() {
             startActivity(intent)
         }
         findViewById<Button>(R.id.search_passenger_statistics).setOnClickListener {
-            val intent = Intent(this, PassengerStatistics::class.java)
-            intent.putExtra("mode", Mode.SEARCH_FORM)
+            val intent = Intent(this, SearchData::class.java)
+            intent.putExtra("base_url", URL.PASSENGER_STATISTICS)
             startActivity(intent)
         }
 
@@ -86,8 +86,8 @@ class Home : AppCompatActivity() {
             startActivity(intent)
         }
         findViewById<Button>(R.id.search_stranger_check).setOnClickListener {
-            val intent = Intent(this, StrangerCheck::class.java)
-            intent.putExtra("mode", Mode.SEARCH_FORM)
+            val intent = Intent(this, SearchData::class.java)
+            intent.putExtra("base_url", URL.STRANGER_CHECK)
             startActivity(intent)
         }
 
@@ -98,8 +98,8 @@ class Home : AppCompatActivity() {
             startActivity(intent)
         }
         findViewById<Button>(R.id.search_intelligence_information).setOnClickListener {
-            val intent = Intent(this, IntelligenceInformation::class.java)
-            intent.putExtra("mode", Mode.SEARCH_FORM)
+            val intent = Intent(this, SearchData::class.java)
+            intent.putExtra("base_url", URL.INTELLIGENCE_INFORMATION)
             startActivity(intent)
         }
 
@@ -110,8 +110,8 @@ class Home : AppCompatActivity() {
             startActivity(intent)
         }
         findViewById<Button>(R.id.search_lost_property).setOnClickListener {
-            val intent = Intent(this, LostProperty::class.java)
-            intent.putExtra("mode", Mode.SEARCH_FORM)
+            val intent = Intent(this, SearchData::class.java)
+            intent.putExtra("base_url", URL.LOST_PROPERTY)
             startActivity(intent)
         }
 
@@ -122,8 +122,8 @@ class Home : AppCompatActivity() {
             startActivity(intent)
         }
         findViewById<Button>(R.id.search_abandoned_property).setOnClickListener {
-            val intent = Intent(this, AbandonedProperty::class.java)
-            intent.putExtra("mode", Mode.SEARCH_FORM)
+            val intent = Intent(this, SearchData::class.java)
+            intent.putExtra("base_url", URL.ABANDONED_PROPERTY)
             startActivity(intent)
         }
 
@@ -134,8 +134,8 @@ class Home : AppCompatActivity() {
             startActivity(intent)
         }
         findViewById<Button>(R.id.search_reliable_person).setOnClickListener {
-            val intent = Intent(this, ReliablePerson::class.java)
-            intent.putExtra("mode", Mode.SEARCH_FORM)
+            val intent = Intent(this, SearchData::class.java)
+            intent.putExtra("base_url", URL.RELIABLE_PERSON)
             startActivity(intent)
         }
 
@@ -146,8 +146,8 @@ class Home : AppCompatActivity() {
             startActivity(intent)
         }
         findViewById<Button>(R.id.search_emergency_contact).setOnClickListener {
-            val intent = Intent(this, EmergencyContact::class.java)
-            intent.putExtra("mode", Mode.SEARCH_FORM)
+            val intent = Intent(this, SearchData::class.java)
+            intent.putExtra("base_url", URL.EMERGENCY_CONTACTS)
             startActivity(intent)
         }
 
@@ -158,8 +158,8 @@ class Home : AppCompatActivity() {
             startActivity(intent)
         }
         findViewById<Button>(R.id.search_poi).setOnClickListener {
-            val intent = Intent(this, POI::class.java)
-            intent.putExtra("mode", Mode.SEARCH_FORM)
+            val intent = Intent(this, SearchData::class.java)
+            intent.putExtra("base_url", URL.POI)
             startActivity(intent)
         }
 
@@ -170,8 +170,8 @@ class Home : AppCompatActivity() {
             startActivity(intent)
         }
         findViewById<Button>(R.id.search_unauthorized_person).setOnClickListener {
-            val intent = Intent(this, UnauthorizedPerson::class.java)
-            intent.putExtra("mode", Mode.SEARCH_FORM)
+            val intent = Intent(this, SearchData::class.java)
+            intent.putExtra("base_url", URL.UNAUTHORIZED_PEOPLE)
             startActivity(intent)
         }
 
@@ -182,8 +182,8 @@ class Home : AppCompatActivity() {
             startActivity(intent)
         }
         findViewById<Button>(R.id.search_crime_memo).setOnClickListener {
-            val intent = Intent(this, CrimeMemo::class.java)
-            intent.putExtra("mode", Mode.SEARCH_FORM)
+            val intent = Intent(this, SearchData::class.java)
+            intent.putExtra("base_url", URL.CRIME_MEMO)
             startActivity(intent)
         }
 
@@ -194,8 +194,8 @@ class Home : AppCompatActivity() {
             startActivity(intent)
         }
         findViewById<Button>(R.id.search_suraksha_samithi_member).setOnClickListener {
-            val intent = Intent(this, SurakshaSamithiMember::class.java)
-            intent.putExtra("mode", Mode.SEARCH_FORM)
+            val intent = Intent(this, SearchData::class.java)
+            intent.putExtra("base_url", URL.SURAKSHA_SAMITHI_MEMBERS)
             startActivity(intent)
         }
 
@@ -206,8 +206,8 @@ class Home : AppCompatActivity() {
             startActivity(intent)
         }
         findViewById<Button>(R.id.search_rail_volunteer).setOnClickListener {
-            val intent = Intent(this, RailVolunteer::class.java)
-            intent.putExtra("mode", Mode.SEARCH_FORM)
+            val intent = Intent(this, SearchData::class.java)
+            intent.putExtra("base_url", URL.RAIL_VOLUNTEER)
             startActivity(intent)
         }
 
@@ -224,8 +224,8 @@ class Home : AppCompatActivity() {
             startActivity(intent)
         }
         findViewById<Button>(R.id.search_railmaithri_meeting).setOnClickListener {
-            val intent = Intent(this, RailMaithriMeeting::class.java)
-            intent.putExtra("mode", Mode.SEARCH_FORM)
+            val intent = Intent(this, SearchData::class.java)
+            intent.putExtra("base_url", URL.RAILMAITHRI_MEETING)
             startActivity(intent)
         }
 
@@ -237,8 +237,7 @@ class Home : AppCompatActivity() {
         }
         findViewById<Button>(R.id.search_beat_diary).setOnClickListener {
             val intent = Intent(this, SearchData::class.java)
-            intent.putExtra("search_url", URL.BEAT_DIARY)
-            intent.putExtra("parameters", JSONObject().toString())
+            intent.putExtra("base_url", URL.BEAT_DIARY)
             startActivity(intent)
         }
 
@@ -249,8 +248,8 @@ class Home : AppCompatActivity() {
             startActivity(intent)
         }
         findViewById<Button>(R.id.search_shop_and_labours).setOnClickListener {
-            val intent = Intent(this, ShopAndLabours::class.java)
-            intent.putExtra("mode", Mode.SEARCH_FORM)
+            val intent = Intent(this, SearchData::class.java)
+            intent.putExtra("base_url", URL.SHOPS)
             startActivity(intent)
         }
 
@@ -261,8 +260,8 @@ class Home : AppCompatActivity() {
             startActivity(intent)
         }
         findViewById<Button>(R.id.search_incident_report).setOnClickListener {
-            val intent = Intent(this, IncidentReport::class.java)
-            intent.putExtra("mode", Mode.SEARCH_FORM)
+            val intent = Intent(this, SearchData::class.java)
+            intent.putExtra("base_url", URL.INCIDENT_REPORT)
             startActivity(intent)
         }
 
