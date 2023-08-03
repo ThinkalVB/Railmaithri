@@ -433,9 +433,9 @@ class Home : AppCompatActivity() {
                 saveLocationDataToServer(
                     intent.getDoubleExtra("latitude", 0.0).toString(),
                     intent.getDoubleExtra("longitude", 0.0).toString(),
-                    intent.getDoubleExtra("accuracy", 0.0).toString(),
-                    intent.getDoubleExtra("speed", 0.0).toString(),
-                    intent.getDoubleExtra("heading", 0.0).toString(),
+                    intent.getFloatExtra("accuracy", 0.0F).toString(),
+                    intent.getFloatExtra("speed", 0.0F).toString(),
+                    intent.getFloatExtra("heading", 0.0F).toString(),
                     intent.getDoubleExtra("altitude", 0.0).toString(),
                     Helper.getUTC(),
                     false,

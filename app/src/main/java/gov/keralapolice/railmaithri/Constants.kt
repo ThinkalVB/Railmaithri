@@ -57,7 +57,7 @@ class URL {
         const val COMMUNICATION_RECEIVER      = "$BASE_URL/api/v1/close_communication_receiver/"
         const val CLOSE_COMMUNICATION         = "$BASE_URL/api/v1/close_communication/"
         const val TASK_LIST                   = "$BASE_URL/api/v1/beat_officer_notifications/"
-        const val WATCH_ZONE                  = "$BASE_URL/api/v1/watch_zone/"
+        const val WATCH_ZONE                  = "$BASE_URL/api/v1/watch_zone/?mobile=true"
         const val LOCATION_UPDATE             = "$BASE_URL/api/v1/tracking_history/"
     }
 }
