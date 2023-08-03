@@ -1,7 +1,9 @@
 package gov.keralapolice.railmaithri.roomDB;
 
-import android.arch.persistence.room.Room;
+//import android.arch.persistence.room.Room;
 import android.content.Context;
+
+import androidx.room.Room;
 
 public class DatabaseClient {
 

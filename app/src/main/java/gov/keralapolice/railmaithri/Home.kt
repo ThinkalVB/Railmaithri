@@ -440,16 +440,17 @@ class Home : AppCompatActivity() {
                     Helper.getUTC(),
                     false,
                 )
+                CoroutineScope(Dispatchers.IO).launch {
+                    val taskList = DatabaseClient
+                        .getInstance(applicationContext)
+                        .appDatabase
+                        .taskLocation()
+                        .all
 
-                val taskList = DatabaseClient
-                    .getInstance(applicationContext)
-                    .appDatabase
-                    .taskLocation()
-                    .all
-
-                if (taskList.isNotEmpty()){
-                    //offline syncing
-                    startOfflineSyncing(taskList)
+                    if (taskList.isNotEmpty()){
+                        //offline syncing
+                        startOfflineSyncing(taskList)
+                    }
                 }
 
             } else {
@@ -464,7 +465,7 @@ class Home : AppCompatActivity() {
                 task.latitude = Helper.getUTC()
 
                 //adding to database
-                DatabaseClient.getInstance(applicationContext).getAppDatabase()
+                DatabaseClient.getInstance(applicationContext).appDatabase
                     .taskLocation()
                     .insert(task)
             }
