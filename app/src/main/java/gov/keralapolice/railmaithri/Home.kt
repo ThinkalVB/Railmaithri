@@ -35,10 +35,11 @@ import java.util.Calendar
 class Home : AppCompatActivity() {
     private lateinit var token: String
     private var officerID: Int = 0
-    private lateinit var profile: JSONObject
-    private lateinit var clientNT: OkHttpClient
-    private lateinit var logoutBT: ImageView
-    private lateinit var savedDataBT: ImageView
+    private lateinit var profile:       JSONObject
+    private lateinit var clientNT:      OkHttpClient
+    private lateinit var logoutBT:      ImageView
+    private lateinit var savedDataBT:   ImageView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.home)
