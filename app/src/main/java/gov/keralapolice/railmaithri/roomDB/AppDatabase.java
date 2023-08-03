@@ -1,8 +1,7 @@
 package gov.keralapolice.railmaithri.roomDB;
 
-
-import android.arch.persistence.room.Database;
-import android.arch.persistence.room.RoomDatabase;
+import androidx.room.Database;
+import androidx.room.RoomDatabase;
 
 import gov.keralapolice.railmaithri.models.LocationModel;
 
