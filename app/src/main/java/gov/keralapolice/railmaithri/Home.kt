@@ -29,6 +29,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient
+import org.json.JSONArray
 import org.json.JSONObject
 import java.util.Calendar
 
@@ -294,7 +295,7 @@ class Home : AppCompatActivity() {
     @SuppressLint("MissingPermission")
     private fun registerWatchZones() {
         val geofencingClient = LocationServices.getGeofencingClient(this)
-        val watchZones       = JSONObject(Helper.getData(this, Storage.WATCH_ZONE)!!).getJSONArray("results")
+        val watchZones       = JSONArray(Helper.getData(this, Storage.WATCH_ZONE)!!)
         for (i in 0 until watchZones.length()) {
             val watchZone   = watchZones.getJSONObject(i)
             val name        = watchZone.getString("name")
