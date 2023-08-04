@@ -3,11 +3,10 @@ package gov.keralapolice.railmaithri
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.Gravity
 import android.widget.Button
 import android.widget.LinearLayout
-import com.google.android.gms.location.LocationServices
+import org.json.JSONArray
 import org.json.JSONObject
 
 class WatchZone : AppCompatActivity() {
@@ -16,8 +15,7 @@ class WatchZone : AppCompatActivity() {
         setContentView(R.layout.watch_zone)
 
         val watchZoneList = findViewById<LinearLayout>(R.id.watch_zone_list)
-
-        val watchZones = JSONObject(Helper.getData(this, Storage.WATCH_ZONE)!!).getJSONArray("results")
+        val watchZones    = JSONArray(Helper.getData(this, Storage.WATCH_ZONE)!!)
         for (i in 0 until watchZones.length()) {
             val watchZone   = watchZones.getJSONObject(i)
             val button      = generateButton(this, watchZone)

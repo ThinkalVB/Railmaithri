@@ -15,6 +15,9 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.FirebaseApp
+import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -30,6 +33,7 @@ class Login : AppCompatActivity() {
     private lateinit var loginBT:       Button
     private lateinit var usernameET:    EditText
     private lateinit var passwordET:    EditText
+    private lateinit var loginData:     JSONObject
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,27 +60,37 @@ class Login : AppCompatActivity() {
                 val message = "Both username and password are required to login"
                 Helper.showToast(this, message)
             } else {
-                CoroutineScope(Dispatchers.IO).launch {  login(username, password)  }
+                val deviceID = Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID)
+                loginData    = JSONObject()
+                loginData.put("username", username)
+                loginData.put("password", password)
+                loginData.put("device_id", deviceID.toString())
+                loginData.put("app_version", App.APP_VERSION)
+                registerFirebase()
             }
         }
     }
 
-    private fun login(username: String, password: String) {
+    private fun registerFirebase() {
+        FirebaseApp.initializeApp(this)
+        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                Helper.showToast(this, "Firebase failed to connect")
+                return@OnCompleteListener
+            }
+            loginData.put("fcm_token", task.result)
+            CoroutineScope(Dispatchers.IO).launch { login() }
+        })
+    }
+
+    private fun login() {
         Handler(Looper.getMainLooper()).post {
             loginBT.isClickable   = false
             progressPB.visibility = View.VISIBLE
         }
 
-        val deviceID = Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID)
-        val data     = JSONObject()
-        data.put("username", username)
-        data.put("password", password)
-        data.put("device_id", deviceID.toString())
-        data.put("app_version", App.APP_VERSION)
-        data.put("fcm_token", "no_token")
-
         try {
-            val request  = API.post(URL.MOBILE_LOGIN, data, null)
+            val request  = API.post(URL.MOBILE_LOGIN, loginData, null)
             val response = clientNT.newCall(request).execute()
             if (response.isSuccessful) {
                 val authData = JSONObject(response.body!!.string())

@@ -19,8 +19,6 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.location.Geofence
 import com.google.android.gms.location.GeofencingRequest
 import com.google.android.gms.location.LocationServices
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.firebase.messaging.FirebaseMessaging
 import gov.keralapolice.railmaithri.models.LocationModel
 import gov.keralapolice.railmaithri.roomDB.DatabaseClient
 import gov.keralapolice.railmaithri.services.Network
@@ -45,15 +43,6 @@ class Home : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.home)
         supportActionBar!!.hide()
-
-        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
-            if (!task.isSuccessful) {
-                return@OnCompleteListener
-            }
-            // Get new FCM registration token
-            val token = task.result
-            Toast.makeText(baseContext, token, Toast.LENGTH_SHORT).show()
-        })
 
         clientNT = OkHttpClient().newBuilder().build()
         profile = JSONObject(Helper.getData(this, Storage.PROFILE)!!)
