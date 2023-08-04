@@ -1,12 +1,15 @@
 package gov.keralapolice.railmaithri
 
 import android.Manifest
+import android.annotation.SuppressLint
+import android.app.PendingIntent
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.provider.Settings
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
@@ -15,6 +18,9 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.google.android.gms.location.Geofence
+import com.google.android.gms.location.GeofencingRequest
+import com.google.android.gms.location.LocationServices
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.FirebaseApp
 import com.google.firebase.messaging.FirebaseMessaging
@@ -22,6 +28,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient
+import org.json.JSONArray
 import org.json.JSONObject
 
 class Login : AppCompatActivity() {
@@ -166,6 +173,7 @@ class Login : AppCompatActivity() {
         status = status && cacheData(URL.SHOP_TYPES, Storage.SHOP_TYPES)
         status = status && cacheData(URL.CRIME_MEMO_TYPES, Storage.CRIME_MEMO_TYPES)
         status = status && cacheData(URL.WATCH_ZONE, Storage.WATCH_ZONE)
+        registerWatchZones()
         return status
     }
 
@@ -178,5 +186,54 @@ class Login : AppCompatActivity() {
         } else {
             false
         }
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun registerWatchZones() {
+        val geofencingClient = LocationServices.getGeofencingClient(this)
+        val watchZones       = JSONArray(Helper.getData(this, Storage.WATCH_ZONE)!!)
+        for (i in 0 until watchZones.length()) {
+            val watchZone   = watchZones.getJSONObject(i)
+            val name        = watchZone.getString("name")
+            val endpoints   = watchZone.getJSONObject("end_points")
+            val coordinates = endpoints.getJSONArray("coordinates")
+
+            val start = coordinates.getJSONArray(0)
+            val end   = coordinates.getJSONArray(1)
+            val midX  = (start.getDouble(0) + end.getDouble(0))/2
+            val midY  = (start.getDouble(1) + end.getDouble(1))/2
+
+            val geoFenceRequest  = makeGeofencingRequest(name, midY, midX, 1000.0f)
+            geofencingClient.addGeofences(geoFenceRequest, geofencePendingIntent).run {
+                addOnSuccessListener {
+                    Log.e("Railmaithri", "Geofence added")
+                }
+                addOnFailureListener {  it:Exception ->
+                    Log.e("Railmaithri", "Geofence failed")
+                    Log.e("Railmaithri", it.stackTraceToString())
+                }
+            }
+        }
+    }
+
+    private val geofencePendingIntent: PendingIntent by lazy {
+        val intent = Intent(this, GeofenceBroadcastReceiver::class.java)
+        PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_MUTABLE)
+    }
+
+    private fun makeGeofencingRequest(requestID: String, latitude: Double,
+                                      longitude: Double,
+                                      radius: Float): GeofencingRequest {
+        val geofence = Geofence.Builder()
+            .setRequestId(requestID)
+            .setCircularRegion(latitude, longitude, radius)
+            .setExpirationDuration(Geofence.NEVER_EXPIRE)
+            .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER or Geofence.GEOFENCE_TRANSITION_EXIT)
+            .build()
+
+        return GeofencingRequest.Builder().apply {
+            setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER)
+            addGeofence(geofence)
+        }.build()
     }
 }

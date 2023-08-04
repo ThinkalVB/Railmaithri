@@ -277,35 +277,6 @@ class Home : AppCompatActivity() {
     private fun startTracking() {
         if (Helper.haveLocationPermission(this)){
             startLocationService()
-            registerWatchZones()
-        }
-    }
-
-    @SuppressLint("MissingPermission")
-    private fun registerWatchZones() {
-        val geofencingClient = LocationServices.getGeofencingClient(this)
-        val watchZones       = JSONArray(Helper.getData(this, Storage.WATCH_ZONE)!!)
-        for (i in 0 until watchZones.length()) {
-            val watchZone   = watchZones.getJSONObject(i)
-            val name        = watchZone.getString("name")
-            val endpoints   = watchZone.getJSONObject("end_points")
-            val coordinates = endpoints.getJSONArray("coordinates")
-
-            val start = coordinates.getJSONArray(0)
-            val end   = coordinates.getJSONArray(1)
-            val midX  = (start.getDouble(0) + end.getDouble(0))/2
-            val midY  = (start.getDouble(1) + end.getDouble(1))/2
-
-            val geoFenceRequest  = makeGeofencingRequest(name, midY, midX, 1000.0f)
-            geofencingClient.addGeofences(geoFenceRequest, geofencePendingIntent).run {
-                addOnSuccessListener {
-                    Log.e("Railmaithri", "Geofence added")
-                }
-                addOnFailureListener {  it:Exception ->
-                    Log.e("Railmaithri", "Geofence failed")
-                    Log.e("Railmaithri", it.stackTraceToString())
-                }
-            }
         }
     }
 
@@ -483,26 +454,5 @@ class Home : AppCompatActivity() {
         val intentFilter = IntentFilter("Location")
         registerReceiver(locationStateReceiver, intentFilter)
         super.onResume()
-    }
-
-    private val geofencePendingIntent: PendingIntent by lazy {
-        val intent = Intent(this, GeofenceBroadcastReceiver::class.java)
-        PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_MUTABLE)
-    }
-
-    private fun makeGeofencingRequest(requestID: String, latitude: Double,
-                                      longitude: Double,
-                                      radius: Float): GeofencingRequest {
-        val geofence = Geofence.Builder()
-            .setRequestId(requestID)
-            .setCircularRegion(latitude, longitude, radius)
-            .setExpirationDuration(Geofence.NEVER_EXPIRE)
-            .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER or Geofence.GEOFENCE_TRANSITION_EXIT)
-            .build()
-
-        return GeofencingRequest.Builder().apply {
-            setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER)
-            addGeofence(geofence)
-        }.build()
     }
 }
