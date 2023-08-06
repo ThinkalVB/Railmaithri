@@ -414,12 +414,12 @@ class Home : AppCompatActivity() {
                 //creating a task
                 val task = LocationModel()
                 task.latitude = intent.getDoubleExtra("latitude", 0.0).toString()
-                task.latitude = intent.getDoubleExtra("longitude", 0.0).toString()
-                task.latitude = intent.getDoubleExtra("accuracy", 0.0).toString()
-                task.latitude = intent.getDoubleExtra("speed", 0.0).toString()
-                task.latitude = intent.getDoubleExtra("heading", 0.0).toString()
-                task.latitude = intent.getDoubleExtra("altitude", 0.0).toString()
-                task.latitude = Helper.getUTC()
+                task.longitude = intent.getDoubleExtra("longitude", 0.0).toString()
+                task.accuracy = intent.getDoubleExtra("accuracy", 0.0).toString()
+                task.speed = intent.getDoubleExtra("speed", 0.0).toString()
+                task.heading = intent.getDoubleExtra("heading", 0.0).toString()
+                task.altitude = intent.getDoubleExtra("altitude", 0.0).toString()
+                task.utc_timestamp = Helper.getUTC()
 
                 //adding to database
                 DatabaseClient.getInstance(applicationContext).appDatabase
