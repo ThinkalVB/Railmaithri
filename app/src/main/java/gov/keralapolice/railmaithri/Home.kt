@@ -242,6 +242,18 @@ class Home : AppCompatActivity() {
             startActivity(intent)
         }
 
+        //Run over
+        findViewById<ImageView>(R.id.add_run_over).setOnClickListener {
+            val intent = Intent(this, RunOver::class.java)
+            intent.putExtra("mode", Mode.NEW_FORM)
+            startActivity(intent)
+        }
+        findViewById<Button>(R.id.search_run_over).setOnClickListener {
+            val intent = Intent(this, SearchData::class.java)
+            intent.putExtra("base_url", URL.RUN_OVER)
+            startActivity(intent)
+        }
+
         //Incident Report
         findViewById<ImageView>(R.id.add_incident_report).setOnClickListener {
             val intent = Intent(this, IncidentReport::class.java)

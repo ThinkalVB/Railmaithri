@@ -34,107 +34,111 @@
         android:usesCleartextTraffic="false"
         tools:targetApi="31">
         <activity
-            android:screenOrientation="nosensor"
+            android:name=".RunOver"
+            android:exported="false" />
+        <activity
             android:name=".ViewTask"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="nosensor" />
         <activity
-            android:screenOrientation="nosensor"
             android:name=".TaskList"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="nosensor" />
         <activity
-            android:screenOrientation="nosensor"
             android:name=".IncidentReport"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="nosensor" />
         <activity
-            android:screenOrientation="nosensor"
             android:name=".Labour"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="nosensor" />
         <activity
-            android:screenOrientation="nosensor"
             android:name=".ShopAndLabours"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="nosensor" />
         <activity
-            android:screenOrientation="nosensor"
             android:name=".WatchZone"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="nosensor" />
         <activity
-            android:screenOrientation="nosensor"
             android:name=".BeatDiary"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="nosensor" />
         <activity
-            android:screenOrientation="nosensor"
             android:name=".RailMaithriMeeting"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="nosensor" />
         <activity
-            android:screenOrientation="nosensor"
             android:name=".Chat"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="nosensor" />
         <activity
-            android:screenOrientation="nosensor"
             android:name=".RailVolunteer"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="nosensor" />
         <activity
-            android:screenOrientation="nosensor"
             android:name=".SurakshaSamithiMember"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="nosensor" />
         <activity
-            android:screenOrientation="nosensor"
             android:name=".CrimeMemo"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="nosensor" />
         <activity
-            android:screenOrientation="nosensor"
             android:name=".UnauthorizedPerson"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="nosensor" />
         <activity
-            android:screenOrientation="nosensor"
             android:name=".POI"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="nosensor" />
         <activity
-            android:screenOrientation="nosensor"
             android:name=".EmergencyContact"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="nosensor" />
         <activity
-            android:screenOrientation="nosensor"
             android:name=".ReliablePerson"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="nosensor" />
         <activity
-            android:screenOrientation="nosensor"
             android:name=".AbandonedProperty"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="nosensor" />
         <activity
-            android:screenOrientation="nosensor"
             android:name=".LostProperty"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="nosensor" />
         <activity
-            android:screenOrientation="nosensor"
             android:name=".IntelligenceInformation"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="nosensor" />
         <activity
-            android:screenOrientation="nosensor"
             android:name=".SavedData"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="nosensor" />
         <activity
-            android:screenOrientation="nosensor"
             android:name=".SearchData"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="nosensor" />
         <activity
-            android:screenOrientation="nosensor"
             android:name=".StrangerCheck"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="nosensor" />
         <activity
-            android:screenOrientation="nosensor"
             android:name=".PassengerStatistics"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="nosensor" />
         <activity
-            android:screenOrientation="nosensor"
             android:name=".Home"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="nosensor" />
         <activity
-            android:screenOrientation="nosensor"
             android:name=".Login"
-            android:exported="true">
+            android:exported="true"
+            android:screenOrientation="nosensor">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

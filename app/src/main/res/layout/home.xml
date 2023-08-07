@@ -960,7 +960,7 @@
 
             </LinearLayout>
 
-            <!-- Watch zone -->
+            <!-- Watch zone, Run over -->
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -992,6 +992,53 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="4dp"
                         android:text="Watch zone\n"
+                        android:textAlignment="center"
+                        android:textColor="@color/black"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:id="@+id/add_run_over"
+                        android:layout_width="125dp"
+                        android:layout_height="125dp"
+                        android:paddingBottom="24dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/home_button" />
+                    <ImageView
+                        android:layout_marginTop="24dp"
+                        android:layout_marginEnd="24dp"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/im_run_over" />
+                    <Button
+                        android:id="@+id/search_run_over"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:backgroundTint="@color/LightSlateGray"
+                        android:drawableTop="@drawable/ic_search"
+                        android:insetTop="0dp"
+                        android:insetBottom="0dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="4dp"
+                        android:text="Run over\n"
                         android:textAlignment="center"
                         android:textColor="@color/black"
                         android:textSize="12sp"

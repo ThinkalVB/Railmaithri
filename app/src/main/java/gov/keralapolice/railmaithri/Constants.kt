@@ -29,6 +29,8 @@ class URL {
         const val SURAKSHA_SAMITHI_LIST       = "$BASE_URL/railmaithri/dropdown/suraksha_samithi_list/"
         const val SHOP_TYPES                  = "$BASE_URL/railmaithri/dropdown/shop_category_list/"
         const val CRIME_MEMO_TYPES            = "$BASE_URL/api/v1/crime_memo_category/"
+        const val RUN_OVER_TYPES              = "$BASE_URL/api/v1/run_over_category/"
+        const val RUN_OVER_CAUSE_TYPES        = "$BASE_URL/api/v1/run_over_cause_category/"
 
         const val MOBILE_LOGIN                = "$BASE_URL/accounts/mobile_login/"
         const val MOBILE_LOGOUT               = "$BASE_URL/accounts/logout/"
@@ -52,6 +54,7 @@ class URL {
         const val INTRUDER_ALERT              = "$BASE_URL/api/v1/intruder_report/"
         const val LONELY_PASSENGER            = "$BASE_URL/api/v1/lonely_passenger/"
         const val SOS                         = "$BASE_URL/api/v1/sos_message/"
+        const val RUN_OVER                    = "$BASE_URL/api/v1/run_over_report/"
 
         const val OFFICERS_IN_PS              = "$BASE_URL/accounts/dropdown/beat_officers_in_ps/"
         const val COMMUNICATION_RECEIVER      = "$BASE_URL/api/v1/close_communication_receiver/"
@@ -89,6 +92,8 @@ class Storage {
         const val SURAKSHA_SAMITHI_LIST       = "SURAKSHA_SAMITHI_LIST"
         const val SHOP_TYPES                  = "SHOP_TYPES"
         const val CRIME_MEMO_TYPES            = "CRIME_MEMO_TYPES"
+        const val RUN_OVER_TYPES              = "RUN_OVER_TYPES"
+        const val RUN_OVER_CAUSE_TYPES        = "RUN_OVER_CAUSE_TYPES"
 
         const val INCIDENT_REPORT             = "INCIDENT_REPORT"
         const val PASSENGER_STATISTICS        = "PASSENGER_STATISTICS"
@@ -108,6 +113,7 @@ class Storage {
         const val SHOPS                       = "SHOPS"
         const val LABOURS                     = "LABOURS"
         const val WATCH_ZONE                  = "WATCH_ZONE"
+        const val RUN_OVER                    = "RUN_OVER"
     }
 }
 

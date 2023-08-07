@@ -173,6 +173,8 @@ class Login : AppCompatActivity() {
         status = status && cacheData(URL.SHOP_TYPES, Storage.SHOP_TYPES)
         status = status && cacheData(URL.CRIME_MEMO_TYPES, Storage.CRIME_MEMO_TYPES)
         status = status && cacheData(URL.WATCH_ZONE, Storage.WATCH_ZONE)
+        status = status && cacheData(URL.RUN_OVER_TYPES, Storage.RUN_OVER_TYPES)
+        status = status && cacheData(URL.RUN_OVER_CAUSE_TYPES, Storage.RUN_OVER_CAUSE_TYPES)
         registerWatchZones()
         return status
     }
