@@ -280,7 +280,6 @@ class Home : AppCompatActivity() {
             val intent = Intent(applicationContext, TrackingService::class.java)
             intent.action = "startLocationService"
             startService(intent)
-            Toast.makeText(this, "Location service started", Toast.LENGTH_SHORT).show()
             val c = Calendar.getInstance()
             c[Calendar.HOUR_OF_DAY] = c[Calendar.HOUR_OF_DAY] + 1
             c[Calendar.MINUTE] = c[Calendar.MINUTE]
@@ -413,13 +412,13 @@ class Home : AppCompatActivity() {
             } else {
                 //creating a task
                 val task = LocationModel()
-                task.latitude = intent.getDoubleExtra("latitude", 0.0).toString()
-                task.longitude = intent.getDoubleExtra("longitude", 0.0).toString()
-                task.accuracy = intent.getDoubleExtra("accuracy", 0.0).toString()
-                task.speed = intent.getDoubleExtra("speed", 0.0).toString()
-                task.heading = intent.getDoubleExtra("heading", 0.0).toString()
-                task.altitude = intent.getDoubleExtra("altitude", 0.0).toString()
-                task.utc_timestamp = Helper.getUTC()
+                task.latitude       = intent.getDoubleExtra("latitude", 0.0).toString()
+                task.longitude      = intent.getDoubleExtra("longitude", 0.0).toString()
+                task.accuracy       = intent.getDoubleExtra("accuracy", 0.0).toString()
+                task.speed          = intent.getDoubleExtra("speed", 0.0).toString()
+                task.heading        = intent.getDoubleExtra("heading", 0.0).toString()
+                task.altitude       = intent.getDoubleExtra("altitude", 0.0).toString()
+                task.utc_timestamp  = Helper.getUTC()
 
                 //adding to database
                 DatabaseClient.getInstance(applicationContext).appDatabase

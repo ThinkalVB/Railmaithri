@@ -167,7 +167,6 @@ public class TrackingService extends Service {
         public void onLocationChanged(final Location loc) {
             if (isBetterLocation(loc, previousBestLocation)) {
                 //Send Coordinates to server
-                Toast.makeText(TrackingService.this, loc.getLatitude() + "|" + loc.getLongitude() + loc.getAccuracy() + loc.getSpeed() + loc.getBearing() + loc.getAltitude(), Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent("Location");
                 intent.putExtra("latitude", loc.getLatitude()).toString();
                 intent.putExtra("longitude", loc.getLongitude()).toString();
@@ -185,12 +184,11 @@ public class TrackingService extends Service {
         }
 
         public void onProviderDisabled(String provider) {
-            Toast.makeText(getApplicationContext(), "Gps Disabled", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "GPS is disabled", Toast.LENGTH_SHORT).show();
         }
 
-
         public void onProviderEnabled(String provider) {
-            Toast.makeText(getApplicationContext(), "Gps Enabled", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "GPS is enabled", Toast.LENGTH_SHORT).show();
         }
     }
 }
