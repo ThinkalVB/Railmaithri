@@ -126,6 +126,11 @@ class IncidentReport : AppCompatActivity() {
             if (formData == null) {
                 formData = JSONObject()
             }
+
+            val profile   = JSONObject(Helper.getData(this, Storage.PROFILE)!!)
+            val officerID = profile.getInt("id")
+            formData.put("informer", officerID)
+
             val intent = Intent()
             intent.putExtra("parameters", formData.toString())
             setResult(RESULT_OK, intent)

@@ -60,6 +60,11 @@ class SurakshaSamithiMember : AppCompatActivity() {
             if (formData == null){
                 formData = JSONObject()
             }
+
+            val profile   = JSONObject(Helper.getData(this, Storage.PROFILE)!!)
+            val stationID = profile.getJSONArray("police_station").getJSONObject(0).getInt("id")
+            formData.put("suraksha_samithi__police_station", stationID)
+
             val intent = Intent()
             intent.putExtra("parameters", formData.toString())
             setResult(RESULT_OK, intent)

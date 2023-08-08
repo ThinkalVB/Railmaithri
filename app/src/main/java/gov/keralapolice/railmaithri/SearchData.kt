@@ -143,6 +143,12 @@ class SearchData : AppCompatActivity() {
         }
 
         parameters.put("page", pageNumber)
+        if(searchURL == URL.BEAT_DIARY){
+            val profile   = JSONObject(Helper.getData(this, Storage.PROFILE)!!)
+            val officerID = profile.getInt("id")
+            parameters.put("beat_officer", officerID)
+        }
+
         val token    = Helper.getData(this, Storage.TOKEN)!!
         val response = Helper.getFormData(searchURL, parameters, token)
         if (response.first == ResponseType.SUCCESS) {
