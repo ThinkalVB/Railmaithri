@@ -1,9 +1,12 @@
 package gov.keralapolice.railmaithri
 
+import android.content.Context
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.view.Gravity
 import android.view.View
 import android.widget.AdapterView
 import android.widget.Button
@@ -80,6 +83,36 @@ class RunOver : AppCompatActivity() {
     }
 
     private fun loadFormData(formData: JSONObject) {
+        when (formData.getBoolean("is_identified")) {
+            true -> {
+                bodyIdentified.setSelection(YES)
+                renderForm(YES)
+                name.importData(formData)
+                address.importData(formData)
+                relativesContact.importData(formData)
+            }
+            false -> {
+                bodyIdentified.setSelection(NO)
+                renderForm(NO)
+                victimDetails.importData(formData)
+                crimeNumber.importData(formData)
+                railwayPoliceStation.importData(formData)
+                localPoliceStation.importData(formData)
+            }
+        }
+        dateOfOccurrence.importData(formData)
+        timeOfOccurrence.importData(formData)
+        placeOfOccurrence.importData(formData)
+        betweenStation1.importData(formData)
+        betweenStation2.importData(formData)
+        contactNumber.importData(formData)
+        runOverCategory.importData(formData)
+        runOverCause.importData(formData)
+        sourceOfInfo.importData(formData)
+        age.importData(formData)
+        district.importData(formData)
+        identificationDetails.importData(formData)
+        remarks.importData(formData)
     }
 
     private fun performAction() {
@@ -91,21 +124,20 @@ class RunOver : AppCompatActivity() {
                 CoroutineScope(Dispatchers.IO).launch {  sendFormData(formData)  }
             }
         } else if (mode == Mode.SEARCH_FORM) {
-//            var formData = getFormData()
-//            if (formData == null) {
-//                formData = JSONObject()
-//            }
-//            val intent = Intent()
-//            intent.putExtra("parameters", formData.toString())
-//            setResult(RESULT_OK, intent)
-//            finish()
+            var formData = getFormData()
+            if (formData == null) {
+                formData = JSONObject()
+            }
+            val intent = Intent()
+            intent.putExtra("parameters", formData.toString())
+            setResult(RESULT_OK, intent)
+            finish()
         } else if (mode == Mode.UPDATE_FORM){
-//            val formData = JSONObject(intent.getStringExtra("data")!!)
-//            val uuid     = formData.getString("utc_timestamp")
-//            getFormData(formData)
-//            storeFile(formData, uuid)
-//            Helper.saveFormData(this, formData, Storage.INCIDENT_REPORT, uuid)
-//            finish()
+            val formData = JSONObject(intent.getStringExtra("data")!!)
+            val uuid     = formData.getString("utc_timestamp")
+            getFormData(formData)
+            Helper.saveFormData(this, formData, Storage.RUN_OVER, uuid)
+            finish()
         }
     }
 
@@ -372,6 +404,32 @@ class RunOver : AppCompatActivity() {
         }
         if(mode == Mode.SEARCH_FORM) {
             actionBT.text = "Search"
+        }
+    }
+
+    companion object {
+        fun generateButton(
+            context: Context,
+            formData: JSONObject,
+            mode: String? = Mode.VIEW_FORM
+        ): Button {
+            val formID       = formData.optString("id", "Not assigned")
+            val isIdentified = formData.getString("is_identified")
+            val createdOn    = formData.getString("utc_timestamp")
+                .take(16).replace("T", "\t")
+            val shortData = "ID ${formID}\nIdentified: ${isIdentified}\nDate: $createdOn"
+
+            val button = Button(context)
+            button.isAllCaps = false
+            button.gravity = Gravity.START
+            button.text = shortData
+            button.setOnClickListener {
+                val intent = Intent(context, RunOver::class.java)
+                intent.putExtra("mode", mode)
+                intent.putExtra("data", formData.toString())
+                context.startActivity(intent)
+            }
+            return button
         }
     }
 }
