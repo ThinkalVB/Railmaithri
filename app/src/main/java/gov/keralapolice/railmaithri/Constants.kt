@@ -28,9 +28,9 @@ class URL {
         const val FOUND_IN_TYPES              = "$BASE_URL/railmaithri/dropdown/found_in_type_list/"
         const val SURAKSHA_SAMITHI_LIST       = "$BASE_URL/railmaithri/dropdown/suraksha_samithi_list/"
         const val SHOP_TYPES                  = "$BASE_URL/railmaithri/dropdown/shop_category_list/"
-        const val CRIME_MEMO_TYPES            = "$BASE_URL/api/v1/crime_memo_category/"
-        const val RUN_OVER_TYPES              = "$BASE_URL/api/v1/run_over_category/"
-        const val RUN_OVER_CAUSE_TYPES        = "$BASE_URL/api/v1/run_over_cause_category/"
+        const val CRIME_MEMO_TYPES            = "$BASE_URL/railmaithri/dropdown/crime_memo_category_list/"
+        const val RUN_OVER_TYPES              = "$BASE_URL/railmaithri/dropdown/run_over_category_list/"
+        const val RUN_OVER_CAUSE_TYPES        = "$BASE_URL/railmaithri/dropdown/run_over_cause_category_list/"
 
         const val MOBILE_LOGIN                = "$BASE_URL/accounts/mobile_login/"
         const val MOBILE_LOGOUT               = "$BASE_URL/accounts/logout/"
