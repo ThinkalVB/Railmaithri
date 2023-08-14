@@ -33,7 +33,6 @@ class RunOver : AppCompatActivity() {
     private lateinit var runOverCategory:       FieldSpinner
     private lateinit var runOverCause:          FieldSpinner
     private lateinit var gender:                FieldSpinner
-    private lateinit var contactNumber:         FieldEditText
     private lateinit var age:                   FieldEditText
     private lateinit var name:                  FieldEditText
     private lateinit var address:               FieldEditText
@@ -88,8 +87,11 @@ class RunOver : AppCompatActivity() {
                 bodyIdentified.setSelection(YES)
                 renderForm(YES)
                 name.importData(formData)
+                age.importData(formData)
                 address.importData(formData)
+                gender.importData(formData)
                 relativesContact.importData(formData)
+                district.importData(formData)
             }
             false -> {
                 bodyIdentified.setSelection(NO)
@@ -105,12 +107,9 @@ class RunOver : AppCompatActivity() {
         placeOfOccurrence.importData(formData)
         betweenStation1.importData(formData)
         betweenStation2.importData(formData)
-        contactNumber.importData(formData)
         runOverCategory.importData(formData)
         runOverCause.importData(formData)
         sourceOfInfo.importData(formData)
-        age.importData(formData)
-        district.importData(formData)
         identificationDetails.importData(formData)
         remarks.importData(formData)
     }
@@ -180,14 +179,8 @@ class RunOver : AppCompatActivity() {
             runOverCategory.exportData(formData)
             runOverCause.exportData(formData)
             sourceOfInfo.exportData(formData)
-            age.exportData(formData)
             identificationDetails.exportData(formData)
             remarks.exportData(formData)
-            gender.exportData(formData)
-            contactNumber.exportData(formData)
-            identificationDetails.exportData(formData)
-            remarks.exportData(formData)
-            district.exportData(formData)
             when (caseRegisteredIn.selectedItemPosition) {
                 RAILWAY_POLCIE_STATION -> {
                     formData.put("case_registered_in", "Railway Police Station")
@@ -201,8 +194,11 @@ class RunOver : AppCompatActivity() {
                 YES -> {
                     formData.put("is_identified", true)
                     name.exportData(formData)
+                    age.exportData(formData)
                     address.exportData(formData)
+                    gender.exportData(formData)
                     relativesContact.exportData(formData)
+                    district.exportData(formData)
                 }
                 NO -> {
                     formData.put("is_identified", false)
@@ -210,7 +206,6 @@ class RunOver : AppCompatActivity() {
                     crimeNumber.exportData(formData)
                     railwayPoliceStation.exportData(formData)
                     localPoliceStation.exportData(formData)
-                    district.exportData(formData)
                 }
             }
         } catch (e: Exception){
@@ -228,17 +223,17 @@ class RunOver : AppCompatActivity() {
         form.addView(placeOfOccurrence.getLayout())
         form.addView(betweenStation1.getLayout())
         form.addView(betweenStation2.getLayout())
-        form.addView(contactNumber.getLayout())
         form.addView(runOverCategory.getLayout())
         form.addView(runOverCause.getLayout())
         form.addView(sourceOfInfo.getLayout())
-        form.addView(age.getLayout())
-        form.addView(district.getLayout())
         when (position) {
             YES -> {
                 form.addView(name.getLayout())
+                form.addView(age.getLayout())
                 form.addView(address.getLayout())
+                form.addView(gender.getLayout())
                 form.addView(relativesContact.getLayout())
+                form.addView(district.getLayout())
             }
             NO -> {
                 form.addView(victimDetails.getLayout())
@@ -303,13 +298,7 @@ class RunOver : AppCompatActivity() {
             fieldLabel = "source_of_information",
             fieldName = "Source of information",
             fieldHeight=98,
-            isRequired = Helper.resolveIsRequired(true, mode)
-        )
-        contactNumber = FieldEditText(this,
-            fieldType = "phone",
-            fieldLabel = "contact_number",
-            fieldName = "Contact number",
-            isRequired = Helper.resolveIsRequired(true, mode)
+            isRequired = Helper.resolveIsRequired(false, mode)
         )
         gender = FieldSpinner(this,
             JSONArray(Helper.getData(this, Storage.GENDER_TYPES)!!),
