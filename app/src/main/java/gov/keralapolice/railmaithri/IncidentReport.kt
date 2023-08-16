@@ -6,15 +6,12 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.widget.AdapterView
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.ProgressBar
-import android.widget.Spinner
-import androidx.constraintlayout.widget.ConstraintLayout
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -88,10 +85,6 @@ class IncidentReport : AppCompatActivity() {
                 if (formData == null) {
                     formData = JSONObject()
                 }
-
-                val profile   = JSONObject(Helper.getData(this, Storage.PROFILE)!!)
-                val officerID = profile.getInt("id")
-                formData.put("informer", officerID)
 
                 val intent = Intent()
                 intent.putExtra("parameters", formData.toString())
@@ -241,33 +234,31 @@ class IncidentReport : AppCompatActivity() {
         locationUtil.hide()
 
         incidentTypes.show()
-        if (mode == Mode.UPDATE_FORM || mode == Mode.NEW_FORM || mode == Mode.SEARCH_FORM){
-            when (incidentTypes.getData().toString()) {
-                "Platform" -> {
-                    railwayStation.show()
-                    platformNumber.show()
-                }
-                "Track" -> {
-                    railwayStation.show()
-                    trackLocation.show()
-                }
-                "Train" -> {
-                    train.show()
-                    coachNumber.show()
-                    contactNumber.show()
-                }
+        when (incidentTypes.getData().toString()) {
+            "Platform" -> {
+                railwayStation.show()
+                platformNumber.show()
             }
+            "Track" -> {
+                railwayStation.show()
+                trackLocation.show()
+            }
+            "Train" -> {
+                train.show()
+                coachNumber.show()
+                contactNumber.show()
+            }
+        }
 
-            if (mode == Mode.SEARCH_FORM) {
-                dateFrom.show()
-                dateTo.show()
-                actionBT.text = "Search"
-            } else {
-                details.show()
-                fileUtil.show()
-                locationUtil.show()
-                actionBT.text = "Save"
-            }
+        if (mode == Mode.SEARCH_FORM) {
+            dateFrom.show()
+            dateTo.show()
+            actionBT.text = "Search"
+        } else {
+            details.show()
+            fileUtil.show()
+            locationUtil.show()
+            actionBT.text = "Save"
         }
     }
 

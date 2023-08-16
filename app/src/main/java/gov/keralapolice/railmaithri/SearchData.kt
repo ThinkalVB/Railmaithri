@@ -38,7 +38,6 @@ class SearchData : AppCompatActivity() {
         filterBT      = findViewById(R.id.filter_button)
         parameters    = JSONObject()
 
-        CoroutineScope(Dispatchers.IO).launch {  searchFormData()  }
         loadMoreBT.setOnClickListener {
             CoroutineScope(Dispatchers.IO).launch {  searchFormData()  }
         }
@@ -128,11 +127,9 @@ class SearchData : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        if (parameters.keys().hasNext()){
-            resultLayout.removeAllViews()
-            pageNumber = 1
-            CoroutineScope(Dispatchers.IO).launch {  searchFormData()  }
-        }
+        resultLayout.removeAllViews()
+        pageNumber = 1
+        CoroutineScope(Dispatchers.IO).launch {  searchFormData()  }
     }
 
     private fun searchFormData() {
@@ -143,10 +140,14 @@ class SearchData : AppCompatActivity() {
         }
 
         parameters.put("page", pageNumber)
-        if(searchURL == URL.BEAT_DIARY){
-            val profile   = JSONObject(Helper.getData(this, Storage.PROFILE)!!)
-            val officerID = profile.getInt("id")
+        val profile   = JSONObject(Helper.getData(this, Storage.PROFILE)!!)
+        val officerID = profile.getInt("id")
+
+        if (searchURL == URL.BEAT_DIARY){
             parameters.put("beat_officer", officerID)
+        }
+        if (searchURL == URL.BEAT_DIARY){
+            parameters.put("informer", officerID)
         }
 
         val token    = Helper.getData(this, Storage.TOKEN)!!
@@ -223,10 +224,10 @@ class SearchData : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, resultIntent: Intent?) {
         super.onActivityResult(requestCode, resultCode, intent)
-        if (requestCode == 1000 && resultCode == RESULT_OK) {
-            parameters = JSONObject(resultIntent!!.getStringExtra("parameters")!!)
+        parameters = if (requestCode == 1000 && resultCode == RESULT_OK) {
+            JSONObject(resultIntent!!.getStringExtra("parameters")!!)
         } else {
-            parameters = JSONObject()
+            JSONObject()
         }
     }
 }
