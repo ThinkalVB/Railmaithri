@@ -221,7 +221,6 @@ class IncidentReport : AppCompatActivity() {
     private fun renderFields() {
         dateFrom.hide()
         dateTo.hide()
-        dateTo.hide()
         incidentTypes.hide()
         railwayStation.hide()
         platformNumber.hide()
@@ -288,8 +287,8 @@ class IncidentReport : AppCompatActivity() {
     private fun getFormData(formData: JSONObject = JSONObject()): JSONObject? {
         try{
             locationUtil.exportLocation(formData)
-            dateFrom.exportData(formData)
-            dateTo.exportData(formData)
+            dateFrom.exportData(formData, tailPadding = "T00:00:00")
+            dateTo.exportData(formData, tailPadding = "T23:59:59")
             incidentTypes.exportData(formData)
             platformNumber.exportData(formData)
             railwayStation.exportData(formData)

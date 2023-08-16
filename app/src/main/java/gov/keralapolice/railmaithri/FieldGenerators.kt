@@ -162,7 +162,7 @@ class FieldEditText(context: Context,
         }
     }
 
-    fun exportData(jsonObject: JSONObject, filedLabel: String? = null){
+    fun exportData(jsonObject: JSONObject, filedLabel: String? = null, tailPadding: String? = null){
         var actualLabel = _fieldLabel
         if (filedLabel != null){
             actualLabel = filedLabel
@@ -170,7 +170,7 @@ class FieldEditText(context: Context,
 
         if (_linearLayout.visibility == View. VISIBLE){
             if(_editText.text.isNotEmpty()){
-                jsonObject.put(actualLabel, getData())
+                jsonObject.put(actualLabel, getData(tailPadding))
             } else {
                 if(_isRequired) {
                     val errorMessage = "$_fieldName is a required field"
@@ -180,8 +180,12 @@ class FieldEditText(context: Context,
         }
     }
 
-    fun getData() : String {
-        return _editText.text.toString()
+    fun getData(tailPadding: String? = null) : String {
+        return if(tailPadding == null){
+            _editText.text.toString()
+        }else {
+            _editText.text.toString() + tailPadding
+        }
     }
 
     fun hide() {
