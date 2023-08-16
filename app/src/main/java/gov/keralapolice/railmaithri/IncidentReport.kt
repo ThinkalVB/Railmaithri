@@ -288,6 +288,8 @@ class IncidentReport : AppCompatActivity() {
     private fun getFormData(formData: JSONObject = JSONObject()): JSONObject? {
         try{
             locationUtil.exportLocation(formData)
+            dateFrom.exportData(formData)
+            dateTo.exportData(formData)
             incidentTypes.exportData(formData)
             platformNumber.exportData(formData)
             railwayStation.exportData(formData)
