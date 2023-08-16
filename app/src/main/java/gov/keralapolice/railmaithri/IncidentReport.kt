@@ -56,13 +56,95 @@ class IncidentReport : AppCompatActivity() {
                 renderFields()
             }
         }
+        actionBT.setOnClickListener { performAction() }
 
         locationUtil = LocationUtil(this, findViewById(R.id.ly_location))
         fileUtil     = FileUtil(this, findViewById(R.id.ly_file), "photo")
+
         if(mode == Mode.NEW_FORM){
             locationUtil.fetchLocation(this)
         }
+        if (mode == Mode.VIEW_FORM || mode == Mode.UPDATE_FORM) {
+            val formData = JSONObject(intent.getStringExtra("data")!!)
+            loadFormData(formData)
+        }
         renderFields()
+    }
+
+    private fun performAction() {
+        when (mode) {
+            Mode.NEW_FORM -> {
+                val formData = getFormData()
+                if (formData != null) {
+                    val utcTime = Helper.getUTC()
+                    formData.put("incident_date_time", utcTime)
+                    formData.put("data_from", "Beat Officer")
+                    formData.put("utc_timestamp", utcTime)
+                    CoroutineScope(Dispatchers.IO).launch {  sendFormData(formData)  }
+                }
+            }
+            Mode.SEARCH_FORM -> {
+                var formData = getFormData()
+                if (formData == null) {
+                    formData = JSONObject()
+                }
+
+                val profile   = JSONObject(Helper.getData(this, Storage.PROFILE)!!)
+                val officerID = profile.getInt("id")
+                formData.put("informer", officerID)
+
+                val intent = Intent()
+                intent.putExtra("parameters", formData.toString())
+                setResult(RESULT_OK, intent)
+                finish()
+            }
+            Mode.UPDATE_FORM -> {
+                val formData = JSONObject(intent.getStringExtra("data")!!)
+                val uuid     = formData.getString("utc_timestamp")
+                getFormData(formData)
+                storeFile(formData, uuid)
+                Helper.saveFormData(this, formData, Storage.INCIDENT_REPORT, uuid)
+                finish()
+            }
+        }
+    }
+
+    private fun sendFormData(formData: JSONObject) {
+        Handler(Looper.getMainLooper()).post {
+            actionBT.isClickable  = false
+            progressPB.visibility = View.VISIBLE
+        }
+
+        val token    = Helper.getData(this, Storage.TOKEN)!!
+        val response = Helper.sendFormData(URL.INCIDENT_REPORT, formData, token, fileUtil)
+
+        val uuid = formData.getString("utc_timestamp")
+        if (response.first == ResponseType.SUCCESS) {
+            Helper.showToast(this, "success")
+            finish()
+        }
+        Helper.showToast(this, response.second)
+        if (response.first == ResponseType.NETWORK_ERROR) {
+            storeFile(formData, uuid)
+            Helper.saveFormData(this, formData, Storage.INCIDENT_REPORT, uuid)
+            finish()
+        }
+
+        Handler(Looper.getMainLooper()).post {
+            actionBT.isClickable  = true
+            progressPB.visibility = View.GONE
+        }
+    }
+
+    private fun storeFile(formData: JSONObject, uuid: String) {
+        if (fileUtil.haveFile()) {
+            formData.put("__have_file", true)
+            formData.put("__file_name", fileUtil.getFileName())
+            fileUtil.saveFile(this, uuid)
+        } else {
+            formData.put("__have_file", false)
+            formData.put("__file_name", "No file")
+        }
     }
 
     private fun generateFields() {
@@ -111,7 +193,7 @@ class IncidentReport : AppCompatActivity() {
             isRequired = Helper.resolveIsRequired(true, mode)
         )
         coachNumber = FieldEditText(this,
-            fieldType = "number",
+            fieldType = "text",
             fieldLabel = "coach_number",
             fieldName = "Coach number",
             isRequired = Helper.resolveIsRequired(true, mode)
@@ -188,7 +270,49 @@ class IncidentReport : AppCompatActivity() {
             }
         }
     }
-    
+
+    private fun loadFormData(formData: JSONObject) {
+        incidentTypes.importData(formData)
+        platformNumber.importData(formData)
+        railwayStation.importData(formData)
+        railwayStation.importData(formData)
+        trackLocation.importData(formData)
+        train.exportData(formData)
+        coachNumber.importData(formData)
+        contactNumber.importData(formData)
+        details.importData(formData)
+        locationUtil.importLocation(formData)
+
+        if(mode == Mode.VIEW_FORM){
+            locationUtil.disableUpdate()
+        }
+
+        if (mode == Mode.UPDATE_FORM && formData.getBoolean("__have_file")){
+            val uuid     = formData.getString("utc_timestamp")
+            val fileName = formData.getString("__file_name")
+            fileUtil.loadFile(this, uuid , fileName)
+        }
+    }
+
+    private fun getFormData(formData: JSONObject = JSONObject()): JSONObject? {
+        try{
+            locationUtil.exportLocation(formData)
+            incidentTypes.exportData(formData)
+            platformNumber.exportData(formData)
+            railwayStation.exportData(formData)
+            railwayStation.exportData(formData)
+            trackLocation.exportData(formData)
+            train.exportData(formData)
+            coachNumber.exportData(formData)
+            contactNumber.exportData(formData)
+            details.exportData(formData)
+        } catch (e: Exception){
+            Helper.showToast(this, e.message!!)
+            return null
+        }
+        return formData
+    }
+
     companion object{
         fun generateButton(context: Context, formData: JSONObject, mode: String? = Mode.VIEW_FORM): Button {
             val formID       = formData.optString("id", "Not assigned")

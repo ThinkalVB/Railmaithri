@@ -5,6 +5,7 @@ import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.location.Location
 import android.net.Uri
 import android.view.View
@@ -15,16 +16,18 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import org.json.JSONObject
 
 class LocationUtil(_activity: Activity, _locationLY: ConstraintLayout) {
-    private var latitude:  Double? = null
-    private var longitude: Double? = null
-    private var accuracy:  Float?  = null
-    private var isHidden:  Boolean = false
+    private var latitude:   Double? = null
+    private var longitude:  Double? = null
+    private var accuracy:   Float?  = null
+    private var isHidden:   Boolean = false
+    private var isRequired: Boolean = true
 
     private var locationDataTV: TextView
     private var locationAccuracyTV: TextView
     private var locationLY: ConstraintLayout
     private var getLocationBT: Button
     private var openLocationBT: Button
+    private var labelText: TextView
 
     init {
         locationLY         = _locationLY
@@ -32,6 +35,7 @@ class LocationUtil(_activity: Activity, _locationLY: ConstraintLayout) {
         locationAccuracyTV = _activity.findViewById(R.id.location_accuracy)
         getLocationBT      = _activity.findViewById(R.id.get_location)
         openLocationBT     = _activity.findViewById(R.id.open_location)
+        labelText          = _activity.findViewById(R.id.label_file)
 
         getLocationBT.setOnClickListener { fetchLocation(_activity.applicationContext) }
         openLocationBT.setOnClickListener {
@@ -92,6 +96,13 @@ class LocationUtil(_activity: Activity, _locationLY: ConstraintLayout) {
         getLocationBT.isClickable = false
     }
 
+    fun importLocation(_formData: JSONObject){
+        val latitude  = _formData.getDouble("latitude")
+        val longitude = _formData.getDouble("longitude")
+        val accuracy  = _formData.optDouble("accuracy", 2.0).toFloat()
+        importLocation(latitude, longitude, accuracy)
+    }
+
     fun importLocation(_latitude: Double, _longitude: Double, _accuracy: Float) {
         latitude  = _latitude
         longitude = _longitude
@@ -106,9 +117,16 @@ class LocationUtil(_activity: Activity, _locationLY: ConstraintLayout) {
     }
 
     fun exportLocation(data: JSONObject): JSONObject {
-        data.put("latitude",  latitude)
-        data.put("longitude", longitude)
-        data.put("accuracy",  accuracy)
+        if(haveLocation()){
+            data.put("latitude",  latitude)
+            data.put("longitude", longitude)
+            data.put("accuracy",  accuracy)
+        } else {
+            if(isRequired) {
+                val errorMessage = "Location is mandatory"
+                throw(FieldRequiredException(errorMessage))
+            }
+        }
         return data
     }
 
@@ -120,5 +138,15 @@ class LocationUtil(_activity: Activity, _locationLY: ConstraintLayout) {
     fun show() {
         locationLY.visibility = View.VISIBLE
         isHidden              = false
+    }
+
+    fun markAsRequired() {
+        isRequired = true
+        labelText.setTextColor(Color.RED)
+    }
+
+    fun markAsNotRequired() {
+        isRequired = false
+        labelText.setTextColor(Color.GRAY)
     }
 }
