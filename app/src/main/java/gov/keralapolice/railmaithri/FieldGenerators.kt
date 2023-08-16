@@ -24,6 +24,7 @@ class FieldRequiredException(message: String) : Exception(message){
 }
 
 class FieldEditText(context: Context,
+                    isHidden: Boolean = false,
                     isReadOnly: Boolean = false,
                     fieldLabel: String = "",
                     fieldHintText: String = "",
@@ -35,7 +36,8 @@ class FieldEditText(context: Context,
                     isRequired: Boolean = false) {
     private var _fieldName       = fieldName
     private var _fieldLabel      = fieldLabel
-    private val _isRequired      = isRequired
+    private var _isRequired      = isRequired
+    private var _isHidden        = isHidden
 
     private val _linearLayout:   LinearLayout
     private val _textView:       TextView
@@ -51,11 +53,6 @@ class FieldEditText(context: Context,
         _textView        = TextView(context)
         _textView.text   = fieldName
         _textView.setTypeface(null, Typeface.BOLD)
-        if(isRequired){
-            _textView.setTextColor(Color.RED)
-        } else{
-            _textView.setTextColor(Color.GRAY)
-        }
         _linearLayout.addView(_textView)
 
         _editText       = EditText(context)
@@ -113,10 +110,7 @@ class FieldEditText(context: Context,
         _editText.hint      = fieldHintText
         _editText.minLines  = fieldMinLines
         _editText.maxLines  = fieldMaxLines
-        if(isReadOnly) {
-            _editText.isEnabled     = false
-            _editText.isFocusable   = false
-        }
+
         val scale               = context.resources.displayMetrics.density
         val adjustedFieldHeight = (fieldHeight * scale + 0.5f).toInt()
         val padding8dp          = (8 * scale + 0.5f).toInt()
@@ -136,6 +130,20 @@ class FieldEditText(context: Context,
 //            }
 //        }
         _linearLayout.addView(_editText)
+
+        if(isRequired){
+            _textView.setTextColor(Color.RED)
+        } else{
+            _textView.setTextColor(Color.GRAY)
+        }
+
+        if(isReadOnly) {
+            _editText.isEnabled     = false
+            _editText.isFocusable   = false
+        }
+        if(isHidden){
+            _linearLayout.visibility = View.GONE
+        }
     }
 
     fun importData(jsonObject: JSONObject, filedLabel: String? = null){
@@ -173,10 +181,22 @@ class FieldEditText(context: Context,
 
     fun hide() {
         _linearLayout.visibility = View.GONE
+        _isHidden                = true
     }
 
     fun show() {
         _linearLayout.visibility = View.VISIBLE
+        _isHidden                = false
+    }
+
+    fun markAsRequired() {
+        _isRequired = true
+        _textView.setTextColor(Color.RED)
+    }
+
+    fun markAsNotRequired() {
+        _isRequired = false
+        _textView.setTextColor(Color.GRAY)
     }
 
     fun getLayout(): LinearLayout {
@@ -190,10 +210,14 @@ class FieldSpinner(context: Context,
                    fieldName: String = "",
                    fieldHeight: Int = 48,
                    addEmptyValue: Boolean = false,
+                   isHidden: Boolean = false,
                    isRequired: Boolean = false,
+
                    isReadOnly: Boolean = false) {
     private var _fieldLabel = fieldLabel
     private var _fieldData  = fieldData
+    private var _isHidden   = isHidden
+    private var _isRequired = isRequired
 
     private val _linearLayout:  LinearLayout
     private val _textView:      TextView
@@ -222,12 +246,8 @@ class FieldSpinner(context: Context,
         _textView.setTypeface(null, Typeface.BOLD)
         _textView.setTextColor(Color.GRAY)
         _linearLayout.addView(_textView)
-
         _spinner = Spinner(context)
-        if (isReadOnly) {
-            _spinner.isEnabled = false
-            _spinner.isFocusable = false
-        }
+
         val scale               = context.resources.displayMetrics.density
         val adjustedFieldHeight = (fieldHeight * scale + 0.5f).toInt()
         val padding8dp          = (8 * scale + 0.5f).toInt()
@@ -248,6 +268,14 @@ class FieldSpinner(context: Context,
             _textView.setTextColor(Color.RED)
         } else{
             _textView.setTextColor(Color.GRAY)
+        }
+
+        if (isReadOnly) {
+            _spinner.isEnabled   = false
+            _spinner.isFocusable = false
+        }
+        if(isHidden){
+            _linearLayout.visibility = View.GONE
         }
     }
 
@@ -281,27 +309,40 @@ class FieldSpinner(context: Context,
             actualLabel = filedLabel
         }
 
-        var selectedID: Any? = null
-        for (i in 0 until _fieldData.length()) {
-            val arrayElement = _fieldData.getJSONObject(i)
-            val value        = arrayElement.getString("name")
-            if (value == _spinner.selectedItem){
-                selectedID = arrayElement.get("id")
-                break
+        if (_linearLayout.visibility == View.VISIBLE){
+            var selectedID: Any? = null
+            for (i in 0 until _fieldData.length()) {
+                val arrayElement = _fieldData.getJSONObject(i)
+                val value        = arrayElement.getString("name")
+                if (value == _spinner.selectedItem){
+                    selectedID = arrayElement.get("id")
+                    break
+                }
             }
-        }
-
-        if (_linearLayout.visibility == View.VISIBLE && selectedID != null) {
-            jsonObject.put(actualLabel, selectedID)
+            if (selectedID != null) {
+                jsonObject.put(actualLabel, selectedID)
+            }
         }
     }
 
     fun hide() {
         _linearLayout.visibility = View.GONE
+        _isHidden                = true
     }
 
     fun show() {
         _linearLayout.visibility = View.VISIBLE
+        _isHidden                = false
+    }
+
+    fun markAsRequired() {
+        _isRequired = true
+        _textView.setTextColor(Color.RED)
+    }
+
+    fun markAsNotRequired() {
+        _isRequired = false
+        _textView.setTextColor(Color.GRAY)
     }
 
     fun getLayout(): LinearLayout {
