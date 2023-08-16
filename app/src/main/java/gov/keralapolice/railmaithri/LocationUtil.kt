@@ -15,9 +15,10 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import org.json.JSONObject
 
 class LocationUtil(_activity: Activity, _locationLY: ConstraintLayout) {
-    private var  latitude:  Double? = null
-    private var  longitude: Double? = null
-    private var  accuracy:  Float?  = null
+    private var latitude:  Double? = null
+    private var longitude: Double? = null
+    private var accuracy:  Float?  = null
+    private var isHidden:  Boolean = false
 
     private var locationDataTV: TextView
     private var locationAccuracyTV: TextView
@@ -111,7 +112,13 @@ class LocationUtil(_activity: Activity, _locationLY: ConstraintLayout) {
         return data
     }
 
-    fun hideLayout() {
+    fun hide() {
         locationLY.visibility = View.GONE
+        isHidden              = true
+    }
+
+    fun show() {
+        locationLY.visibility = View.VISIBLE
+        isHidden              = false
     }
 }

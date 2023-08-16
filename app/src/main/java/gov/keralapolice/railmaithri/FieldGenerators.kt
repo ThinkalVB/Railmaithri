@@ -53,6 +53,9 @@ class FieldEditText(context: Context,
         _textView        = TextView(context)
         _textView.text   = fieldName
         _textView.setTypeface(null, Typeface.BOLD)
+        val scale               = context.resources.displayMetrics.density
+        val padding8dp          = (8 * scale + 0.5f).toInt()
+        _textView.setPadding(padding8dp, 0, padding8dp, 0)
         _linearLayout.addView(_textView)
 
         _editText       = EditText(context)
@@ -111,9 +114,7 @@ class FieldEditText(context: Context,
         _editText.minLines  = fieldMinLines
         _editText.maxLines  = fieldMaxLines
 
-        val scale               = context.resources.displayMetrics.density
         val adjustedFieldHeight = (fieldHeight * scale + 0.5f).toInt()
-        val padding8dp          = (8 * scale + 0.5f).toInt()
         _editText.setPadding(padding8dp, 0, padding8dp, 0)
         _editText.setBackgroundResource(R.drawable.rectangular_boarder)
 
@@ -169,7 +170,7 @@ class FieldEditText(context: Context,
 
         if (_linearLayout.visibility == View. VISIBLE){
             if(_editText.text.isNotEmpty()){
-                jsonObject.put(actualLabel, _editText.text)
+                jsonObject.put(actualLabel, getData())
             } else {
                 if(_isRequired) {
                     val errorMessage = "$_fieldName is a required field"
@@ -177,6 +178,10 @@ class FieldEditText(context: Context,
                 }
             }
         }
+    }
+
+    fun getData() : String {
+        return _editText.text.toString()
     }
 
     fun hide() {
@@ -244,13 +249,13 @@ class FieldSpinner(context: Context,
         _textView = TextView(context)
         _textView.text = fieldName
         _textView.setTypeface(null, Typeface.BOLD)
-        _textView.setTextColor(Color.GRAY)
+        val scale               = context.resources.displayMetrics.density
+        val padding8dp          = (8 * scale + 0.5f).toInt()
+        _textView.setPadding(padding8dp, 0, padding8dp, 0)
         _linearLayout.addView(_textView)
         _spinner = Spinner(context)
 
-        val scale               = context.resources.displayMetrics.density
         val adjustedFieldHeight = (fieldHeight * scale + 0.5f).toInt()
-        val padding8dp          = (8 * scale + 0.5f).toInt()
         _spinner.setPadding(padding8dp, 0, padding8dp, 0)
         _spinner.layoutParams = LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT,
@@ -310,19 +315,24 @@ class FieldSpinner(context: Context,
         }
 
         if (_linearLayout.visibility == View.VISIBLE){
-            var selectedID: Any? = null
-            for (i in 0 until _fieldData.length()) {
-                val arrayElement = _fieldData.getJSONObject(i)
-                val value        = arrayElement.getString("name")
-                if (value == _spinner.selectedItem){
-                    selectedID = arrayElement.get("id")
-                    break
-                }
-            }
-            if (selectedID != null) {
+            val selectedID = getData()
+            if (selectedID != null){
                 jsonObject.put(actualLabel, selectedID)
             }
         }
+    }
+
+    fun getData(): Any? {
+        var selectedID: Any? = null
+        for (i in 0 until _fieldData.length()) {
+            val arrayElement = _fieldData.getJSONObject(i)
+            val value        = arrayElement.getString("name")
+            if (value == _spinner.selectedItem){
+                selectedID = arrayElement.get("id")
+                break
+            }
+        }
+        return selectedID
     }
 
     fun hide() {
@@ -347,5 +357,9 @@ class FieldSpinner(context: Context,
 
     fun getLayout(): LinearLayout {
         return _linearLayout
+    }
+
+    fun getSpinner(): Spinner {
+        return _spinner
     }
 }

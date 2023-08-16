@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.widget.AdapterView
@@ -26,8 +27,11 @@ class IncidentReport : AppCompatActivity() {
     private lateinit var actionBT:          Button
 
     private lateinit var locationUtil:      LocationUtil
-    private lateinit var incidentType:      Spinner
     private lateinit var fileUtil:          FileUtil
+
+    private lateinit var dateFrom:          FieldEditText
+    private lateinit var dateTo:            FieldEditText
+    private lateinit var incidentTypes:     FieldSpinner
     private lateinit var railwayStation:    FieldSpinner
     private lateinit var platformNumber:    FieldEditText
     private lateinit var trackLocation:     FieldEditText
@@ -35,10 +39,6 @@ class IncidentReport : AppCompatActivity() {
     private lateinit var coachNumber:       FieldEditText
     private lateinit var contactNumber:     FieldEditText
     private lateinit var details:           FieldEditText
-
-    private val PLATFORM = 0
-    private val TRACK    = 1
-    private val TRAIN    = 2
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,193 +50,40 @@ class IncidentReport : AppCompatActivity() {
         actionBT     = findViewById(R.id.action)
         generateFields()
 
-        locationUtil = LocationUtil(this, findViewById(R.id.ly_location))
-        fileUtil     = FileUtil(this, findViewById(R.id.ly_file), "photo")
-        incidentType = findViewById(R.id.incident_type)
-        incidentType.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+        incidentTypes.getSpinner().onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
             override fun onNothingSelected(parent: AdapterView<*>?) {}
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                renderForm(position)
+                renderFields()
             }
         }
 
-        prepareActionButton()
-        actionBT.setOnClickListener { performAction() }
-
-        if (mode == Mode.VIEW_FORM || mode == Mode.UPDATE_FORM) {
-            val formData = JSONObject(intent.getStringExtra("data")!!)
-            loadFormData(formData)
-        }
-    }
-
-    private fun loadFormData(formData: JSONObject) {
-        when (formData.getString("incident_type")) {
-            "Platform" -> {
-                incidentType.setSelection(PLATFORM)
-                renderForm(PLATFORM)
-                platformNumber.importData(formData)
-                railwayStation.importData(formData)
-            }
-            "Track" -> {
-                incidentType.setSelection(TRACK)
-                renderForm(TRACK)
-                railwayStation.importData(formData)
-                trackLocation.importData(formData)
-            }
-            "Train" -> {
-                incidentType.setSelection(TRAIN)
-                renderForm(TRAIN)
-                train.exportData(formData)
-                coachNumber.importData(formData)
-                contactNumber.importData(formData)
-            }
-        }
-        details.importData(formData)
-
-        val latitude  = formData.getDouble("latitude")
-        val longitude = formData.getDouble("longitude")
-        var accuracy  = 0.0f
-        if (mode == Mode.UPDATE_FORM) {
-            accuracy = formData.getDouble("accuracy").toFloat()
-        }
-        locationUtil.importLocation(latitude, longitude, accuracy)
-        if(mode == Mode.VIEW_FORM){
-            locationUtil.disableUpdate()
-        }
-
-        if (mode == Mode.UPDATE_FORM && formData.getBoolean("__have_file")){
-            val uuid     = formData.getString("utc_timestamp")
-            val fileName = formData.getString("__file_name")
-            fileUtil.loadFile(this, uuid , fileName)
-        }
-    }
-
-    private fun performAction() {
-        if (mode == Mode.NEW_FORM){
-            val formData = getFormData()
-            if (formData != null) {
-                val utcTime = Helper.getUTC()
-                formData.put("incident_date_time", utcTime)
-                formData.put("data_from", "Beat Officer")
-                formData.put("utc_timestamp", utcTime)
-                CoroutineScope(Dispatchers.IO).launch {  sendFormData(formData)  }
-            }
-        } else if (mode == Mode.SEARCH_FORM) {
-            var formData = getFormData()
-            if (formData == null) {
-                formData = JSONObject()
-            }
-
-            val profile   = JSONObject(Helper.getData(this, Storage.PROFILE)!!)
-            val officerID = profile.getInt("id")
-            formData.put("informer", officerID)
-
-            val intent = Intent()
-            intent.putExtra("parameters", formData.toString())
-            setResult(RESULT_OK, intent)
-            finish()
-        } else if (mode == Mode.UPDATE_FORM){
-            val formData = JSONObject(intent.getStringExtra("data")!!)
-            val uuid     = formData.getString("utc_timestamp")
-            getFormData(formData)
-            storeFile(formData, uuid)
-            Helper.saveFormData(this, formData, Storage.INCIDENT_REPORT, uuid)
-            finish()
-        }
-    }
-
-    private fun getFormData(formData: JSONObject = JSONObject()): JSONObject? {
-        if (mode == Mode.NEW_FORM){
-            if (!locationUtil.haveLocation()) {
-                Helper.showToast(this, "Location is mandatory")
-                return null
-            } else {
-                locationUtil.exportLocation(formData)
-            }
-        }
-
-        try{
-            when (incidentType.selectedItemPosition) {
-                PLATFORM -> {
-                    formData.put("incident_type", "Platform")
-                    platformNumber.exportData(formData)
-                    railwayStation.exportData(formData)
-                }
-                TRACK -> {
-                    formData.put("incident_type", "Track")
-                    railwayStation.exportData(formData)
-                    trackLocation.exportData(formData)
-                }
-                TRAIN -> {
-                    formData.put("incident_type", "Train")
-                    train.exportData(formData)
-                    coachNumber.exportData(formData)
-                    contactNumber.exportData(formData)
-                }
-            }
-            details.exportData(formData)
-        } catch (e: Exception){
-            Helper.showToast(this, e.message!!)
-            return null
-        }
-        return formData
-    }
-
-    private fun sendFormData(formData: JSONObject) {
-        Handler(Looper.getMainLooper()).post {
-            actionBT.isClickable  = false
-            progressPB.visibility = View.VISIBLE
-        }
-
-        val token    = Helper.getData(this, Storage.TOKEN)!!
-        val response = Helper.sendFormData(URL.INCIDENT_REPORT, formData, token, fileUtil)
-
-        val uuid = formData.getString("utc_timestamp")
-        if (response.first == ResponseType.SUCCESS) {
-            Helper.showToast(this, "success")
-            finish()
-        }
-        Helper.showToast(this, response.second)
-        if (response.first == ResponseType.NETWORK_ERROR) {
-            storeFile(formData, uuid)
-            Helper.saveFormData(this, formData, Storage.INCIDENT_REPORT, uuid)
-            finish()
-        }
-
-        Handler(Looper.getMainLooper()).post {
-            actionBT.isClickable  = true
-            progressPB.visibility = View.GONE
-        }
-    }
-
-    private fun storeFile(formData: JSONObject, uuid: String) {
-        if (fileUtil.haveFile()) {
-            formData.put("__have_file", true)
-            formData.put("__file_name", fileUtil.getFileName())
-            fileUtil.saveFile(this, uuid)
-        } else {
-            formData.put("__have_file", false)
-            formData.put("__file_name", "No file")
-        }
-    }
-
-    private fun prepareActionButton() {
+        locationUtil = LocationUtil(this, findViewById(R.id.ly_location))
+        fileUtil     = FileUtil(this, findViewById(R.id.ly_file), "photo")
         if(mode == Mode.NEW_FORM){
-            actionBT.text = "Save"
             locationUtil.fetchLocation(this)
         }
-        if(mode == Mode.UPDATE_FORM) {
-            actionBT.text = "Update"
-        }
-        if(mode == Mode.VIEW_FORM) {
-            actionBT.visibility = View.GONE
-        }
-        if(mode == Mode.SEARCH_FORM) {
-            actionBT.text = "Search"
-        }
+        renderFields()
     }
 
     private fun generateFields() {
+        dateFrom = FieldEditText(this,
+            fieldType = "date",
+            fieldLabel = "incident_date_time__gte",
+            fieldName = "Date from",
+            isRequired = false
+        )
+        dateTo = FieldEditText(this,
+            fieldType = "date",
+            fieldLabel = "incident_date_time__lte",
+            fieldName = "Date to",
+            isRequired = false
+        )
+        incidentTypes = FieldSpinner(this,
+            JSONArray(Helper.getData(this, Storage.INCIDENT_TYPES)!!),
+            "incident_type",
+            "Incident type",
+            isRequired = Helper.resolveIsRequired(true, mode)
+        )
         railwayStation = FieldSpinner(this,
             JSONArray(Helper.getData(this, Storage.RAILWAY_STATIONS_LIST)!!),
             "railway_station",
@@ -283,36 +130,65 @@ class IncidentReport : AppCompatActivity() {
             isRequired = Helper.resolveIsRequired(true, mode)
         )
 
-        if (mode == Mode.SEARCH_FORM){
-            findViewById<ConstraintLayout>(R.id.ly_location).visibility = View.GONE
-        }
-    }
-
-    private fun renderForm(position: Int) {
         val form = findViewById<LinearLayout>(R.id.dynamic_fields)
-        form.removeAllViews()
-        when (position) {
-            PLATFORM -> {
-                form.addView(railwayStation.getLayout())
-                form.addView(platformNumber.getLayout())
-            }
-            TRACK -> {
-                form.addView(railwayStation.getLayout())
-                form.addView(trackLocation.getLayout())
-            }
-            TRAIN -> {
-                form.addView(train.getLayout())
-                form.addView(coachNumber.getLayout())
-                form.addView(contactNumber.getLayout())
-            }
-        }
+        form.addView(dateFrom.getLayout())
+        form.addView(dateTo.getLayout())
+        form.addView(incidentTypes.getLayout())
+        form.addView(railwayStation.getLayout())
+        form.addView(platformNumber.getLayout())
+        form.addView(trackLocation.getLayout())
+        form.addView(train.getLayout())
+        form.addView(coachNumber.getLayout())
+        form.addView(contactNumber.getLayout() )
         form.addView(details.getLayout())
-
-        if (mode == Mode.SEARCH_FORM){
-            findViewById<ConstraintLayout>(R.id.ly_file).visibility = View.GONE
-        }
     }
 
+    private fun renderFields() {
+        dateFrom.hide()
+        dateTo.hide()
+        dateTo.hide()
+        incidentTypes.hide()
+        railwayStation.hide()
+        platformNumber.hide()
+        trackLocation.hide()
+        train.hide()
+        coachNumber.hide()
+        contactNumber.hide()
+        details.hide()
+        fileUtil.hide()
+        locationUtil.hide()
+
+        incidentTypes.show()
+        if (mode == Mode.UPDATE_FORM || mode == Mode.NEW_FORM || mode == Mode.SEARCH_FORM){
+            when (incidentTypes.getData().toString()) {
+                "Platform" -> {
+                    railwayStation.show()
+                    platformNumber.show()
+                }
+                "Track" -> {
+                    railwayStation.show()
+                    trackLocation.show()
+                }
+                "Train" -> {
+                    train.show()
+                    coachNumber.show()
+                    contactNumber.show()
+                }
+            }
+
+            if (mode == Mode.SEARCH_FORM) {
+                dateFrom.show()
+                dateTo.show()
+                actionBT.text = "Search"
+            } else {
+                details.show()
+                fileUtil.show()
+                locationUtil.show()
+                actionBT.text = "Save"
+            }
+        }
+    }
+    
     companion object{
         fun generateButton(context: Context, formData: JSONObject, mode: String? = Mode.VIEW_FORM): Button {
             val formID       = formData.optString("id", "Not assigned")

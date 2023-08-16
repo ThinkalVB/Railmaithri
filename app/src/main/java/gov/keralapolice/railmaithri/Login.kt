@@ -175,6 +175,11 @@ class Login : AppCompatActivity() {
         status = status && cacheData(URL.WATCH_ZONE, Storage.WATCH_ZONE)
         status = status && cacheData(URL.RUN_OVER_TYPES, Storage.RUN_OVER_TYPES)
         status = status && cacheData(URL.RUN_OVER_CAUSE_TYPES, Storage.RUN_OVER_CAUSE_TYPES)
+
+        // Cache incident type
+        val incidentTypes = "[{\"id\":\"Platform\",\"name\":\"Platform\"},{\"id\":\"Track\",\"name\":\"Track\"},{\"id\":\"Train\",\"name\":\"Train\"}]"
+        Helper.saveData(this, Storage.INCIDENT_TYPES, incidentTypes)
+
         registerWatchZones()
         return status
     }

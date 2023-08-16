@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.provider.OpenableColumns
+import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
@@ -12,16 +13,19 @@ import androidx.constraintlayout.widget.ConstraintLayout
 
 
 class FileUtil(_activity: AppCompatActivity, _locationLY: ConstraintLayout, _fieldLabel: String) {
-    private var file:         ByteArray? = null
-    private var fileName:     String?    = null
-    private var fieldLabel:   String?    = null
-    private var uuid:         String?    = null
+    private var file:         ByteArray?        = null
+    private var fileName:     String?           = null
+    private var fieldLabel:   String?           = null
+    private var uuid:         String?           = null
+    private var layout:       ConstraintLayout? = null
+    private var isHidden:     Boolean           = false
 
     private var selectFileBT: Button
     private var deleteFileBT: Button
     private var fileNameTV:   TextView
 
     init {
+        layout       = _locationLY
         fieldLabel   = _fieldLabel
         selectFileBT = _locationLY.findViewById(R.id.select_file)
         deleteFileBT = _locationLY.findViewById(R.id.delete_file)
@@ -97,4 +101,13 @@ class FileUtil(_activity: AppCompatActivity, _locationLY: ConstraintLayout, _fie
         return fieldLabel
     }
 
+    fun hide() {
+        layout?.visibility = View.GONE
+        isHidden           = true
+    }
+
+    fun show() {
+        layout?.visibility = View.VISIBLE
+        isHidden           = false
+    }
 }
