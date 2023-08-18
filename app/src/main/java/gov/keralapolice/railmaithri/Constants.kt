@@ -95,6 +95,7 @@ class Storage {
         const val RUN_OVER_TYPES              = "RUN_OVER_TYPES"
         const val RUN_OVER_CAUSE_TYPES        = "RUN_OVER_CAUSE_TYPES"
         const val INCIDENT_TYPES              = "INCIDENT_TYPES"
+        const val BOOLEAN_ANSWERS             = "BOOLEAN_ANSWERS"
 
         const val INCIDENT_REPORT             = "INCIDENT_REPORT"
         const val PASSENGER_STATISTICS        = "PASSENGER_STATISTICS"

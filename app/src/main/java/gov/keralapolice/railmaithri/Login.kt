@@ -180,6 +180,10 @@ class Login : AppCompatActivity() {
         val incidentTypes = "[{\"id\":\"Platform\",\"name\":\"Platform\"},{\"id\":\"Track\",\"name\":\"Track\"},{\"id\":\"Train\",\"name\":\"Train\"}]"
         Helper.saveData(this, Storage.INCIDENT_TYPES, incidentTypes)
 
+        // Cache boolean answer type
+        val booleanAnswers = "[{\"id\":\"true\",\"name\":\"Yes\"},{\"id\":\"false\",\"name\":\"No\"}]"
+        Helper.saveData(this, Storage.BOOLEAN_ANSWERS, booleanAnswers)
+
         registerWatchZones()
         return status
     }

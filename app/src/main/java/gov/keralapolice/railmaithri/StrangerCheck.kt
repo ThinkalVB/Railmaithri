@@ -36,6 +36,7 @@ class StrangerCheck : AppCompatActivity() {
     private lateinit var mobileNumber:          FieldEditText
     private lateinit var languagesKnown:        FieldEditText
     private lateinit var placeOfCheck:          FieldEditText
+    private lateinit var isForeigner:           FieldSpinner
     private lateinit var nativeState:           FieldSpinner
     private lateinit var nativePoliceStation:   FieldEditText
     private lateinit var nativeAddress:         FieldEditText
@@ -168,6 +169,13 @@ class StrangerCheck : AppCompatActivity() {
             fieldName = "Place of check",
             isRequired = Helper.resolveIsRequired(true, mode)
         )
+        isForeigner = FieldSpinner(this,
+            JSONArray(Helper.getData(this, Storage.BOOLEAN_ANSWERS)!!),
+            "is_foreigner",
+            "Is foreigner",
+            addEmptyValue = Helper.resolveAddEmptyValue(false, mode),
+            isRequired = Helper.resolveIsRequired(true, mode)
+        )
         nativeState = FieldSpinner(this,
             JSONArray(Helper.getData(this, Storage.STATES_LIST)!!),
             "native_state",
@@ -219,12 +227,12 @@ class StrangerCheck : AppCompatActivity() {
         form.addView(landPhoneNumber.getLayout())
         form.addView(languagesKnown.getLayout())
         form.addView(placeOfCheck.getLayout())
+        form.addView(isForeigner.getLayout())
         form.addView(nativeState.getLayout())
         form.addView(nativePoliceStation.getLayout())
         form.addView(nativeAddress.getLayout())
         form.addView(idCardDetails.getLayout())
         form.addView(remarks.getLayout())
-
 
         if (mode == Mode.SEARCH_FORM){
             findViewById<ConstraintLayout>(R.id.ly_file).visibility = View.GONE
@@ -306,6 +314,7 @@ class StrangerCheck : AppCompatActivity() {
             landPhoneNumber.exportData(formData)
             languagesKnown.exportData(formData)
             placeOfCheck.exportData(formData)
+            isForeigner.exportData(formData)
             nativeState.exportData(formData)
             nativePoliceStation.exportData(formData)
             nativeAddress.exportData(formData)
@@ -328,6 +337,7 @@ class StrangerCheck : AppCompatActivity() {
         landPhoneNumber.importData(formData)
         languagesKnown.importData(formData)
         placeOfCheck.importData(formData)
+        isForeigner.importData(formData)
         nativeState.importData(formData)
         nativePoliceStation.importData(formData)
         nativeAddress.importData(formData)
