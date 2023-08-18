@@ -22,6 +22,8 @@ class PassengerStatistics : AppCompatActivity() {
     private lateinit var progressPB:        ProgressBar
     private lateinit var actionBT:          Button
 
+    private lateinit var dateFrom:          FieldEditText
+    private lateinit var dateTo:            FieldEditText
     private lateinit var train:             FieldSpinner
     private lateinit var coachNumber:       FieldEditText
     private lateinit var density:           FieldSpinner
@@ -35,44 +37,65 @@ class PassengerStatistics : AppCompatActivity() {
         mode        = intent.getStringExtra("mode")!!
         progressPB  = findViewById(R.id.progress_bar)
         actionBT    = findViewById(R.id.action)
+        generateFields()
 
-        prepareActionButton()
-        renderForm()
         actionBT.setOnClickListener { performAction() }
-
         if (mode == Mode.VIEW_FORM || mode == Mode.UPDATE_FORM) {
             val formData = JSONObject(intent.getStringExtra("data")!!)
             loadFormData(formData)
         }
+        renderFields()
     }
 
     private fun performAction() {
-        if (mode == Mode.NEW_FORM){
-            val formData = getFormData()
-            if (formData != null) {
-                val utcTime = Helper.getUTC()
-                formData.put("last_updated",  utcTime)
-                CoroutineScope(Dispatchers.IO).launch {  sendFormData(formData)  }
+        when (mode) {
+            Mode.NEW_FORM -> {
+                val formData = getFormData()
+                if (formData != null) {
+                    val utcTime = Helper.getUTC()
+                    formData.put("last_updated", utcTime)
+                    formData.put("data_from", "Beat Officer")
+                    formData.put("last_updated", utcTime)
+                    CoroutineScope(Dispatchers.IO).launch {  sendFormData(formData)  }
+                }
             }
-        } else if (mode == Mode.SEARCH_FORM) {
-            var formData = getFormData()
-            if (formData == null){
-                formData = JSONObject()
+            Mode.SEARCH_FORM -> {
+                var formData = getFormData()
+                if (formData == null) {
+                    formData = JSONObject()
+                }
+
+                val intent = Intent()
+                intent.putExtra("parameters", formData.toString())
+                setResult(RESULT_OK, intent)
+                finish()
             }
-            val intent = Intent()
-            intent.putExtra("parameters", formData.toString())
-            setResult(RESULT_OK, intent)
-            finish()
-        } else if (mode == Mode.UPDATE_FORM){
-            val formData = JSONObject(intent.getStringExtra("data")!!)
-            val uuid     = formData.getString("last_updated")
-            getFormData(formData)
-            Helper.saveFormData(this, formData, Storage.PASSENGER_STATISTICS, uuid)
-            finish()
+            Mode.UPDATE_FORM -> {
+                val formData = JSONObject(intent.getStringExtra("data")!!)
+                val uuid     = formData.getString("last_updated")
+
+                val updatedFormData = getFormData(formData)
+                if (updatedFormData != null) {
+                    Helper.saveFormData(this, formData, Storage.PASSENGER_STATISTICS, uuid)
+                    finish()
+                }
+            }
         }
     }
 
-    private fun renderForm() {
+    private fun generateFields() {
+        dateFrom = FieldEditText(this,
+            fieldType  = "date",
+            fieldLabel = "last_updated__gte",
+            fieldName  = "Date from",
+            isRequired = false
+        )
+        dateTo = FieldEditText(this,
+            fieldType  = "date",
+            fieldLabel = "last_updated__lte",
+            fieldName  = "Date to",
+            isRequired = false
+        )
         train = FieldSpinner(this,
             JSONArray(Helper.getData(this, Storage.TRAINS_LIST)!!),
             "train",
@@ -81,9 +104,9 @@ class PassengerStatistics : AppCompatActivity() {
             isRequired = Helper.resolveIsRequired(true, mode)
         )
         coachNumber = FieldEditText(this,
-            fieldType = "text",
+            fieldType  = "text",
             fieldLabel = "coach",
-            fieldName = "Coach number",
+            fieldName  = "Coach number",
             isRequired = Helper.resolveIsRequired(true, mode)
         )
         density = FieldSpinner(this,
@@ -102,6 +125,8 @@ class PassengerStatistics : AppCompatActivity() {
         )
 
         val form = findViewById<LinearLayout>(R.id.form)
+        form.addView(dateFrom.getLayout())
+        form.addView(dateTo.getLayout())
         form.addView(train.getLayout())
         form.addView(coachNumber.getLayout())
         form.addView(density.getLayout())
@@ -134,32 +159,36 @@ class PassengerStatistics : AppCompatActivity() {
         }
     }
 
-    private fun prepareActionButton() {
-        if(mode == Mode.NEW_FORM){
-            actionBT.text = "Save"
-        }
-        if(mode == Mode.UPDATE_FORM) {
-            actionBT.text = "Update"
-        }
-        if(mode == Mode.VIEW_FORM) {
-            actionBT.visibility = View.GONE
-        }
-        if(mode == Mode.SEARCH_FORM) {
+    private fun renderFields() {
+        dateFrom.hide()
+        dateTo.hide()
+
+        if (mode == Mode.SEARCH_FORM) {
+            dateFrom.show()
+            dateTo.show()
             actionBT.text = "Search"
+        } else {
+            if(mode == Mode.VIEW_FORM){
+                actionBT.visibility = View.GONE
+            } else{
+                actionBT.text = "Save"
+            }
         }
     }
 
     private fun getFormData(formData: JSONObject = JSONObject()): JSONObject? {
-        return try{
+        try{
+            dateFrom.exportData(formData, tailPadding = "T00:00:00")
+            dateTo.exportData(formData, tailPadding = "T23:59:59")
             train.exportData(formData)
             density.exportData(formData)
             compartmentType.exportData(formData)
             coachNumber.exportData(formData)
-            formData
-        }catch (e: Exception){
+        } catch (e: Exception){
             Helper.showToast(this, e.message!!)
-            null
+            return null
         }
+        return formData
     }
 
     private fun loadFormData(formData: JSONObject) {
