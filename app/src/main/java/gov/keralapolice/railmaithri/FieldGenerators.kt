@@ -294,17 +294,19 @@ class FieldSpinner(context: Context,
 
         var fieldValue  = jsonObject.get(actualLabel)?: ""
         if(fieldValue is Boolean){
-            for (i in 0 until _fieldData.length()) {
-                val arrayElement = _fieldData.getJSONObject(i)
-                val id = arrayElement.getString("id")
-                if (id == fieldValue.toString()) {
-                    val value = arrayElement.getString("name")
-                    val valuePos = _arrayAdapter.getPosition(value)
-                    _spinner.setSelection(valuePos)
-                    break
-                }
+            fieldValue = if(fieldValue == false){
+                "No"
+            } else {
+                "Yes"
             }
-        } else if(fieldValue is String){
+        }
+
+        if(fieldValue is String){
+            if(fieldValue == "true"){
+                fieldValue = "Yes"
+            }else if(fieldValue == "false"){
+                fieldValue = "No"
+            }
             val valuePos  = _arrayAdapter.getPosition(fieldValue)
             _spinner.setSelection(valuePos)
         } else if (fieldValue is Int) {
