@@ -265,7 +265,6 @@ class IncidentReport : AppCompatActivity() {
         incidentTypes.importData(formData)
         platformNumber.importData(formData)
         railwayStation.importData(formData)
-        railwayStation.importData(formData)
         trackLocation.importData(formData)
         train.exportData(formData)
         coachNumber.importData(formData)

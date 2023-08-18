@@ -294,19 +294,21 @@ class FieldSpinner(context: Context,
             actualLabel = filedLabel
         }
 
-        val fieldValue  = jsonObject.get(actualLabel)?: ""
-        if(fieldValue is String){
-            val valuePos  = _arrayAdapter.getPosition(fieldValue)
-            _spinner.setSelection(valuePos)
-        } else if (fieldValue is Int){
-            for (i in 0 until _fieldData.length()) {
-                val arrayElement = _fieldData.getJSONObject(i)
-                val id           = arrayElement.getInt("id")
-                if (id == fieldValue){
-                    val value    = arrayElement.getString("name")
-                    val valuePos = _arrayAdapter.getPosition(value)
-                    _spinner.setSelection(valuePos)
-                    break
+        val fieldValue  = jsonObject.opt(actualLabel)
+        if(fieldValue != null){
+            if(fieldValue is String){
+                val valuePos  = _arrayAdapter.getPosition(fieldValue)
+                _spinner.setSelection(valuePos)
+            } else if (fieldValue is Int){
+                for (i in 0 until _fieldData.length()) {
+                    val arrayElement = _fieldData.getJSONObject(i)
+                    val id           = arrayElement.getString("id")
+                    if (id == fieldValue){
+                        val value    = arrayElement.getString("name")
+                        val valuePos = _arrayAdapter.getPosition(value)
+                        _spinner.setSelection(valuePos)
+                        break
+                    }
                 }
             }
         }
