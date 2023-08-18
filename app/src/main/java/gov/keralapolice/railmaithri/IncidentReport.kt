@@ -94,10 +94,13 @@ class IncidentReport : AppCompatActivity() {
             Mode.UPDATE_FORM -> {
                 val formData = JSONObject(intent.getStringExtra("data")!!)
                 val uuid     = formData.getString("utc_timestamp")
-                getFormData(formData)
-                storeFile(formData, uuid)
-                Helper.saveFormData(this, formData, Storage.INCIDENT_REPORT, uuid)
-                finish()
+
+                val updatedFormData = getFormData(formData)
+                if (updatedFormData != null) {
+                    storeFile(formData, uuid)
+                    Helper.saveFormData(this, formData, Storage.INCIDENT_REPORT, uuid)
+                    finish()
+                }
             }
         }
     }

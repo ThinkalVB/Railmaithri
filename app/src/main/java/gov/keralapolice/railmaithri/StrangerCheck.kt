@@ -93,10 +93,14 @@ class StrangerCheck : AppCompatActivity() {
             Mode.UPDATE_FORM -> {
                 val formData = JSONObject(intent.getStringExtra("data")!!)
                 val uuid     = formData.getString("checking_date_time")
-                getFormData(formData)
-                storeFile(formData, uuid)
-                Helper.saveFormData(this, formData, Storage.STRANGER_CHECK, uuid)
-                finish()
+
+                val updatedFormData = getFormData(formData)
+                if (updatedFormData != null) {
+                    getFormData(formData)
+                    storeFile(formData, uuid)
+                    Helper.saveFormData(this, formData, Storage.STRANGER_CHECK, uuid)
+                    finish()
+                }
             }
         }
     }
