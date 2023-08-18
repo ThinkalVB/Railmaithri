@@ -97,7 +97,6 @@ class StrangerCheck : AppCompatActivity() {
 
                 val updatedFormData = getFormData(formData)
                 if (updatedFormData != null) {
-                    getFormData(formData)
                     storeFile(formData, uuid)
                     Helper.saveFormData(this, formData, Storage.STRANGER_CHECK, uuid)
                     finish()
