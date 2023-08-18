@@ -7,10 +7,8 @@ import android.graphics.Color
 import android.graphics.Typeface
 import android.icu.util.Calendar
 import android.text.InputType
-import android.util.Log
 import android.view.View
 import android.widget.*
-import androidx.core.widget.doAfterTextChanged
 import org.json.JSONArray
 import org.json.JSONObject
 import java.util.ArrayList
@@ -18,9 +16,7 @@ import java.util.ArrayList
 
 // This exception is thrown when the field is required but empty when calling getData()
 class FieldRequiredException(message: String) : Exception(message){
-    init{
-        Log.e("Railmaithri", message)
-    }
+
 }
 
 class FieldEditText(context: Context,
@@ -296,8 +292,19 @@ class FieldSpinner(context: Context,
             actualLabel = filedLabel
         }
 
-        val fieldValue  = jsonObject.get(actualLabel)?: ""
-        if(fieldValue is String){
+        var fieldValue  = jsonObject.get(actualLabel)?: ""
+        if(fieldValue is Boolean){
+            for (i in 0 until _fieldData.length()) {
+                val arrayElement = _fieldData.getJSONObject(i)
+                val id = arrayElement.getString("id")
+                if (id == fieldValue.toString()) {
+                    val value = arrayElement.getString("name")
+                    val valuePos = _arrayAdapter.getPosition(value)
+                    _spinner.setSelection(valuePos)
+                    break
+                }
+            }
+        } else if(fieldValue is String){
             val valuePos  = _arrayAdapter.getPosition(fieldValue)
             _spinner.setSelection(valuePos)
         } else if (fieldValue is Int) {
