@@ -340,7 +340,6 @@ class StrangerCheck : AppCompatActivity() {
             val fileName = formData.getString("__file_name")
             fileUtil.loadFile(this, uuid , fileName)
         }
-        renderFields()
     }
 
     companion object{

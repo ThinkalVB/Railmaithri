@@ -276,7 +276,7 @@ class IncidentReport : AppCompatActivity() {
                 trackLocation.importData(formData)
             }
             "Train" -> {
-                train.exportData(formData)
+                train.importData(formData)
                 coachNumber.importData(formData)
                 contactNumber.importData(formData)
             }
@@ -293,7 +293,6 @@ class IncidentReport : AppCompatActivity() {
             val fileName = formData.getString("__file_name")
             fileUtil.loadFile(this, uuid , fileName)
         }
-        renderFields()
     }
 
     private fun getFormData(formData: JSONObject = JSONObject()): JSONObject? {

@@ -154,7 +154,9 @@ class FieldEditText(context: Context,
         }
 
         val fieldValue  = jsonObject.optString(actualLabel, "")
-        _editText.setText(fieldValue)
+        if(fieldValue != "null"){
+            _editText.setText(fieldValue)
+        }
         if(_isRequired && fieldValue.isBlank()){
             _textView.setTextColor(Color.RED)
         } else{
