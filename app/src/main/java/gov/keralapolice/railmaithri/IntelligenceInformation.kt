@@ -11,7 +11,6 @@ import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.ProgressBar
-import androidx.constraintlayout.widget.ConstraintLayout
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -25,6 +24,8 @@ class IntelligenceInformation : AppCompatActivity() {
 
     private lateinit var locationUtil:      LocationUtil
     private lateinit var fileUtil:          FileUtil
+    private lateinit var dateFrom:          FieldEditText
+    private lateinit var dateTo:            FieldEditText
     private lateinit var intelligenceType:  FieldSpinner
     private lateinit var severity:          FieldSpinner
     private lateinit var mobileNumber:      FieldEditText
@@ -36,67 +37,126 @@ class IntelligenceInformation : AppCompatActivity() {
         setContentView(R.layout.intelligence_information)
         supportActionBar!!.hide()
 
-        mode         = intent.getStringExtra("mode")!!
-        progressPB   = findViewById(R.id.progress_bar)
-        actionBT     = findViewById(R.id.action)
+        mode = intent.getStringExtra("mode")!!
+        progressPB = findViewById(R.id.progress_bar)
+        actionBT = findViewById(R.id.action)
+        generateFields()
 
+        actionBT.setOnClickListener { performAction() }
         locationUtil = LocationUtil(this, findViewById(R.id.ly_location))
         fileUtil     = FileUtil(this, findViewById(R.id.ly_file), "photo")
 
-        prepareActionButton()
-        renderForm()
-        actionBT.setOnClickListener { performAction() }
-
+        if (mode == Mode.NEW_FORM) {
+            locationUtil.fetchLocation(this)
+        }
         if (mode == Mode.VIEW_FORM || mode == Mode.UPDATE_FORM) {
             val formData = JSONObject(intent.getStringExtra("data")!!)
             loadFormData(formData)
         }
+        renderFields()
     }
 
     private fun performAction() {
-        if (mode == Mode.NEW_FORM){
-            val formData = getFormData()
-            if (formData != null) {
-                val utcTime = Helper.getUTC()
-                formData.put("utc_timestamp", utcTime)
-                formData.put("data_from", "Beat Officer")
-                CoroutineScope(Dispatchers.IO).launch {  sendFormData(formData)  }
+        when (mode) {
+            Mode.NEW_FORM -> {
+                val formData = getFormData()
+                if (formData != null) {
+                    val utcTime   = Helper.getUTC()
+                    val profile   = JSONObject(Helper.getData(this, Storage.PROFILE)!!)
+                    val officerID = profile.getInt("id")
+                    formData.put("utc_timestamp", utcTime)
+                    formData.put("informer", officerID)
+                    formData.put("data_from", "Beat Officer")
+                    CoroutineScope(Dispatchers.IO).launch { sendFormData(formData) }
+                }
             }
-        } else if (mode == Mode.SEARCH_FORM) {
-            var formData = getFormData()
-            if (formData == null) {
-                formData = JSONObject()
+            Mode.SEARCH_FORM -> {
+                var formData = getFormData()
+                if (formData == null) {
+                    formData = JSONObject()
+                }
+                val intent = Intent()
+                intent.putExtra("parameters", formData.toString())
+                setResult(RESULT_OK, intent)
+                finish()
             }
+            Mode.UPDATE_FORM -> {
+                val formData = JSONObject(intent.getStringExtra("data")!!)
+                val uuid = formData.getString("utc_timestamp")
 
-            val profile   = JSONObject(Helper.getData(this, Storage.PROFILE)!!)
-            val officerID = profile.getInt("id")
-            formData.put("informer", officerID)
-
-            val intent = Intent()
-            intent.putExtra("parameters", formData.toString())
-            setResult(RESULT_OK, intent)
-            finish()
-        } else if (mode == Mode.UPDATE_FORM){
-            val formData = JSONObject(intent.getStringExtra("data")!!)
-            val uuid     = formData.getString("utc_timestamp")
-            getFormData(formData)
-            storeFile(formData, uuid)
-            Helper.saveFormData(this, formData, Storage.INTELLIGENCE_INFORMATION, uuid)
-            finish()
+                val updatedFormData = getFormData(formData)
+                if (updatedFormData != null) {
+                    storeFile(formData, uuid)
+                    Helper.saveFormData(this, formData, Storage.INTELLIGENCE_INFORMATION, uuid)
+                    finish()
+                }
+            }
         }
     }
 
-    private fun getFormData(formData: JSONObject = JSONObject()): JSONObject? {
-        if (mode == Mode.NEW_FORM){
-            if (!locationUtil.haveLocation()) {
-                Helper.showToast(this, "Location is mandatory")
-                return null
-            } else {
-                locationUtil.exportLocation(formData)
-            }
-        }
+    private fun generateFields() {
+        dateFrom = FieldEditText(this,
+            fieldType  = "date",
+            fieldLabel = "utc_timestamp__gte",
+            fieldName  = "Date from",
+            isRequired = false
+        )
+        dateTo = FieldEditText(this,
+            fieldType  = "date",
+            fieldLabel = "utc_timestamp__lte",
+            fieldName  = "Date to",
+            isRequired = false
+        )
+        intelligenceType = FieldSpinner(this,
+            JSONArray(Helper.getData(this, Storage.INTELLIGENCE_TYPES)!!),
+            "intelligence_type",
+            "Intelligence Type",
+            addEmptyValue = Helper.resolveAddEmptyValue(false, mode),
+            isRequired = Helper.resolveIsRequired(true, mode)
+        )
+        severity = FieldSpinner(this,
+            JSONArray(Helper.getData(this, Storage.INTELLIGENCE_SEVERITY_TYPES)!!),
+            "severity",
+            "Severity",
+            addEmptyValue = Helper.resolveAddEmptyValue(false, mode),
+            isRequired = Helper.resolveIsRequired(true, mode)
+        )
+        mobileNumber = FieldEditText(this,
+            fieldType = "number",
+            fieldLabel = "mobile_number",
+            fieldName = "Phone number",
+            isRequired = Helper.resolveIsRequired(false, mode)
+        )
+        information = FieldEditText(this,
+            fieldType = "multiline",
+            fieldLabel = "information",
+            fieldName = "Information",
+            fieldHeight=98,
+            isRequired = Helper.resolveIsRequired(true, mode)
+        )
+        remarks = FieldEditText(this,
+            fieldType = "multiline",
+            fieldLabel = "remarks",
+            fieldName = "Remarks",
+            fieldHeight=98,
+            isRequired = Helper.resolveIsRequired(false, mode)
+        )
 
+        val form = findViewById<LinearLayout>(R.id.form)
+        form.addView(dateFrom.getLayout())
+        form.addView(dateTo.getLayout())
+        form.addView(intelligenceType.getLayout())
+        form.addView(severity.getLayout())
+        form.addView(mobileNumber.getLayout())
+        form.addView(information.getLayout())
+        form.addView(remarks.getLayout())
+    }
+
+    private fun getFormData(formData: JSONObject = JSONObject()): JSONObject? {
         try{
+            locationUtil.exportLocation(formData)
+            dateFrom.exportData(formData, tailPadding = "T00:00:00")
+            dateTo.exportData(formData, tailPadding = "T23:59:59")
             intelligenceType.exportData(formData)
             severity.exportData(formData)
             mobileNumber.exportData(formData)
@@ -147,68 +207,25 @@ class IntelligenceInformation : AppCompatActivity() {
         }
     }
 
-    private fun prepareActionButton() {
-        if(mode == Mode.NEW_FORM){
-            actionBT.text = "Save"
-            locationUtil.fetchLocation(this)
-        }
-        if(mode == Mode.UPDATE_FORM) {
-            actionBT.text = "Update"
-        }
-        if(mode == Mode.VIEW_FORM) {
-            actionBT.visibility = View.GONE
-        }
-        if(mode == Mode.SEARCH_FORM) {
+    private fun renderFields() {
+        dateFrom.hide()
+        dateTo.hide()
+        fileUtil.hide()
+        locationUtil.hide()
+
+        if (mode == Mode.SEARCH_FORM) {
+            dateFrom.show()
+            dateTo.show()
             actionBT.text = "Search"
-        }
-    }
+        } else {
+            fileUtil.show()
+            locationUtil.show()
 
-    private fun renderForm() {
-        intelligenceType = FieldSpinner(this,
-            JSONArray(Helper.getData(this, Storage.INTELLIGENCE_TYPES)!!),
-            "intelligence_type",
-            "Intelligence Type",
-            addEmptyValue = Helper.resolveAddEmptyValue(false, mode),
-            isRequired = Helper.resolveIsRequired(true, mode)
-        )
-        severity = FieldSpinner(this,
-            JSONArray(Helper.getData(this, Storage.INTELLIGENCE_SEVERITY_TYPES)!!),
-            "severity",
-            "Severity",
-            addEmptyValue = Helper.resolveAddEmptyValue(false, mode),
-            isRequired = Helper.resolveIsRequired(true, mode)
-        )
-        mobileNumber = FieldEditText(this,
-            fieldType = "number",
-            fieldLabel = "mobile_number",
-            fieldName = "Phone number",
-            isRequired = Helper.resolveIsRequired(false, mode)
-        )
-        information = FieldEditText(this,
-            fieldType = "multiline",
-            fieldLabel = "information",
-            fieldName = "Information",
-            fieldHeight=98,
-            isRequired = Helper.resolveIsRequired(true, mode)
-        )
-        remarks = FieldEditText(this,
-            fieldType = "multiline",
-            fieldLabel = "remarks",
-            fieldName = "Remarks",
-            fieldHeight=98,
-            isRequired = Helper.resolveIsRequired(false, mode)
-        )
-
-        val form = findViewById<LinearLayout>(R.id.form)
-        form.addView(intelligenceType.getLayout())
-        form.addView(severity.getLayout())
-        form.addView(mobileNumber.getLayout())
-        form.addView(information.getLayout())
-        form.addView(remarks.getLayout())
-
-        if (mode == Mode.SEARCH_FORM){
-            findViewById<ConstraintLayout>(R.id.ly_file).visibility = View.GONE
-            findViewById<ConstraintLayout>(R.id.ly_location).visibility = View.GONE
+            if(mode == Mode.VIEW_FORM){
+                actionBT.visibility = View.GONE
+            } else{
+                actionBT.text = "Save"
+            }
         }
     }
 
@@ -218,14 +235,8 @@ class IntelligenceInformation : AppCompatActivity() {
         mobileNumber.importData(formData)
         information.importData(formData)
         remarks.importData(formData)
+        locationUtil.importLocation(formData)
 
-        val latitude  = formData.getDouble("latitude")
-        val longitude = formData.getDouble("longitude")
-        var accuracy  = 0.0f
-        if (mode == Mode.UPDATE_FORM) {
-            accuracy = formData.getDouble("accuracy").toFloat()
-        }
-        locationUtil.importLocation(latitude, longitude, accuracy)
         if(mode == Mode.VIEW_FORM){
             locationUtil.disableUpdate()
         }
