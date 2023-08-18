@@ -166,6 +166,10 @@ class FieldEditText(context: Context,
             actualLabel = filedLabel
         }
 
+        if (_editText.text.isEmpty()){
+            jsonObject.remove(actualLabel)
+        }
+
         if (_linearLayout.visibility == View. VISIBLE){
             if(_editText.text.isNotEmpty()){
                 jsonObject.put(actualLabel, getData(tailPadding))
