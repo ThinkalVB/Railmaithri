@@ -266,12 +266,21 @@ class IncidentReport : AppCompatActivity() {
 
     private fun loadFormData(formData: JSONObject) {
         incidentTypes.importData(formData)
-        platformNumber.importData(formData)
-        railwayStation.importData(formData)
-        trackLocation.importData(formData)
-        train.exportData(formData)
-        coachNumber.importData(formData)
-        contactNumber.importData(formData)
+        when (incidentTypes.getData().toString()) {
+            "Platform" -> {
+                platformNumber.importData(formData)
+                railwayStation.importData(formData)
+            }
+            "Track" -> {
+                railwayStation.importData(formData)
+                trackLocation.importData(formData)
+            }
+            "Train" -> {
+                train.exportData(formData)
+                coachNumber.importData(formData)
+                contactNumber.importData(formData)
+            }
+        }
         details.importData(formData)
         locationUtil.importLocation(formData)
 
@@ -284,6 +293,7 @@ class IncidentReport : AppCompatActivity() {
             val fileName = formData.getString("__file_name")
             fileUtil.loadFile(this, uuid , fileName)
         }
+        renderFields()
     }
 
     private fun getFormData(formData: JSONObject = JSONObject()): JSONObject? {

@@ -42,7 +42,6 @@ class StrangerCheck : AppCompatActivity() {
     private lateinit var remarks:               FieldEditText
     private lateinit var landPhoneNumber:       FieldEditText
     private lateinit var idCardDetails:         FieldEditText
-    private lateinit var reportedPoliceStation: FieldSpinner
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,6 +74,9 @@ class StrangerCheck : AppCompatActivity() {
                 if (formData != null) {
                     val utcTime = Helper.getUTC()
                     formData.put("checking_date_time", utcTime)
+                    val profile   = JSONObject(Helper.getData(this, Storage.PROFILE)!!)
+                    val stationID = profile.getJSONArray("police_station").getJSONObject(0).getInt("id")
+                    formData.put("police_station", stationID)
                     CoroutineScope(Dispatchers.IO).launch { sendFormData(formData) }
                 }
             }
@@ -200,17 +202,10 @@ class StrangerCheck : AppCompatActivity() {
             fieldName = "ID card details",
             isRequired = Helper.resolveIsRequired(false, mode)
         )
-        reportedPoliceStation = FieldSpinner( context = this,
-            JSONArray(Helper.getData( context = this,Storage.POLICE_STATIONS_LIST)!!),
-            "police_station",
-            "Reported Police Station",
-            isRequired = Helper.resolveIsRequired(false, mode)
-        )
 
         val form = findViewById<LinearLayout>(R.id.form)
         form.addView(dateFrom.getLayout())
         form.addView(dateTo.getLayout())
-        form.addView(reportedPoliceStation.getLayout())
         form.addView(name.getLayout())
         form.addView(identificationMarks.getLayout())
         form.addView(purposeOfVisit.getLayout())
@@ -312,7 +307,6 @@ class StrangerCheck : AppCompatActivity() {
             nativeAddress.exportData(formData)
             idCardDetails.exportData(formData)
             remarks.exportData(formData)
-            reportedPoliceStation.exportData(formData)
         } catch (e: Exception){
             Helper.showToast(this, e.message!!)
             return null
@@ -335,7 +329,6 @@ class StrangerCheck : AppCompatActivity() {
         nativeAddress.importData(formData)
         idCardDetails.importData(formData)
         remarks.importData(formData)
-        reportedPoliceStation.importData(formData)
         locationUtil.importLocation(formData)
 
         if(mode == Mode.VIEW_FORM){
@@ -347,6 +340,7 @@ class StrangerCheck : AppCompatActivity() {
             val fileName = formData.getString("__file_name")
             fileUtil.loadFile(this, uuid , fileName)
         }
+        renderFields()
     }
 
     companion object{
