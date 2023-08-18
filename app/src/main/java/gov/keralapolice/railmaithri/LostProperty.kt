@@ -6,12 +6,12 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.ProgressBar
-import androidx.constraintlayout.widget.ConstraintLayout
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -24,8 +24,9 @@ class LostProperty : AppCompatActivity() {
     private lateinit var actionBT:          Button
 
     private lateinit var fileUtil:              FileUtil
+    private lateinit var dateFrom:              FieldEditText
+    private lateinit var dateTo:                FieldEditText
     private lateinit var lostPropertyCategory:  FieldSpinner
-    private lateinit var keptInPoliceStation:   FieldSpinner
     private lateinit var descrption:            FieldEditText
     private lateinit var foundIn:               FieldSpinner
     private lateinit var foundOn:               FieldEditText
@@ -39,73 +40,92 @@ class LostProperty : AppCompatActivity() {
         mode         = intent.getStringExtra("mode")!!
         progressPB   = findViewById(R.id.progress_bar)
         actionBT     = findViewById(R.id.action)
+        generateFields()
 
-        fileUtil     = FileUtil(this, findViewById(R.id.ly_file), "photo")
-
-        prepareActionButton()
-        renderForm()
         actionBT.setOnClickListener { performAction() }
+        fileUtil     = FileUtil(this, findViewById(R.id.ly_file), "photo")
 
         if (mode == Mode.VIEW_FORM || mode == Mode.UPDATE_FORM) {
             val formData = JSONObject(intent.getStringExtra("data")!!)
             loadFormData(formData)
         }
+        renderFields()
     }
 
     private fun performAction() {
-        if (mode == Mode.NEW_FORM){
-            val formData = getFormData()
-            if (formData != null) {
-                val utcTime = Helper.getUTC()
-                formData.put("utc_timestamp", utcTime)
-                CoroutineScope(Dispatchers.IO).launch {  sendFormData(formData)  }
+        when (mode) {
+            Mode.NEW_FORM -> {
+                val formData = getFormData()
+                if (formData != null) {
+                    val profile   = JSONObject(Helper.getData(this, Storage.PROFILE)!!)
+                    val stationID = profile.getJSONArray("police_station").getJSONObject(0).getInt("id")
+                    val utcTime   = Helper.getUTC()
+                    formData.put("utc_timestamp", utcTime)
+                    formData.put("kept_in_police_station", stationID)
+                    CoroutineScope(Dispatchers.IO).launch { sendFormData(formData) }
+                }
             }
-        } else if (mode == Mode.SEARCH_FORM) {
-            var formData = getFormData()
-            if (formData == null){
-                formData = JSONObject()
+            Mode.SEARCH_FORM -> {
+                var formData = getFormData()
+                if (formData == null) {
+                    formData = JSONObject()
+                }
+
+                val intent = Intent()
+                intent.putExtra("parameters", formData.toString())
+                setResult(RESULT_OK, intent)
+                finish()
             }
-            val intent = Intent()
-            intent.putExtra("parameters", formData.toString())
-            setResult(RESULT_OK, intent)
-            finish()
-        } else if (mode == Mode.UPDATE_FORM){
-            val formData = JSONObject(intent.getStringExtra("data")!!)
-            val uuid     = formData.getString("utc_timestamp")
-            getFormData(formData)
-            storeFile(formData, uuid)
-            Helper.saveFormData(this, formData, Storage.LOST_PROPERTY, uuid)
-            finish()
+            Mode.UPDATE_FORM -> {
+                val formData = JSONObject(intent.getStringExtra("data")!!)
+                val uuid = formData.getString("utc_timestamp")
+
+                val updatedFormData = getFormData(formData)
+                if (updatedFormData != null) {
+                    storeFile(formData, uuid)
+                    Helper.saveFormData(this, formData, Storage.LOST_PROPERTY, uuid)
+                    finish()
+                }
+            }
         }
     }
 
-    private fun prepareActionButton() {
-        if(mode == Mode.NEW_FORM){
-            actionBT.text = "Save"
-        }
-        if(mode == Mode.UPDATE_FORM) {
-            actionBT.text = "Update"
-        }
-        if(mode == Mode.VIEW_FORM) {
-            actionBT.visibility = View.GONE
-        }
-        if(mode == Mode.SEARCH_FORM) {
+    private fun renderFields() {
+        dateFrom.hide()
+        dateTo.hide()
+        fileUtil.hide()
+
+        if (mode == Mode.SEARCH_FORM) {
+            dateFrom.show()
+            dateTo.show()
             actionBT.text = "Search"
+        } else {
+            fileUtil.show()
+            if(mode == Mode.VIEW_FORM){
+                actionBT.visibility = View.GONE
+            } else{
+                actionBT.text = "Save"
+            }
         }
     }
 
-    private fun renderForm() {
+    private fun generateFields() {
+        dateFrom = FieldEditText(this,
+            fieldType  = "date",
+            fieldLabel = "utc_timestamp__gte",
+            fieldName  = "Date from",
+            isRequired = false
+        )
+        dateTo = FieldEditText(this,
+            fieldType  = "date",
+            fieldLabel = "utc_timestamp__lte",
+            fieldName  = "Date to",
+            isRequired = false
+        )
         lostPropertyCategory = FieldSpinner(this,
             JSONArray(Helper.getData(this, Storage.LOST_PROPERTY_TYPES)!!),
             "lost_property_category",
             "Lost Property Category",
-            addEmptyValue = Helper.resolveAddEmptyValue(false, mode),
-            isRequired = Helper.resolveIsRequired(true, mode)
-        )
-        keptInPoliceStation = FieldSpinner(this,
-            JSONArray(Helper.getData(this, Storage.POLICE_STATIONS_LIST)!!),
-            "kept_in_police_station",
-            "Kept In Police Station",
             addEmptyValue = Helper.resolveAddEmptyValue(false, mode),
             isRequired = Helper.resolveIsRequired(true, mode)
         )
@@ -145,16 +165,13 @@ class LostProperty : AppCompatActivity() {
         )
 
         val form = findViewById<LinearLayout>(R.id.form)
+        form.addView(dateFrom.getLayout())
+        form.addView(dateTo.getLayout())
         form.addView(lostPropertyCategory.getLayout())
-        form.addView(keptInPoliceStation.getLayout())
         form.addView(descrption.getLayout())
         form.addView(foundIn.getLayout())
         form.addView(foundOn.getLayout())
         form.addView(remarks.getLayout())
-
-        if (mode == Mode.SEARCH_FORM) {
-            findViewById<ConstraintLayout>(R.id.ly_file).visibility = View.GONE
-        }
     }
 
     private fun sendFormData(formData: JSONObject) {
@@ -204,8 +221,9 @@ class LostProperty : AppCompatActivity() {
         }
 
         try{
+            dateFrom.exportData(formData, tailPadding = "T00:00:00")
+            dateTo.exportData(formData, tailPadding = "T23:59:59")
             lostPropertyCategory.exportData(formData)
-            keptInPoliceStation.exportData(formData)
             descrption.exportData(formData)
             foundIn.exportData(formData)
             foundOn.exportData(formData)
@@ -219,7 +237,6 @@ class LostProperty : AppCompatActivity() {
 
     private fun loadFormData(formData: JSONObject) {
         lostPropertyCategory.importData(formData)
-        keptInPoliceStation.importData(formData)
         descrption.importData(formData)
         foundIn.importData(formData)
         foundOn.importData(formData)
