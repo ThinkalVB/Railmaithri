@@ -228,7 +228,6 @@ class IncidentReport : AppCompatActivity() {
         train.hide()
         coachNumber.hide()
         contactNumber.hide()
-        details.hide()
         fileUtil.hide()
         locationUtil.hide()
 
@@ -254,10 +253,14 @@ class IncidentReport : AppCompatActivity() {
             dateTo.show()
             actionBT.text = "Search"
         } else {
-            details.show()
             fileUtil.show()
             locationUtil.show()
-            actionBT.text = "Save"
+
+            if(mode == Mode.VIEW_FORM){
+                actionBT.visibility = View.GONE
+            } else{
+                actionBT.text = "Save"
+            }
         }
     }
 

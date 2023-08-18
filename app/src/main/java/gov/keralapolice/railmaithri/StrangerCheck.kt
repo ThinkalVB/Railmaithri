@@ -19,12 +19,15 @@ import org.json.JSONArray
 import org.json.JSONObject
 
 class StrangerCheck : AppCompatActivity() {
-    private lateinit var mode:              String
-    private lateinit var progressPB:        ProgressBar
-    private lateinit var actionBT:          Button
+    private lateinit var mode:                  String
+    private lateinit var progressPB:            ProgressBar
+    private lateinit var actionBT:              Button
 
     private lateinit var locationUtil:          LocationUtil
     private lateinit var fileUtil:              FileUtil
+
+    private lateinit var dateFrom:              FieldEditText
+    private lateinit var dateTo:                FieldEditText
     private lateinit var name:                  FieldEditText
     private lateinit var identificationMarks:   FieldEditText
     private lateinit var purposeOfVisit:        FieldEditText
@@ -39,6 +42,7 @@ class StrangerCheck : AppCompatActivity() {
     private lateinit var remarks:               FieldEditText
     private lateinit var landPhoneNumber:       FieldEditText
     private lateinit var idCardDetails:         FieldEditText
+    private lateinit var reportedPoliceStation: FieldSpinner
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,48 +52,66 @@ class StrangerCheck : AppCompatActivity() {
         mode         = intent.getStringExtra("mode")!!
         progressPB   = findViewById(R.id.progress_bar)
         actionBT     = findViewById(R.id.action)
+        generateFields()
 
+        actionBT.setOnClickListener { performAction() }
         locationUtil = LocationUtil(this, findViewById(R.id.ly_location))
         fileUtil     = FileUtil(this, findViewById(R.id.ly_file), "photo")
 
-        prepareActionButton()
-        renderForm()
-        actionBT.setOnClickListener { performAction() }
-
+        if (mode == Mode.NEW_FORM) {
+            locationUtil.fetchLocation(this)
+        }
         if (mode == Mode.VIEW_FORM || mode == Mode.UPDATE_FORM) {
             val formData = JSONObject(intent.getStringExtra("data")!!)
             loadFormData(formData)
         }
+        renderFields()
     }
 
     private fun performAction() {
-        if (mode == Mode.NEW_FORM){
-            val formData = getFormData()
-            if (formData != null) {
-                val utcTime = Helper.getUTC()
-                formData.put("checking_date_time", utcTime)
-                CoroutineScope(Dispatchers.IO).launch {  sendFormData(formData)  }
+        when (mode) {
+            Mode.NEW_FORM -> {
+                val formData = getFormData()
+                if (formData != null) {
+                    val utcTime = Helper.getUTC()
+                    formData.put("checking_date_time", utcTime)
+                    CoroutineScope(Dispatchers.IO).launch { sendFormData(formData) }
+                }
             }
-        } else if (mode == Mode.SEARCH_FORM) {
-            var formData = getFormData()
-            if (formData == null){
-                formData = JSONObject()
+            Mode.SEARCH_FORM -> {
+                var formData = getFormData()
+                if (formData == null) {
+                    formData = JSONObject()
+                }
+                val intent = Intent()
+                intent.putExtra("parameters", formData.toString())
+                setResult(RESULT_OK, intent)
+                finish()
             }
-            val intent = Intent()
-            intent.putExtra("parameters", formData.toString())
-            setResult(RESULT_OK, intent)
-            finish()
-        } else if (mode == Mode.UPDATE_FORM){
-            val formData = JSONObject(intent.getStringExtra("data")!!)
-            val uuid     = formData.getString("checking_date_time")
-            getFormData(formData)
-            storeFile(formData, uuid)
-            Helper.saveFormData(this, formData, Storage.STRANGER_CHECK, uuid)
-            finish()
+            Mode.UPDATE_FORM -> {
+                val formData = JSONObject(intent.getStringExtra("data")!!)
+                val uuid     = formData.getString("checking_date_time")
+                getFormData(formData)
+                storeFile(formData, uuid)
+                Helper.saveFormData(this, formData, Storage.STRANGER_CHECK, uuid)
+                finish()
+            }
         }
     }
 
-    private fun renderForm() {
+    private fun generateFields() {
+        dateFrom = FieldEditText(this,
+            fieldType  = "date",
+            fieldLabel = "checking_date_time__gte",
+            fieldName  = "Date from",
+            isRequired = false
+        )
+        dateTo = FieldEditText(this,
+            fieldType  = "date",
+            fieldLabel = "checking_date_time__lte",
+            fieldName  = "Date to",
+            isRequired = false
+        )
         name = FieldEditText(this,
             fieldType = "text",
             fieldLabel = "name",
@@ -178,8 +200,17 @@ class StrangerCheck : AppCompatActivity() {
             fieldName = "ID card details",
             isRequired = Helper.resolveIsRequired(false, mode)
         )
+        reportedPoliceStation = FieldSpinner( context = this,
+            JSONArray(Helper.getData( context = this,Storage.POLICE_STATIONS_LIST)!!),
+            "police_station",
+            "Reported Police Station",
+            isRequired = Helper.resolveIsRequired(false, mode)
+        )
 
         val form = findViewById<LinearLayout>(R.id.form)
+        form.addView(dateFrom.getLayout())
+        form.addView(dateTo.getLayout())
+        form.addView(reportedPoliceStation.getLayout())
         form.addView(name.getLayout())
         form.addView(identificationMarks.getLayout())
         form.addView(purposeOfVisit.getLayout())
@@ -194,6 +225,7 @@ class StrangerCheck : AppCompatActivity() {
         form.addView(nativeAddress.getLayout())
         form.addView(idCardDetails.getLayout())
         form.addView(remarks.getLayout())
+
 
         if (mode == Mode.SEARCH_FORM){
             findViewById<ConstraintLayout>(R.id.ly_file).visibility = View.GONE
@@ -239,33 +271,33 @@ class StrangerCheck : AppCompatActivity() {
         }
     }
 
-    private fun prepareActionButton() {
-        if(mode == Mode.NEW_FORM){
-            actionBT.text = "Save"
-            locationUtil.fetchLocation(this)
-        }
-        if(mode == Mode.UPDATE_FORM) {
-            actionBT.text = "Update"
-        }
-        if(mode == Mode.VIEW_FORM) {
-            actionBT.visibility = View.GONE
-        }
-        if(mode == Mode.SEARCH_FORM) {
+    private fun renderFields() {
+        dateFrom.hide()
+        dateTo.hide()
+        fileUtil.hide()
+        locationUtil.hide()
+
+        if (mode == Mode.SEARCH_FORM) {
+            dateFrom.show()
+            dateTo.show()
             actionBT.text = "Search"
+        } else {
+            fileUtil.show()
+            locationUtil.show()
+
+            if(mode == Mode.VIEW_FORM){
+                actionBT.visibility = View.GONE
+            } else{
+                actionBT.text = "Save"
+            }
         }
     }
 
     private fun getFormData(formData: JSONObject = JSONObject()): JSONObject? {
-        if (mode == Mode.NEW_FORM){
-            if (!locationUtil.haveLocation()) {
-                Helper.showToast(this, "Location is mandatory")
-                return null
-            } else {
-                locationUtil.exportLocation(formData)
-            }
-        }
-
         try{
+            locationUtil.exportLocation(formData)
+            dateFrom.exportData(formData, tailPadding = "T00:00:00")
+            dateTo.exportData(formData, tailPadding = "T23:59:59")
             name.exportData(formData)
             identificationMarks.exportData(formData)
             purposeOfVisit.exportData(formData)
@@ -280,15 +312,10 @@ class StrangerCheck : AppCompatActivity() {
             nativeAddress.exportData(formData)
             idCardDetails.exportData(formData)
             remarks.exportData(formData)
+            reportedPoliceStation.exportData(formData)
         } catch (e: Exception){
             Helper.showToast(this, e.message!!)
             return null
-        }
-
-        if (mode == Mode.NEW_FORM || mode == Mode.UPDATE_FORM){
-            val profile   = JSONObject(Helper.getData(this, Storage.PROFILE)!!)
-            val stationID = profile.getJSONArray("police_station").getJSONObject(0).getInt("id")
-            formData.put("police_station", stationID)
         }
         return formData
     }
@@ -308,14 +335,9 @@ class StrangerCheck : AppCompatActivity() {
         nativeAddress.importData(formData)
         idCardDetails.importData(formData)
         remarks.importData(formData)
+        reportedPoliceStation.importData(formData)
+        locationUtil.importLocation(formData)
 
-        val latitude  = formData.getDouble("latitude")
-        val longitude = formData.getDouble("longitude")
-        var accuracy  = 0.0f
-        if (mode == Mode.UPDATE_FORM) {
-            accuracy = formData.getDouble("accuracy").toFloat()
-        }
-        locationUtil.importLocation(latitude, longitude, accuracy)
         if(mode == Mode.VIEW_FORM){
             locationUtil.disableUpdate()
         }
