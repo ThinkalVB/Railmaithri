@@ -187,7 +187,7 @@ class IncidentReport : AppCompatActivity() {
         )
         coachNumber = FieldEditText(this,
             fieldType = "text",
-            fieldLabel = "coach_number",
+            fieldLabel = "coach",
             fieldName = "Coach number",
             isRequired = Helper.resolveIsRequired(true, mode)
         )
