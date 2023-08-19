@@ -34,6 +34,7 @@ class FieldEditText(context: Context,
     private var _fieldLabel      = fieldLabel
     private var _isRequired      = isRequired
     private var _isHidden        = isHidden
+    private var _fieldType       = fieldType
 
     private val _linearLayout:   LinearLayout
     private val _textView:       TextView
@@ -140,8 +141,11 @@ class FieldEditText(context: Context,
             actualLabel = filedLabel
         }
 
-        val fieldValue  = jsonObject.optString(actualLabel, "")
+        var fieldValue  = jsonObject.optString(actualLabel, "")
         if(fieldValue != "null"){
+            if(_fieldType == "date"){
+                fieldValue = fieldValue.substring(0, fieldValue.indexOf("T"))
+            }
             _editText.setText(fieldValue)
         }
     }

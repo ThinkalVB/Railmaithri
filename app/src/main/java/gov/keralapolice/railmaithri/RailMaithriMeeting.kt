@@ -22,6 +22,9 @@ class RailMaithriMeeting : AppCompatActivity() {
     private lateinit var progressPB:    ProgressBar
     private lateinit var actionBT:      Button
 
+    private lateinit var dateFrom:              FieldEditText
+    private lateinit var policeStation:         FieldSpinner
+    private lateinit var dateTo:                FieldEditText
     private lateinit var meetingType:           FieldSpinner
     private lateinit var meetingDate:           FieldEditText
     private lateinit var participants:          FieldEditText
@@ -36,44 +39,63 @@ class RailMaithriMeeting : AppCompatActivity() {
         mode = intent.getStringExtra("mode")!!
         progressPB = findViewById(R.id.progress_bar)
         actionBT = findViewById(R.id.action)
+        generateFields()
 
-        prepareActionButton()
-        renderForm()
         actionBT.setOnClickListener { performAction() }
-
         if (mode == Mode.VIEW_FORM || mode == Mode.UPDATE_FORM) {
             val formData = JSONObject(intent.getStringExtra("data")!!)
             loadFormData(formData)
         }
+        renderFields()
     }
 
     private fun performAction() {
-        if (mode == Mode.NEW_FORM) {
-            val formData = getFormData()
-            if (formData != null) {
-                val utcTime = Helper.getUTC()
-                formData.put("utc_timestamp", utcTime)
-                CoroutineScope(Dispatchers.IO).launch { sendFormData(formData) }
+        when (mode) {
+            Mode.NEW_FORM -> {
+                val formData = getFormData()
+                if (formData != null) {
+                    val utcTime = Helper.getUTC()
+                    formData.put("utc_timestamp", utcTime)
+                    CoroutineScope(Dispatchers.IO).launch { sendFormData(formData) }
+                }
             }
-        } else if (mode == Mode.SEARCH_FORM) {
-            var formData = getFormData()
-            if (formData == null) {
-                formData = JSONObject()
+            Mode.SEARCH_FORM -> {
+                var formData = getFormData()
+                if (formData == null) {
+                    formData = JSONObject()
+                }
+
+                val intent = Intent()
+                intent.putExtra("parameters", formData.toString())
+                setResult(RESULT_OK, intent)
+                finish()
             }
-            val intent = Intent()
-            intent.putExtra("parameters", formData.toString())
-            setResult(RESULT_OK, intent)
-            finish()
-        } else if (mode == Mode.UPDATE_FORM) {
-            val formData = JSONObject(intent.getStringExtra("data")!!)
-            val uuid = formData.getString("utc_timestamp")
-            getFormData(formData)
-            Helper.saveFormData(this, formData, Storage.RAILMAITHRI_MEETING, uuid)
-            finish()
+            Mode.UPDATE_FORM -> {
+                val formData = JSONObject(intent.getStringExtra("data")!!)
+                val uuid = formData.getString("utc_timestamp")
+
+                val updatedFormData = getFormData(formData)
+                if (updatedFormData != null) {
+                    Helper.saveFormData(this, formData, Storage.RAILMAITHRI_MEETING, uuid)
+                    finish()
+                }
+            }
         }
     }
 
-    private fun renderForm() {
+    private fun generateFields() {
+        dateFrom = FieldEditText(this,
+            fieldType  = "date",
+            fieldLabel = "meeting_date__gte",
+            fieldName  = "Date from",
+            isRequired = false
+        )
+        dateTo = FieldEditText(this,
+            fieldType  = "date",
+            fieldLabel = "meeting_date__lte",
+            fieldName  = "Date to",
+            isRequired = false
+        )
         meetingType = FieldSpinner(
             this,
             JSONArray(Helper.getData(this, Storage.MEETING_TYPES)!!),
@@ -112,10 +134,20 @@ class RailMaithriMeeting : AppCompatActivity() {
             fieldName = "Next meeting date",
             isRequired = Helper.resolveIsRequired(true, mode)
         )
+        policeStation = FieldSpinner(this,
+            JSONArray(Helper.getData(this, Storage.POLICE_STATIONS_LIST)!!),
+            "police_station",
+            "Police Station",
+            addEmptyValue = Helper.resolveAddEmptyValue(false, mode),
+            isRequired = Helper.resolveIsRequired(true, mode)
+        )
 
         val form = findViewById<LinearLayout>(R.id.form)
+        form.addView(dateFrom.getLayout())
+        form.addView(dateTo.getLayout())
         form.addView(meetingType.getLayout())
         form.addView(meetingDate.getLayout())
+        form.addView(policeStation.getLayout())
         form.addView(participants.getLayout())
         form.addView(gistOfDecisionTaken.getLayout())
         form.addView(nextMeetingDate.getLayout())
@@ -147,28 +179,38 @@ class RailMaithriMeeting : AppCompatActivity() {
         }
     }
 
-    private fun prepareActionButton() {
-        if (mode == Mode.NEW_FORM) {
-            actionBT.text = "Save"
-        }
-        if (mode == Mode.UPDATE_FORM) {
-            actionBT.text = "Update"
-        }
-        if (mode == Mode.VIEW_FORM) {
-            actionBT.visibility = View.GONE
-        }
+    private fun renderFields() {
+        dateFrom.hide()
+        dateTo.hide()
+        meetingDate.hide()
+        nextMeetingDate.hide()
+
         if (mode == Mode.SEARCH_FORM) {
+            dateFrom.show()
+            dateTo.show()
             actionBT.text = "Search"
+        } else {
+            meetingDate.show()
+            nextMeetingDate.show()
+
+            if(mode == Mode.VIEW_FORM){
+                actionBT.visibility = View.GONE
+            } else{
+                actionBT.text = "Save"
+            }
         }
     }
 
     private fun getFormData(formData: JSONObject = JSONObject()): JSONObject? {
         try {
+            dateFrom.exportData(formData, tailPadding = "T00:00:00")
+            dateTo.exportData(formData, tailPadding = "T23:59:59")
             meetingType.exportData(formData)
-            meetingDate.exportData(formData)
+            meetingDate.exportData(formData, tailPadding = "T00:00:00")
+            policeStation.exportData(formData)
             participants.exportData(formData)
             gistOfDecisionTaken.exportData(formData)
-            nextMeetingDate.exportData(formData)
+            nextMeetingDate.exportData(formData, tailPadding = "T00:00:00")
         } catch (e: Exception) {
             Helper.showToast(this, e.message!!)
             return null
@@ -177,6 +219,7 @@ class RailMaithriMeeting : AppCompatActivity() {
     }
 
     private fun loadFormData(formData: JSONObject) {
+        policeStation.importData(formData)
         meetingType.importData(formData)
         meetingDate.importData(formData)
         participants.importData(formData)
