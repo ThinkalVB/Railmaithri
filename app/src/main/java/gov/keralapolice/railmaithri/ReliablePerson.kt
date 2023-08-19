@@ -36,45 +36,51 @@ class ReliablePerson : AppCompatActivity() {
         mode         = intent.getStringExtra("mode")!!
         progressPB   = findViewById(R.id.progress_bar)
         actionBT     = findViewById(R.id.action)
+        generateFields()
 
-        prepareActionButton()
-        renderForm()
         actionBT.setOnClickListener { performAction() }
-
         if (mode == Mode.VIEW_FORM || mode == Mode.UPDATE_FORM) {
             val formData = JSONObject(intent.getStringExtra("data")!!)
             loadFormData(formData)
         }
+        renderFields()
     }
 
     private fun performAction() {
-        if (mode == Mode.NEW_FORM){
-            val formData = getFormData()
-            if (formData != null) {
-                val utcTime = Helper.getUTC()
-                formData.put("utc_timestamp", utcTime)
-                CoroutineScope(Dispatchers.IO).launch {  sendFormData(formData)  }
+        when (mode) {
+            Mode.NEW_FORM -> {
+                val formData = getFormData()
+                if (formData != null) {
+                    val utcTime = Helper.getUTC()
+                    formData.put("utc_timestamp", utcTime)
+                    CoroutineScope(Dispatchers.IO).launch { sendFormData(formData) }
+                }
             }
-        } else if (mode == Mode.SEARCH_FORM) {
-            var formData = getFormData()
-            if (formData == null){
-                formData = JSONObject()
-            }
+            Mode.SEARCH_FORM -> {
+                var formData = getFormData()
+                if (formData == null) {
+                    formData = JSONObject()
+                }
 
-            val intent = Intent()
-            intent.putExtra("parameters", formData.toString())
-            setResult(RESULT_OK, intent)
-            finish()
-        } else if (mode == Mode.UPDATE_FORM){
-            val formData = JSONObject(intent.getStringExtra("data")!!)
-            val uuid     = formData.getString("utc_timestamp")
-            getFormData(formData)
-            Helper.saveFormData(this, formData, Storage.RELIABLE_PERSON, uuid)
-            finish()
+                val intent = Intent()
+                intent.putExtra("parameters", formData.toString())
+                setResult(RESULT_OK, intent)
+                finish()
+            }
+            Mode.UPDATE_FORM -> {
+                val formData = JSONObject(intent.getStringExtra("data")!!)
+                val uuid = formData.getString("utc_timestamp")
+
+                val updatedFormData = getFormData(formData)
+                if (updatedFormData != null) {
+                    Helper.saveFormData(this, formData, Storage.RELIABLE_PERSON, uuid)
+                    finish()
+                }
+            }
         }
     }
 
-    private fun renderForm() {
+    private fun generateFields() {
         name = FieldEditText(this,
             fieldType = "text",
             fieldLabel = "name",
@@ -143,18 +149,19 @@ class ReliablePerson : AppCompatActivity() {
         }
     }
 
-    private fun prepareActionButton() {
-        if(mode == Mode.NEW_FORM){
-            actionBT.text = "Save"
-        }
-        if(mode == Mode.UPDATE_FORM) {
-            actionBT.text = "Update"
-        }
-        if(mode == Mode.VIEW_FORM) {
-            actionBT.visibility = View.GONE
-        }
-        if(mode == Mode.SEARCH_FORM) {
+    private fun renderFields() {
+        policeStation.hide()
+
+        if (mode == Mode.SEARCH_FORM) {
             actionBT.text = "Search"
+        } else {
+            policeStation.show()
+
+            if(mode == Mode.VIEW_FORM){
+                actionBT.visibility = View.GONE
+            } else{
+                actionBT.text = "Save"
+            }
         }
     }
 
@@ -165,7 +172,6 @@ class ReliablePerson : AppCompatActivity() {
             policeStation.exportData(formData)
             place.exportData(formData)
             description.exportData(formData)
-            mobileNumber.exportData(formData)
         } catch (e: Exception){
             Helper.showToast(this, e.message!!)
             return null
