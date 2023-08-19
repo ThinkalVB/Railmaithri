@@ -58,11 +58,8 @@ class UnauthorizedPerson : AppCompatActivity() {
             Mode.NEW_FORM -> {
                 val formData = getFormData()
                 if (formData != null) {
-                    val profile   = JSONObject(Helper.getData(this, Storage.PROFILE)!!)
-                    val stationID = profile.getJSONArray("police_station").getJSONObject(0).getInt("id")
-                    val utcTime   = Helper.getUTC()
+                    val utcTime = Helper.getUTC()
                     formData.put("utc_timestamp",  utcTime)
-                    formData.put("police_station", stationID)
                     CoroutineScope(Dispatchers.IO).launch { sendFormData(formData) }
                 }
             }

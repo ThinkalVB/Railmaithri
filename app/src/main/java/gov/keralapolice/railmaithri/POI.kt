@@ -167,6 +167,7 @@ class POI : AppCompatActivity() {
         locationUtil.hide()
 
         if (mode == Mode.SEARCH_FORM) {
+            policeStation.hide()
             actionBT.text = "Search"
         } else {
             fileUtil.show()
