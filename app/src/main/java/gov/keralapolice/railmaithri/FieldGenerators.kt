@@ -144,7 +144,10 @@ class FieldEditText(context: Context,
         var fieldValue  = jsonObject.optString(actualLabel, "")
         if(fieldValue != "null"){
             if(_fieldType == "date"){
-                fieldValue = fieldValue.substring(0, fieldValue.indexOf("T"))
+                var indexOfTime = fieldValue.indexOf("T")
+                if(indexOfTime != -1){
+                    fieldValue = fieldValue.substring(0, indexOfTime)
+                }
             }
             _editText.setText(fieldValue)
         }
