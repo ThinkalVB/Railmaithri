@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.widget.Button
@@ -162,6 +163,7 @@ class CrimeMemo : AppCompatActivity() {
             fileUtil.show()
 
             if(mode == Mode.VIEW_FORM){
+                policeStation.show()
                 actionBT.visibility = View.GONE
             } else{
                 actionBT.text = "Save"
