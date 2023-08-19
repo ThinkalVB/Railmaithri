@@ -117,15 +117,6 @@ class FieldEditText(context: Context,
         _editText.layoutParams  = LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT,
             adjustedFieldHeight)
-//        _editText.doAfterTextChanged {
-//            if(isRequired){
-//                if(_editText.text.isBlank()){
-//                    _textView.setTextColor(Color.RED)
-//                } else{
-//                    _textView.setTextColor(Color.GRAY)
-//                }
-//            }
-//        }
         _linearLayout.addView(_editText)
 
         if(isRequired){
@@ -152,11 +143,6 @@ class FieldEditText(context: Context,
         val fieldValue  = jsonObject.optString(actualLabel, "")
         if(fieldValue != "null"){
             _editText.setText(fieldValue)
-        }
-        if(_isRequired && fieldValue.isBlank()){
-            _textView.setTextColor(Color.RED)
-        } else{
-            _textView.setTextColor(Color.GRAY)
         }
     }
 
