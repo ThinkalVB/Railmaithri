@@ -11,7 +11,6 @@ import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.ProgressBar
-import androidx.constraintlayout.widget.ConstraintLayout
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -24,9 +23,11 @@ class AbandonedProperty : AppCompatActivity() {
     private lateinit var actionBT:          Button
 
     private lateinit var fileUtil:          FileUtil
+    private lateinit var dateFrom:          FieldEditText
+    private lateinit var dateTo:            FieldEditText
     private lateinit var category:          FieldSpinner
     private lateinit var foundBy:           FieldEditText
-    private lateinit var whetherSeized:     FieldEditText
+    private lateinit var whetherSeized:     FieldSpinner
     private lateinit var crimeDetails:      FieldEditText
     private lateinit var remarks:           FieldEditText
 
@@ -38,52 +39,73 @@ class AbandonedProperty : AppCompatActivity() {
         mode         = intent.getStringExtra("mode")!!
         progressPB   = findViewById(R.id.progress_bar)
         actionBT     = findViewById(R.id.action)
+        generateFields()
 
-        fileUtil     = FileUtil(this, findViewById(R.id.ly_file), "photo")
-
-        prepareActionButton()
-        renderForm()
         actionBT.setOnClickListener { performAction() }
+        fileUtil     = FileUtil(this, findViewById(R.id.ly_file), "photo")
 
         if (mode == Mode.VIEW_FORM || mode == Mode.UPDATE_FORM) {
             val formData = JSONObject(intent.getStringExtra("data")!!)
             loadFormData(formData)
         }
+        renderFields()
     }
 
     private fun performAction() {
-        if (mode == Mode.NEW_FORM){
-            val formData = getFormData()
-            if (formData != null) {
-                val utcTime = Helper.getUTC()
-                formData.put("utc_timestamp", utcTime)
-                CoroutineScope(Dispatchers.IO).launch {  sendFormData(formData)  }
+        when (mode) {
+            Mode.NEW_FORM -> {
+                val formData = getFormData()
+                if (formData != null) {
+                    val profile   = JSONObject(Helper.getData(this, Storage.PROFILE)!!)
+                    val stationID = profile.getJSONArray("police_station").getJSONObject(0).getInt("id")
+                    val utcTime   = Helper.getUTC()
+                    formData.put("utc_timestamp", utcTime)
+                    formData.put("police_station", stationID)
+                    CoroutineScope(Dispatchers.IO).launch { sendFormData(formData) }
+                }
             }
-        } else if (mode == Mode.SEARCH_FORM) {
-            var formData = getFormData()
-            if (formData == null){
-                formData = JSONObject()
+            Mode.SEARCH_FORM -> {
+                var formData = getFormData()
+                if (formData == null) {
+                    formData = JSONObject()
+                }
+
+                val intent = Intent()
+                intent.putExtra("parameters", formData.toString())
+                setResult(RESULT_OK, intent)
+                finish()
             }
-            val intent = Intent()
-            intent.putExtra("parameters", formData.toString())
-            setResult(RESULT_OK, intent)
-            finish()
-        } else if (mode == Mode.UPDATE_FORM){
-            val formData = JSONObject(intent.getStringExtra("data")!!)
-            val uuid     = formData.getString("utc_timestamp")
-            getFormData(formData)
-            storeFile(formData, uuid)
-            Helper.saveFormData(this, formData, Storage.ABANDONED_PROPERTY, uuid)
-            finish()
+            Mode.UPDATE_FORM -> {
+                val formData = JSONObject(intent.getStringExtra("data")!!)
+                val uuid     = formData.getString("utc_timestamp")
+
+                val updatedFormData = getFormData(formData)
+                if (updatedFormData != null) {
+                    storeFile(formData, uuid)
+                    Helper.saveFormData(this, formData, Storage.ABANDONED_PROPERTY, uuid)
+                    finish()
+                }
+            }
         }
     }
 
-    private fun renderForm() {
+    private fun generateFields() {
+        dateFrom = FieldEditText(this,
+            fieldType  = "date",
+            fieldLabel = "utc_timestamp__gte",
+            fieldName  = "Date from",
+            isRequired = false
+        )
+        dateTo = FieldEditText(this,
+            fieldType  = "date",
+            fieldLabel = "utc_timestamp__lte",
+            fieldName  = "Date to",
+            isRequired = false
+        )
         category = FieldSpinner(this,
             JSONArray(Helper.getData(this, Storage.ABANDONED_PROPERTY_TYPES)!!),
             "abandoned_property_category",
             "Category",
-            addEmptyValue = Helper.resolveAddEmptyValue(false, mode),
             isRequired = Helper.resolveIsRequired(true, mode)
         )
         foundBy = FieldEditText(this,
@@ -92,11 +114,12 @@ class AbandonedProperty : AppCompatActivity() {
             fieldName = "Found By",
             isRequired = Helper.resolveIsRequired(false, mode)
         )
-        whetherSeized = FieldEditText(this,
-            fieldType = "text",
-            fieldLabel = "seized_or_not",
-            fieldName = "Whether seized?",
-            isRequired = Helper.resolveIsRequired(false, mode)
+        whetherSeized = FieldSpinner(this,
+            JSONArray(Helper.getData(this, Storage.BOOLEAN_ANSWERS)!!),
+            "seized_or_not",
+            "Whether seized?",
+            addEmptyValue = Helper.resolveAddEmptyValue(false, mode),
+            isRequired = Helper.resolveIsRequired(true, mode)
         )
         crimeDetails = FieldEditText(this,
             fieldType = "multiline",
@@ -114,15 +137,13 @@ class AbandonedProperty : AppCompatActivity() {
         )
 
         val form = findViewById<LinearLayout>(R.id.form)
+        form.addView(dateFrom.getLayout())
+        form.addView(dateTo.getLayout())
         form.addView(category.getLayout())
         form.addView(foundBy.getLayout())
         form.addView(whetherSeized.getLayout())
         form.addView(crimeDetails.getLayout())
         form.addView(remarks.getLayout())
-
-        if (mode == Mode.SEARCH_FORM){
-            findViewById<ConstraintLayout>(R.id.ly_file).visibility = View.GONE
-        }
     }
 
     private fun sendFormData(formData: JSONObject) {
@@ -163,23 +184,32 @@ class AbandonedProperty : AppCompatActivity() {
         }
     }
 
-    private fun prepareActionButton() {
-        if(mode == Mode.NEW_FORM){
-            actionBT.text = "Save"
-        }
-        if(mode == Mode.UPDATE_FORM) {
-            actionBT.text = "Update"
-        }
-        if(mode == Mode.VIEW_FORM) {
-            actionBT.visibility = View.GONE
-        }
-        if(mode == Mode.SEARCH_FORM) {
+    private fun renderFields() {
+        dateFrom.hide()
+        dateTo.hide()
+        fileUtil.hide()
+        whetherSeized.hide()
+
+        if (mode == Mode.SEARCH_FORM) {
+            dateFrom.show()
+            dateTo.show()
             actionBT.text = "Search"
+        } else {
+            whetherSeized.show()
+            fileUtil.show()
+
+            if(mode == Mode.VIEW_FORM){
+                actionBT.visibility = View.GONE
+            } else{
+                actionBT.text = "Save"
+            }
         }
     }
 
     private fun getFormData(formData: JSONObject = JSONObject()): JSONObject? {
         try{
+            dateFrom.exportData(formData, tailPadding = "T00:00:00")
+            dateTo.exportData(formData, tailPadding = "T23:59:59")
             category.exportData(formData)
             foundBy.exportData(formData)
             whetherSeized.exportData(formData)
@@ -188,12 +218,6 @@ class AbandonedProperty : AppCompatActivity() {
         } catch (e: Exception){
             Helper.showToast(this, e.message!!)
             return null
-        }
-
-        if (mode != Mode.NEW_FORM || mode == Mode.UPDATE_FORM) {
-            val profile   = JSONObject(Helper.getData(this, Storage.PROFILE)!!)
-            val officerID = profile.getInt("id")
-            formData.put("added_by", officerID)
         }
         return formData
     }
