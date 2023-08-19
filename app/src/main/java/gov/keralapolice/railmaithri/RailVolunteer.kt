@@ -11,7 +11,6 @@ import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.ProgressBar
-import androidx.constraintlayout.widget.ConstraintLayout
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -19,9 +18,9 @@ import org.json.JSONArray
 import org.json.JSONObject
 
 class RailVolunteer : AppCompatActivity() {
-    private lateinit var mode:              String
-    private lateinit var progressPB:        ProgressBar
-    private lateinit var actionBT:          Button
+    private lateinit var mode:                   String
+    private lateinit var progressPB:             ProgressBar
+    private lateinit var actionBT:               Button
 
     private lateinit var fileUtil:               FileUtil
     private lateinit var railVolunteerCategory:  FieldSpinner
@@ -41,48 +40,54 @@ class RailVolunteer : AppCompatActivity() {
         mode         = intent.getStringExtra("mode")!!
         progressPB   = findViewById(R.id.progress_bar)
         actionBT     = findViewById(R.id.action)
+        generateFields()
 
-        fileUtil     = FileUtil(this, findViewById(R.id.ly_file), "photo")
-
-        prepareActionButton()
-        renderForm()
         actionBT.setOnClickListener { performAction() }
+        fileUtil     = FileUtil(this, findViewById(R.id.ly_file), "photo")
 
         if (mode == Mode.VIEW_FORM || mode == Mode.UPDATE_FORM) {
             val formData = JSONObject(intent.getStringExtra("data")!!)
             loadFormData(formData)
         }
+        renderFields()
     }
 
     private fun performAction() {
-        if (mode == Mode.NEW_FORM){
-            val formData = getFormData()
-            if (formData != null) {
-                val utcTime = Helper.getUTC()
-                formData.put("utc_timestamp", utcTime)
-                formData.put("data_from", "Beat Officer")
-                CoroutineScope(Dispatchers.IO).launch {  sendFormData(formData)  }
+        when (mode) {
+            Mode.NEW_FORM -> {
+                val formData = getFormData()
+                if (formData != null) {
+                    val utcTime = Helper.getUTC()
+                    formData.put("utc_timestamp", utcTime)
+                    formData.put("data_from", "Beat Officer")
+                    CoroutineScope(Dispatchers.IO).launch { sendFormData(formData) }
+                }
             }
-        } else if (mode == Mode.SEARCH_FORM) {
-            var formData = getFormData()
-            if (formData == null){
-                formData = JSONObject()
+            Mode.SEARCH_FORM -> {
+                var formData = getFormData()
+                if (formData == null) {
+                    formData = JSONObject()
+                }
+                val intent = Intent()
+                intent.putExtra("parameters", formData.toString())
+                setResult(RESULT_OK, intent)
+                finish()
             }
-            val intent = Intent()
-            intent.putExtra("parameters", formData.toString())
-            setResult(RESULT_OK, intent)
-            finish()
-        } else if (mode == Mode.UPDATE_FORM){
-            val formData = JSONObject(intent.getStringExtra("data")!!)
-            val uuid     = formData.getString("utc_timestamp")
-            getFormData(formData)
-            storeFile(formData, uuid)
-            Helper.saveFormData(this, formData, Storage.RAIL_VOLUNTEER, uuid)
-            finish()
+            Mode.UPDATE_FORM -> {
+                val formData = JSONObject(intent.getStringExtra("data")!!)
+                val uuid = formData.getString("utc_timestamp")
+
+                val updatedFormData = getFormData(formData)
+                if (updatedFormData != null) {
+                    storeFile(formData, uuid)
+                    Helper.saveFormData(this, formData, Storage.RAIL_VOLUNTEER, uuid)
+                    finish()
+                }
+            }
         }
     }
 
-    private fun renderForm() {
+    private fun generateFields() {
         railVolunteerCategory = FieldSpinner(this,
             JSONArray(Helper.getData(this, Storage.RAIL_VOLUNTEER_TYPES)!!),
             "rail_volunteer_category",
@@ -145,10 +150,6 @@ class RailVolunteer : AppCompatActivity() {
         form.addView(email.getLayout())
         form.addView(nearestRailwayStation.getLayout())
         form.addView(policeStation.getLayout())
-
-        if (mode == Mode.SEARCH_FORM){
-            findViewById<ConstraintLayout>(R.id.ly_file).visibility = View.GONE
-        }
     }
 
     private fun sendFormData(formData: JSONObject) {
@@ -189,18 +190,18 @@ class RailVolunteer : AppCompatActivity() {
         }
     }
 
-    private fun prepareActionButton() {
-        if(mode == Mode.NEW_FORM){
-            actionBT.text = "Save"
-        }
-        if(mode == Mode.UPDATE_FORM) {
-            actionBT.text = "Update"
-        }
-        if(mode == Mode.VIEW_FORM) {
-            actionBT.visibility = View.GONE
-        }
-        if(mode == Mode.SEARCH_FORM) {
+    private fun renderFields() {
+        if (mode == Mode.SEARCH_FORM) {
+            fileUtil.hide()
+            railVolunteerCategory.hide()
+
             actionBT.text = "Search"
+        } else {
+            if(mode == Mode.VIEW_FORM){
+                actionBT.visibility = View.GONE
+            } else{
+                actionBT.text = "Save"
+            }
         }
     }
 
