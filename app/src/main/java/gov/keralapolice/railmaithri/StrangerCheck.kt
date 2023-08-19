@@ -232,11 +232,6 @@ class StrangerCheck : AppCompatActivity() {
         form.addView(nativeAddress.getLayout())
         form.addView(idCardDetails.getLayout())
         form.addView(remarks.getLayout())
-
-        if (mode == Mode.SEARCH_FORM){
-            findViewById<ConstraintLayout>(R.id.ly_file).visibility = View.GONE
-            findViewById<ConstraintLayout>(R.id.ly_location).visibility = View.GONE
-        }
     }
 
     private fun sendFormData(formData: JSONObject) {
