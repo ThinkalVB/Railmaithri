@@ -153,17 +153,14 @@ class CrimeMemo : AppCompatActivity() {
     }
 
     private fun renderFields() {
-        policeStation.hide()
         fileUtil.hide()
 
         if (mode == Mode.SEARCH_FORM) {
-            policeStation.show()
             actionBT.text = "Search"
         } else {
             fileUtil.show()
 
             if(mode == Mode.VIEW_FORM){
-                policeStation.show()
                 actionBT.visibility = View.GONE
             } else{
                 actionBT.text = "Save"

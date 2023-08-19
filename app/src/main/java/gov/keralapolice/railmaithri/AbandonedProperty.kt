@@ -25,6 +25,7 @@ class AbandonedProperty : AppCompatActivity() {
     private lateinit var fileUtil:          FileUtil
     private lateinit var dateFrom:          FieldEditText
     private lateinit var dateTo:            FieldEditText
+    private lateinit var policeStation:         FieldSpinner
     private lateinit var category:          FieldSpinner
     private lateinit var foundBy:           FieldEditText
     private lateinit var whetherSeized:     FieldSpinner
@@ -102,6 +103,13 @@ class AbandonedProperty : AppCompatActivity() {
             fieldName  = "Date to",
             isRequired = false
         )
+        policeStation = FieldSpinner(this,
+            JSONArray(Helper.getData(this, Storage.POLICE_STATIONS_LIST)!!),
+            "police_station",
+            "Police Station",
+            addEmptyValue = Helper.resolveAddEmptyValue(false, mode),
+            isRequired = Helper.resolveIsRequired(true, mode)
+        )
         category = FieldSpinner(this,
             JSONArray(Helper.getData(this, Storage.ABANDONED_PROPERTY_TYPES)!!),
             "abandoned_property_category",
@@ -139,6 +147,7 @@ class AbandonedProperty : AppCompatActivity() {
         val form = findViewById<LinearLayout>(R.id.form)
         form.addView(dateFrom.getLayout())
         form.addView(dateTo.getLayout())
+        form.addView(policeStation.getLayout())
         form.addView(category.getLayout())
         form.addView(foundBy.getLayout())
         form.addView(whetherSeized.getLayout())
@@ -191,6 +200,7 @@ class AbandonedProperty : AppCompatActivity() {
         whetherSeized.hide()
 
         if (mode == Mode.SEARCH_FORM) {
+            policeStation.hide()
             dateFrom.show()
             dateTo.show()
             actionBT.text = "Search"
@@ -210,6 +220,7 @@ class AbandonedProperty : AppCompatActivity() {
         try{
             dateFrom.exportData(formData, tailPadding = "T00:00:00")
             dateTo.exportData(formData, tailPadding = "T23:59:59")
+            policeStation.exportData(formData)
             category.exportData(formData)
             foundBy.exportData(formData)
             whetherSeized.exportData(formData)
@@ -223,6 +234,7 @@ class AbandonedProperty : AppCompatActivity() {
     }
 
     private fun loadFormData(formData: JSONObject) {
+        policeStation.importData(formData)
         category.importData(formData)
         foundBy.importData(formData)
         whetherSeized.importData(formData)
