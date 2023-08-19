@@ -36,49 +36,54 @@ class SurakshaSamithiMember : AppCompatActivity() {
         mode         = intent.getStringExtra("mode")!!
         progressPB   = findViewById(R.id.progress_bar)
         actionBT     = findViewById(R.id.action)
+        generateFields()
 
-        prepareActionButton()
-        renderForm()
         actionBT.setOnClickListener { performAction() }
-
         if (mode == Mode.VIEW_FORM || mode == Mode.UPDATE_FORM) {
             val formData = JSONObject(intent.getStringExtra("data")!!)
             loadFormData(formData)
         }
+        renderFields()
     }
 
     private fun performAction() {
-        if (mode == Mode.NEW_FORM){
-            val formData = getFormData()
-            if (formData != null) {
-                val utcTime = Helper.getUTC()
-                formData.put("utc_timestamp", utcTime)
-                CoroutineScope(Dispatchers.IO).launch {  sendFormData(formData)  }
+        when (mode) {
+            Mode.NEW_FORM -> {
+                val formData = getFormData()
+                if (formData != null) {
+                    val profile   = JSONObject(Helper.getData(this, Storage.PROFILE)!!)
+                    val stationID = profile.getJSONArray("police_station").getJSONObject(0).getInt("id")
+                    val utcTime   = Helper.getUTC()
+                    formData.put("utc_timestamp",  utcTime)
+                    formData.put("suraksha_samithi__police_station", stationID)
+                    CoroutineScope(Dispatchers.IO).launch { sendFormData(formData) }
+                }
             }
-        } else if (mode == Mode.SEARCH_FORM) {
-            var formData = getFormData()
-            if (formData == null){
-                formData = JSONObject()
+            Mode.SEARCH_FORM -> {
+                var formData = getFormData()
+                if (formData == null) {
+                    formData = JSONObject()
+                }
+
+                val intent = Intent()
+                intent.putExtra("parameters", formData.toString())
+                setResult(RESULT_OK, intent)
+                finish()
             }
+            Mode.UPDATE_FORM -> {
+                val formData = JSONObject(intent.getStringExtra("data")!!)
+                val uuid = formData.getString("utc_timestamp")
 
-            val profile   = JSONObject(Helper.getData(this, Storage.PROFILE)!!)
-            val stationID = profile.getJSONArray("police_station").getJSONObject(0).getInt("id")
-            formData.put("suraksha_samithi__police_station", stationID)
-
-            val intent = Intent()
-            intent.putExtra("parameters", formData.toString())
-            setResult(RESULT_OK, intent)
-            finish()
-        } else if (mode == Mode.UPDATE_FORM){
-            val formData = JSONObject(intent.getStringExtra("data")!!)
-            val uuid     = formData.getString("utc_timestamp")
-            getFormData(formData)
-            Helper.saveFormData(this, formData, Storage.SURAKSHA_SAMITHI_MEMBERS, uuid)
-            finish()
+                val updatedFormData = getFormData(formData)
+                if (updatedFormData != null) {
+                    Helper.saveFormData(this, formData, Storage.SURAKSHA_SAMITHI_MEMBERS, uuid)
+                    finish()
+                }
+            }
         }
     }
 
-    private fun renderForm() {
+    private fun generateFields() {
         surakshaSamithi = FieldSpinner(this,
             JSONArray(Helper.getData(this, Storage.SURAKSHA_SAMITHI_LIST)!!),
             "suraksha_samithi",
@@ -146,18 +151,18 @@ class SurakshaSamithiMember : AppCompatActivity() {
         }
     }
 
-    private fun prepareActionButton() {
-        if(mode == Mode.NEW_FORM){
-            actionBT.text = "Save"
-        }
-        if(mode == Mode.UPDATE_FORM) {
-            actionBT.text = "Update"
-        }
-        if(mode == Mode.VIEW_FORM) {
-            actionBT.visibility = View.GONE
-        }
-        if(mode == Mode.SEARCH_FORM) {
+    private fun renderFields() {
+        surakshaSamithi.hide()
+
+        if (mode == Mode.SEARCH_FORM) {
             actionBT.text = "Search"
+        } else {
+            surakshaSamithi.show()
+            if(mode == Mode.VIEW_FORM){
+                actionBT.visibility = View.GONE
+            } else{
+                actionBT.text = "Save"
+            }
         }
     }
 
@@ -204,6 +209,4 @@ class SurakshaSamithiMember : AppCompatActivity() {
             return button
         }
     }
-
-
 }
