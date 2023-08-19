@@ -11,7 +11,6 @@ import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.ProgressBar
-import androidx.constraintlayout.widget.ConstraintLayout
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -23,12 +22,12 @@ class UnauthorizedPerson : AppCompatActivity() {
     private lateinit var progressPB:    ProgressBar
     private lateinit var actionBT:      Button
 
-    private lateinit var locationUtil:          LocationUtil
-    private lateinit var fileUtil:              FileUtil
-    private lateinit var category:              FieldSpinner
-    private lateinit var description:           FieldEditText
-    private lateinit var policeStation:         FieldSpinner
-    private lateinit var placeOfCheck:          FieldEditText
+    private lateinit var locationUtil:  LocationUtil
+    private lateinit var fileUtil:      FileUtil
+    private lateinit var category:      FieldSpinner
+    private lateinit var description:   FieldEditText
+    private lateinit var policeStation: FieldSpinner
+    private lateinit var placeOfCheck:  FieldEditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,48 +37,60 @@ class UnauthorizedPerson : AppCompatActivity() {
         mode         = intent.getStringExtra("mode")!!
         progressPB   = findViewById(R.id.progress_bar)
         actionBT     = findViewById(R.id.action)
+        generateFields()
 
+        actionBT.setOnClickListener { performAction() }
         locationUtil = LocationUtil(this, findViewById(R.id.ly_location))
         fileUtil     = FileUtil(this, findViewById(R.id.ly_file), "photo")
 
-        prepareActionButton()
-        renderForm()
-        actionBT.setOnClickListener { performAction() }
-
+        if (mode == Mode.NEW_FORM) {
+            locationUtil.fetchLocation(this)
+        }
         if (mode == Mode.VIEW_FORM || mode == Mode.UPDATE_FORM) {
             val formData = JSONObject(intent.getStringExtra("data")!!)
             loadFormData(formData)
         }
+        renderFields()
     }
 
     private fun performAction() {
-        if (mode == Mode.NEW_FORM){
-            val formData = getFormData()
-            if (formData != null) {
-                val utcTime = Helper.getUTC()
-                formData.put("utc_timestamp", utcTime)
-                CoroutineScope(Dispatchers.IO).launch {  sendFormData(formData)  }
+        when (mode) {
+            Mode.NEW_FORM -> {
+                val formData = getFormData()
+                if (formData != null) {
+                    val profile   = JSONObject(Helper.getData(this, Storage.PROFILE)!!)
+                    val stationID = profile.getJSONArray("police_station").getJSONObject(0).getInt("id")
+                    val utcTime   = Helper.getUTC()
+                    formData.put("utc_timestamp",  utcTime)
+                    formData.put("police_station", stationID)
+                    CoroutineScope(Dispatchers.IO).launch { sendFormData(formData) }
+                }
             }
-        } else if (mode == Mode.SEARCH_FORM) {
-            var formData = getFormData()
-            if (formData == null){
-                formData = JSONObject()
+            Mode.SEARCH_FORM -> {
+                var formData = getFormData()
+                if (formData == null) {
+                    formData = JSONObject()
+                }
+                val intent = Intent()
+                intent.putExtra("parameters", formData.toString())
+                setResult(RESULT_OK, intent)
+                finish()
             }
-            val intent = Intent()
-            intent.putExtra("parameters", formData.toString())
-            setResult(RESULT_OK, intent)
-            finish()
-        } else if (mode == Mode.UPDATE_FORM){
-            val formData = JSONObject(intent.getStringExtra("data")!!)
-            val uuid     = formData.getString("utc_timestamp")
-            getFormData(formData)
-            storeFile(formData, uuid)
-            Helper.saveFormData(this, formData, Storage.UNAUTHORIZED_PEOPLE, uuid)
-            finish()
+            Mode.UPDATE_FORM -> {
+                val formData = JSONObject(intent.getStringExtra("data")!!)
+                val uuid = formData.getString("utc_timestamp")
+
+                val updatedFormData = getFormData(formData)
+                if (updatedFormData != null) {
+                    storeFile(formData, uuid)
+                    Helper.saveFormData(this, formData, Storage.UNAUTHORIZED_PEOPLE, uuid)
+                    finish()
+                }
+            }
         }
     }
 
-    private fun renderForm() {
+    private fun generateFields() {
         category = FieldSpinner(this,
             JSONArray(Helper.getData(this, Storage.VENDOR_TYPES)!!),
             "category",
@@ -113,11 +124,6 @@ class UnauthorizedPerson : AppCompatActivity() {
         form.addView(description.getLayout())
         form.addView(policeStation.getLayout())
         form.addView(placeOfCheck.getLayout())
-
-        if (mode == Mode.SEARCH_FORM){
-            findViewById<ConstraintLayout>(R.id.ly_file).visibility = View.GONE
-            findViewById<ConstraintLayout>(R.id.ly_location).visibility = View.GONE
-        }
     }
 
     private fun sendFormData(formData: JSONObject) {
@@ -158,33 +164,27 @@ class UnauthorizedPerson : AppCompatActivity() {
         }
     }
 
-    private fun prepareActionButton() {
-        if(mode == Mode.NEW_FORM){
-            actionBT.text = "Save"
-            locationUtil.fetchLocation(this)
-        }
-        if(mode == Mode.UPDATE_FORM) {
-            actionBT.text = "Update"
-        }
-        if(mode == Mode.VIEW_FORM) {
-            actionBT.visibility = View.GONE
-        }
-        if(mode == Mode.SEARCH_FORM) {
+    private fun renderFields() {
+        fileUtil.hide()
+        locationUtil.hide()
+
+        if (mode == Mode.SEARCH_FORM) {
             actionBT.text = "Search"
+        } else {
+            fileUtil.show()
+            locationUtil.show()
+
+            if(mode == Mode.VIEW_FORM){
+                actionBT.visibility = View.GONE
+            } else{
+                actionBT.text = "Save"
+            }
         }
     }
 
     private fun getFormData(formData: JSONObject = JSONObject()): JSONObject? {
-        if (mode == Mode.NEW_FORM){
-            if (!locationUtil.haveLocation()) {
-                Helper.showToast(this, "Location is mandatory")
-                return null
-            } else {
-                locationUtil.exportLocation(formData)
-            }
-        }
-
         try{
+            locationUtil.exportLocation(formData)
             category.exportData(formData)
             description.exportData(formData)
             policeStation.exportData(formData)
@@ -197,18 +197,12 @@ class UnauthorizedPerson : AppCompatActivity() {
     }
 
     private fun loadFormData(formData: JSONObject) {
+        locationUtil.importLocation(formData)
         category.importData(formData)
         description.importData(formData)
         policeStation.importData(formData)
         placeOfCheck.importData(formData)
 
-        val latitude  = formData.getDouble("latitude")
-        val longitude = formData.getDouble("longitude")
-        var accuracy  = 0.0f
-        if (mode == Mode.UPDATE_FORM) {
-            accuracy = formData.getDouble("accuracy").toFloat()
-        }
-        locationUtil.importLocation(latitude, longitude, accuracy)
         if(mode == Mode.VIEW_FORM){
             locationUtil.disableUpdate()
         }
