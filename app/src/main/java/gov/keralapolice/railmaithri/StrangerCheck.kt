@@ -354,7 +354,8 @@ class StrangerCheck : AppCompatActivity() {
             val uuid     = formData.getString("checking_date_time")
             val fileName = formData.getString("__file_name")
             fileUtil.loadFile(this, uuid , fileName)
-        } else {
+        }
+        if (mode == Mode.VIEW_FORM) {
             fileUtil.registerLink(formData)
             locationUtil.disableUpdate()
         }

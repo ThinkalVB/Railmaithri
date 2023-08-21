@@ -185,7 +185,8 @@ class CrimeMemo : AppCompatActivity() {
             val uuid     = formData.getString("utc_timestamp")
             val fileName = formData.getString("__file_name")
             fileUtil.loadFile(this, uuid , fileName)
-        }  else {
+        }
+        if (mode == Mode.VIEW_FORM) {
             fileUtil.registerLink(formData)
         }
     }
