@@ -200,14 +200,13 @@ class UnauthorizedPerson : AppCompatActivity() {
         policeStation.importData(formData)
         placeOfCheck.importData(formData)
 
-        if(mode == Mode.VIEW_FORM){
-            locationUtil.disableUpdate()
-        }
-
         if (mode == Mode.UPDATE_FORM && formData.getBoolean("__have_file")){
             val uuid     = formData.getString("utc_timestamp")
             val fileName = formData.getString("__file_name")
             fileUtil.loadFile(this, uuid , fileName)
+        }  else {
+            fileUtil.registerLink(formData)
+            locationUtil.disableUpdate()
         }
     }
 

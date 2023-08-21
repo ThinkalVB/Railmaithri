@@ -245,6 +245,8 @@ class AbandonedProperty : AppCompatActivity() {
             val uuid     = formData.getString("utc_timestamp")
             val fileName = formData.getString("__file_name")
             fileUtil.loadFile(this, uuid , fileName)
+        }  else {
+            fileUtil.registerLink(formData)
         }
     }
 

@@ -11,7 +11,6 @@ import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.ProgressBar
-import androidx.constraintlayout.widget.ConstraintLayout
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -351,14 +350,13 @@ class StrangerCheck : AppCompatActivity() {
         remarks.importData(formData)
         locationUtil.importLocation(formData)
 
-        if(mode == Mode.VIEW_FORM){
-            locationUtil.disableUpdate()
-        }
-
         if (mode == Mode.UPDATE_FORM && formData.getBoolean("__have_file")){
             val uuid     = formData.getString("checking_date_time")
             val fileName = formData.getString("__file_name")
             fileUtil.loadFile(this, uuid , fileName)
+        } else {
+            fileUtil.registerLink(formData)
+            locationUtil.disableUpdate()
         }
     }
 

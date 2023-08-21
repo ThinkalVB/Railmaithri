@@ -3,6 +3,7 @@ package gov.keralapolice.railmaithri
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.provider.OpenableColumns
 import android.view.View
 import android.widget.Button
@@ -10,6 +11,7 @@ import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import org.json.JSONObject
 
 
 class FileUtil(_activity: AppCompatActivity, _locationLY: ConstraintLayout, _fieldLabel: String) {
@@ -18,6 +20,7 @@ class FileUtil(_activity: AppCompatActivity, _locationLY: ConstraintLayout, _fie
     private var fieldLabel:   String?           = null
     private var uuid:         String?           = null
     private var layout:       ConstraintLayout? = null
+    private var urlLink:      String            = "null"
     private var isHidden:     Boolean           = false
 
     private var selectFileBT: Button
@@ -50,8 +53,13 @@ class FileUtil(_activity: AppCompatActivity, _locationLY: ConstraintLayout, _fie
             }
         }
         selectFileBT.setOnClickListener {
-            val intent = Intent().setType("*/*").setAction(Intent.ACTION_GET_CONTENT)
-            selectionResult.launch(Intent.createChooser(intent, "Select a file"))
+            if (urlLink == "null") {
+                val intent = Intent().setType("*/*").setAction(Intent.ACTION_GET_CONTENT)
+                selectionResult.launch(Intent.createChooser(intent, "Select a file"))
+            } else {
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(urlLink))
+                _activity.startActivity(intent)
+            }
         }
         deleteFileBT.setOnClickListener {
             deleteFileBT.isClickable = false
@@ -109,5 +117,16 @@ class FileUtil(_activity: AppCompatActivity, _locationLY: ConstraintLayout, _fie
     fun show() {
         layout?.visibility = View.VISIBLE
         isHidden           = false
+    }
+
+    fun registerLink(formData: JSONObject) {
+        urlLink = formData.optString(fieldLabel, "null")
+        deleteFileBT.isClickable = false
+        if(urlLink == "null"){
+            selectFileBT.isClickable = false
+            fileNameTV.text = "No files"
+        } else {
+            fileNameTV.text = "Click to open the file"
+        }
     }
 }

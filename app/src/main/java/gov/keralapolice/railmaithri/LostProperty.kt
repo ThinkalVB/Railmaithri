@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.widget.Button
@@ -246,6 +245,8 @@ class LostProperty : AppCompatActivity() {
             val uuid     = formData.getString("utc_timestamp")
             val fileName = formData.getString("__file_name")
             fileUtil.loadFile(this, uuid , fileName)
+        } else {
+            fileUtil.registerLink(formData)
         }
     }
 
