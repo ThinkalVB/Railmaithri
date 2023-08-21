@@ -35,7 +35,7 @@ class LocationUtil(_activity: Activity, _locationLY: ConstraintLayout) {
         locationAccuracyTV = _activity.findViewById(R.id.location_accuracy)
         getLocationBT      = _activity.findViewById(R.id.get_location)
         openLocationBT     = _activity.findViewById(R.id.open_location)
-        labelText          = _activity.findViewById(R.id.label_file)
+        labelText          = _activity.findViewById(R.id.label_location)
 
         getLocationBT.setOnClickListener { fetchLocation(_activity.applicationContext) }
         openLocationBT.setOnClickListener {

@@ -11,7 +11,6 @@ import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.ProgressBar
-import androidx.constraintlayout.widget.ConstraintLayout
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -41,46 +40,55 @@ class EmergencyContact : AppCompatActivity() {
         mode         = intent.getStringExtra("mode")!!
         progressPB   = findViewById(R.id.progress_bar)
         actionBT     = findViewById(R.id.action)
+        generateFields()
 
+        actionBT.setOnClickListener { performAction() }
         locationUtil = LocationUtil(this, findViewById(R.id.ly_location))
 
-        prepareActionButton()
-        renderForm()
-        actionBT.setOnClickListener { performAction() }
-
+        if (mode == Mode.NEW_FORM) {
+            locationUtil.fetchLocation(this)
+        }
         if (mode == Mode.VIEW_FORM || mode == Mode.UPDATE_FORM) {
             val formData = JSONObject(intent.getStringExtra("data")!!)
             loadFormData(formData)
         }
+        renderFields()
     }
 
     private fun performAction() {
-        if (mode == Mode.NEW_FORM){
-            val formData = getFormData()
-            if (formData != null) {
-                val utcTime = Helper.getUTC()
-                formData.put("utc_timestamp", utcTime)
-                CoroutineScope(Dispatchers.IO).launch {  sendFormData(formData)  }
+        when (mode) {
+            Mode.NEW_FORM -> {
+                val formData = getFormData()
+                if (formData != null) {
+                    val utcTime   = Helper.getUTC()
+                    formData.put("utc_timestamp", utcTime)
+                    CoroutineScope(Dispatchers.IO).launch { sendFormData(formData) }
+                }
             }
-        } else if (mode == Mode.SEARCH_FORM) {
-            var formData = getFormData()
-            if (formData == null){
-                formData = JSONObject()
+            Mode.SEARCH_FORM -> {
+                var formData = getFormData()
+                if (formData == null) {
+                    formData = JSONObject()
+                }
+                val intent = Intent()
+                intent.putExtra("parameters", formData.toString())
+                setResult(RESULT_OK, intent)
+                finish()
             }
-            val intent = Intent()
-            intent.putExtra("parameters", formData.toString())
-            setResult(RESULT_OK, intent)
-            finish()
-        } else if (mode == Mode.UPDATE_FORM){
-            val formData = JSONObject(intent.getStringExtra("data")!!)
-            val uuid     = formData.getString("utc_timestamp")
-            getFormData(formData)
-            Helper.saveFormData(this, formData, Storage.EMERGENCY_CONTACTS, uuid)
-            finish()
+            Mode.UPDATE_FORM -> {
+                val formData = JSONObject(intent.getStringExtra("data")!!)
+                val uuid = formData.getString("utc_timestamp")
+
+                val updatedFormData = getFormData(formData)
+                if (updatedFormData != null) {
+                    Helper.saveFormData(this, formData, Storage.EMERGENCY_CONTACTS, uuid)
+                    finish()
+                }
+            }
         }
     }
 
-    private fun renderForm() {
+    private fun generateFields() {
         policeStation = FieldSpinner(this,
             JSONArray(Helper.getData(this, Storage.POLICE_STATIONS_LIST)!!),
             "police_station",
@@ -144,10 +152,6 @@ class EmergencyContact : AppCompatActivity() {
         form.addView(mobileNumber.getLayout())
         form.addView(email.getLayout())
         form.addView(remarks.getLayout())
-
-        if (mode == Mode.SEARCH_FORM){
-            findViewById<ConstraintLayout>(R.id.ly_location).visibility = View.GONE
-        }
     }
 
     private fun sendFormData(formData: JSONObject) {
@@ -176,32 +180,25 @@ class EmergencyContact : AppCompatActivity() {
         }
     }
 
-    private fun prepareActionButton() {
-        if(mode == Mode.NEW_FORM){
-            actionBT.text = "Save"
-            locationUtil.fetchLocation(this)
-        }
-        if(mode == Mode.UPDATE_FORM) {
-            actionBT.text = "Update"
-        }
-        if(mode == Mode.VIEW_FORM) {
-            actionBT.visibility = View.GONE
-        }
-        if(mode == Mode.SEARCH_FORM) {
+    private fun renderFields() {
+        locationUtil.hide()
+        remarks.hide()
+
+        if (mode == Mode.SEARCH_FORM) {
             actionBT.text = "Search"
+        } else {
+            locationUtil.show()
+            remarks.show()
+
+            if(mode == Mode.VIEW_FORM){
+                actionBT.visibility = View.GONE
+            } else{
+                actionBT.text = "Save"
+            }
         }
     }
 
     private fun getFormData(formData: JSONObject = JSONObject()): JSONObject? {
-        if (mode == Mode.NEW_FORM){
-            if (!locationUtil.haveLocation()) {
-                Helper.showToast(this, "Location is mandatory")
-                return null
-            } else {
-                locationUtil.exportLocation(formData)
-            }
-        }
-
         try {
             policeStation.exportData(formData)
             district.exportData(formData)
@@ -214,12 +211,6 @@ class EmergencyContact : AppCompatActivity() {
         } catch (e: Exception){
             Helper.showToast(this, e.message!!)
             return null
-        }
-
-        if (mode != Mode.NEW_FORM || mode == Mode.UPDATE_FORM) {
-            val profile   = JSONObject(Helper.getData(this, Storage.PROFILE)!!)
-            val stationID = profile.getJSONArray("police_station").getJSONObject(0).getInt("id")
-            formData.put("police_station", stationID)
         }
         return formData
     }
@@ -234,14 +225,7 @@ class EmergencyContact : AppCompatActivity() {
         email.importData(formData)
         remarks.importData(formData)
 
-        val latitude  = formData.getDouble("latitude")
-        val longitude = formData.getDouble("longitude")
-        var accuracy  = 0.0f
-        if (mode == Mode.UPDATE_FORM) {
-            accuracy = formData.getDouble("accuracy").toFloat()
-        }
-        locationUtil.importLocation(latitude, longitude, accuracy)
-        if(mode == Mode.VIEW_FORM){
+        if (mode == Mode.VIEW_FORM) {
             locationUtil.disableUpdate()
         }
     }
