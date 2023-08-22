@@ -12,7 +12,6 @@ import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.ConstraintLayout
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -45,11 +44,9 @@ class ShopAndLabours : AppCompatActivity() {
         progressPB   = findViewById(R.id.progress_bar)
         actionBT     = findViewById(R.id.action)
         addLaboursBT = findViewById(R.id.add_labours)
+        generateFields()
 
         locationUtil = LocationUtil(this, findViewById(R.id.ly_location))
-
-        prepareActionButton()
-        renderForm()
         actionBT.setOnClickListener { performAction() }
         addLaboursBT.setOnClickListener {
             val intent = Intent(this, Labour::class.java)
@@ -57,9 +54,92 @@ class ShopAndLabours : AppCompatActivity() {
             startActivityForResult(intent, 1000)
         }
 
+        if(mode == Mode.NEW_FORM){
+            locationUtil.fetchLocation(this)
+        }
         if (mode == Mode.VIEW_FORM || mode == Mode.UPDATE_FORM) {
             val formData = JSONObject(intent.getStringExtra("data")!!)
             loadFormData(formData)
+        }
+        renderFields()
+    }
+
+    private fun generateFields() {
+        shopCategory = FieldSpinner(this,
+            JSONArray(Helper.getData(this, Storage.SHOP_TYPES)!!),
+            "shop_category",
+            "Shop category",
+            addEmptyValue = Helper.resolveAddEmptyValue(false, mode),
+            isRequired = Helper.resolveIsRequired(true, mode)
+        )
+        shopName = FieldEditText(this,
+            fieldType = "text",
+            fieldLabel = "name",
+            fieldName = "Shop name",
+            isRequired = Helper.resolveIsRequired(true, mode)
+        )
+        ownerName = FieldEditText(this,
+            fieldType = "text",
+            fieldLabel = "owner_name",
+            fieldName = "Owner name",
+            isRequired = Helper.resolveIsRequired(true, mode)
+        )
+        aadhaarNumber = FieldEditText(this,
+            fieldType = "number",
+            fieldLabel = "aadhar_number",
+            fieldName = "Aadhaar number",
+            isRequired = Helper.resolveIsRequired(true, mode)
+        )
+        mobileNumber = FieldEditText(this,
+            fieldType = "number",
+            fieldLabel = "contact_number",
+            fieldName = "Mobile number",
+            isRequired = Helper.resolveIsRequired(true, mode)
+        )
+        licenseNumber = FieldEditText(this,
+            fieldType = "number",
+            fieldLabel = "licence_number",
+            fieldName = "License number",
+            isRequired = Helper.resolveIsRequired(true, mode)
+        )
+        railwayStation = FieldSpinner(this,
+            JSONArray(Helper.getData(this, Storage.RAILWAY_STATIONS_LIST)!!),
+            "railway_station",
+            "Railway station",
+            addEmptyValue = Helper.resolveAddEmptyValue(false, mode),
+            isRequired = Helper.resolveIsRequired(true, mode)
+        )
+        platformNumber = FieldEditText(this,
+            fieldType = "number",
+            fieldLabel = "platform_number",
+            fieldName = "Platform number",
+            isRequired = Helper.resolveIsRequired(true, mode)
+        )
+
+        val form = findViewById<LinearLayout>(R.id.form)
+        form.addView(shopCategory.getLayout())
+        form.addView(shopName.getLayout())
+        form.addView(ownerName.getLayout())
+        form.addView(aadhaarNumber.getLayout())
+        form.addView(mobileNumber.getLayout())
+        form.addView(licenseNumber.getLayout())
+        form.addView(railwayStation.getLayout())
+        form.addView(platformNumber.getLayout())
+    }
+
+    private fun renderFields() {
+        locationUtil.hide()
+
+        if (mode == Mode.SEARCH_FORM) {
+            actionBT.text = "Search"
+        } else {
+            locationUtil.show()
+
+            if(mode == Mode.VIEW_FORM){
+                actionBT.visibility = View.GONE
+            } else{
+                actionBT.text = "Save"
+            }
         }
     }
 
@@ -137,15 +217,6 @@ class ShopAndLabours : AppCompatActivity() {
     }
 
     private fun getFormData(formData: JSONObject = JSONObject()): JSONObject? {
-        if (mode == Mode.NEW_FORM){
-            if (!locationUtil.haveLocation()) {
-                Helper.showToast(this, "Location is mandatory")
-                return null
-            } else {
-                locationUtil.exportLocation(formData)
-            }
-        }
-
         try{
             shopCategory.exportData(formData)
             shopName.exportData(formData)
@@ -172,99 +243,8 @@ class ShopAndLabours : AppCompatActivity() {
         railwayStation.importData(formData)
         platformNumber.importData(formData)
 
-        val latitude  = formData.getDouble("latitude")
-        val longitude = formData.getDouble("longitude")
-        var accuracy  = 0.0f
-        if (mode == Mode.UPDATE_FORM) {
-            accuracy = formData.getDouble("accuracy").toFloat()
-        }
-        locationUtil.importLocation(latitude, longitude, accuracy)
-        if(mode == Mode.VIEW_FORM){
+        if (mode == Mode.VIEW_FORM){
             locationUtil.disableUpdate()
-        }
-    }
-
-    private fun prepareActionButton() {
-        if(mode == Mode.NEW_FORM){
-            actionBT.text = "Save"
-            locationUtil.fetchLocation(this)
-        }
-        if(mode == Mode.UPDATE_FORM) {
-            actionBT.text = "Update"
-        }
-        if(mode == Mode.VIEW_FORM) {
-            actionBT.visibility = View.GONE
-        }
-        if(mode == Mode.SEARCH_FORM) {
-            actionBT.text = "Search"
-        }
-    }
-
-    private fun renderForm() {
-        shopCategory = FieldSpinner(this,
-            JSONArray(Helper.getData(this, Storage.SHOP_TYPES)!!),
-            "shop_category",
-            "Shop category",
-            addEmptyValue = Helper.resolveAddEmptyValue(false, mode),
-            isRequired = Helper.resolveIsRequired(true, mode)
-        )
-        shopName = FieldEditText(this,
-            fieldType = "text",
-            fieldLabel = "name",
-            fieldName = "Shop name",
-            isRequired = Helper.resolveIsRequired(true, mode)
-        )
-        ownerName = FieldEditText(this,
-            fieldType = "text",
-            fieldLabel = "owner_name",
-            fieldName = "Owner name",
-            isRequired = Helper.resolveIsRequired(true, mode)
-        )
-        aadhaarNumber = FieldEditText(this,
-            fieldType = "number",
-            fieldLabel = "aadhar_number",
-            fieldName = "Aadhaar number",
-            isRequired = Helper.resolveIsRequired(true, mode)
-        )
-        mobileNumber = FieldEditText(this,
-            fieldType = "number",
-            fieldLabel = "contact_number",
-            fieldName = "Mobile number",
-            isRequired = Helper.resolveIsRequired(true, mode)
-        )
-        licenseNumber = FieldEditText(this,
-            fieldType = "number",
-            fieldLabel = "licence_number",
-            fieldName = "License number",
-            isRequired = Helper.resolveIsRequired(true, mode)
-        )
-        railwayStation = FieldSpinner(this,
-            JSONArray(Helper.getData(this, Storage.RAILWAY_STATIONS_LIST)!!),
-            "railway_station",
-            "Railway station",
-            addEmptyValue = Helper.resolveAddEmptyValue(false, mode),
-            isRequired = Helper.resolveIsRequired(true, mode)
-        )
-        platformNumber = FieldEditText(this,
-            fieldType = "number",
-            fieldLabel = "platform_number",
-            fieldName = "Platform number",
-            isRequired = Helper.resolveIsRequired(true, mode)
-        )
-
-        val form = findViewById<LinearLayout>(R.id.form)
-        form.addView(shopCategory.getLayout())
-        form.addView(shopName.getLayout())
-        form.addView(ownerName.getLayout())
-        form.addView(aadhaarNumber.getLayout())
-        form.addView(mobileNumber.getLayout())
-        form.addView(licenseNumber.getLayout())
-        form.addView(railwayStation.getLayout())
-        form.addView(platformNumber.getLayout())
-
-        if (mode == Mode.SEARCH_FORM){
-            findViewById<ConstraintLayout>(R.id.ly_location).visibility = View.GONE
-            addLaboursBT.visibility = View.GONE
         }
     }
 
