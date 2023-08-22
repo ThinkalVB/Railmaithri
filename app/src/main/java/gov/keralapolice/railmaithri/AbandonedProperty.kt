@@ -25,12 +25,13 @@ class AbandonedProperty : AppCompatActivity() {
     private lateinit var fileUtil:          FileUtil
     private lateinit var dateFrom:          FieldEditText
     private lateinit var dateTo:            FieldEditText
-    private lateinit var policeStation:         FieldSpinner
+    private lateinit var policeStation:     FieldSpinner
     private lateinit var category:          FieldSpinner
     private lateinit var foundBy:           FieldEditText
     private lateinit var whetherSeized:     FieldSpinner
     private lateinit var crimeDetails:      FieldEditText
     private lateinit var remarks:           FieldEditText
+    private lateinit var search:            FieldEditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -91,6 +92,12 @@ class AbandonedProperty : AppCompatActivity() {
     }
 
     private fun generateFields() {
+        search = FieldEditText(this,
+            fieldType = "text",
+            fieldLabel = "search",
+            fieldName = "Search",
+            isRequired = false
+        )
         dateFrom = FieldEditText(this,
             fieldType  = "date",
             fieldLabel = "utc_timestamp__gte",
@@ -145,6 +152,7 @@ class AbandonedProperty : AppCompatActivity() {
         )
 
         val form = findViewById<LinearLayout>(R.id.form)
+        form.addView(search.getLayout())
         form.addView(dateFrom.getLayout())
         form.addView(dateTo.getLayout())
         form.addView(policeStation.getLayout())
@@ -194,24 +202,31 @@ class AbandonedProperty : AppCompatActivity() {
     }
 
     private fun renderFields() {
-        dateFrom.hide()
-        dateTo.hide()
-        fileUtil.hide()
-        whetherSeized.hide()
-
-        if (mode == Mode.SEARCH_FORM) {
+        if (mode == Mode.SEARCH_FORM){
+            fileUtil.hide()
             policeStation.hide()
-            dateFrom.show()
-            dateTo.show()
-            actionBT.text = "Search"
-        } else {
-            whetherSeized.show()
-            fileUtil.show()
+            category.hide()
+            foundBy.hide()
+            whetherSeized.hide()
+            crimeDetails.hide()
+            remarks.hide()
 
-            if(mode == Mode.VIEW_FORM){
-                actionBT.visibility = View.GONE
-            } else{
-                actionBT.text = "Save"
+            actionBT.text = "Search"
+        } else if(mode == Mode.VIEW_FORM || mode== Mode.UPDATE_FORM || mode == Mode.NEW_FORM){
+            dateFrom.hide()
+            dateTo.hide()
+            search.hide()
+
+            when (mode) {
+                Mode.VIEW_FORM -> {
+                    actionBT.visibility = View.GONE
+                }
+                Mode.UPDATE_FORM -> {
+                    actionBT.text = "Update"
+                }
+                Mode.NEW_FORM -> {
+                    actionBT.text = "Save"
+                }
             }
         }
     }
