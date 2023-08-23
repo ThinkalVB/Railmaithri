@@ -30,6 +30,7 @@ class LostProperty : AppCompatActivity() {
     private lateinit var foundIn:               FieldSpinner
     private lateinit var foundOn:               FieldEditText
     private lateinit var remarks:               FieldEditText
+    private lateinit var search:                FieldEditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -90,25 +91,41 @@ class LostProperty : AppCompatActivity() {
     }
 
     private fun renderFields() {
-        dateFrom.hide()
-        dateTo.hide()
-        fileUtil.hide()
+        if (mode == Mode.SEARCH_FORM){
+            fileUtil.hide()
+            lostPropertyCategory.hide()
+            descrption.hide()
+            foundIn.hide()
+            foundOn.hide()
+            remarks.hide()
 
-        if (mode == Mode.SEARCH_FORM) {
-            dateFrom.show()
-            dateTo.show()
             actionBT.text = "Search"
-        } else {
-            fileUtil.show()
-            if(mode == Mode.VIEW_FORM){
-                actionBT.visibility = View.GONE
-            } else{
-                actionBT.text = "Save"
+        } else if(mode == Mode.VIEW_FORM || mode== Mode.UPDATE_FORM || mode == Mode.NEW_FORM){
+            dateFrom.hide()
+            dateTo.hide()
+            search.hide()
+
+            when (mode) {
+                Mode.VIEW_FORM -> {
+                    actionBT.visibility = View.GONE
+                }
+                Mode.UPDATE_FORM -> {
+                    actionBT.text = "Update"
+                }
+                Mode.NEW_FORM -> {
+                    actionBT.text = "Save"
+                }
             }
         }
     }
 
     private fun generateFields() {
+        search = FieldEditText(this,
+            fieldType = "text",
+            fieldLabel = "search",
+            fieldName = "Search",
+            isRequired = false
+        )
         dateFrom = FieldEditText(this,
             fieldType  = "date",
             fieldLabel = "utc_timestamp__gte",
@@ -164,6 +181,7 @@ class LostProperty : AppCompatActivity() {
         )
 
         val form = findViewById<LinearLayout>(R.id.form)
+        form.addView(search.getLayout())
         form.addView(dateFrom.getLayout())
         form.addView(dateTo.getLayout())
         form.addView(lostPropertyCategory.getLayout())

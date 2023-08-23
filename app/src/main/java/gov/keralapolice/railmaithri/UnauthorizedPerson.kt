@@ -28,6 +28,7 @@ class UnauthorizedPerson : AppCompatActivity() {
     private lateinit var description:   FieldEditText
     private lateinit var policeStation: FieldSpinner
     private lateinit var placeOfCheck:  FieldEditText
+    private lateinit var search:            FieldEditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -88,6 +89,12 @@ class UnauthorizedPerson : AppCompatActivity() {
     }
 
     private fun generateFields() {
+        search = FieldEditText(this,
+            fieldType = "text",
+            fieldLabel = "search",
+            fieldName = "Search",
+            isRequired = false
+        )
         category = FieldSpinner(this,
             JSONArray(Helper.getData(this, Storage.VENDOR_TYPES)!!),
             "category",
@@ -117,6 +124,7 @@ class UnauthorizedPerson : AppCompatActivity() {
         )
 
         val form = findViewById<LinearLayout>(R.id.form)
+        form.addView(search.getLayout())
         form.addView(category.getLayout())
         form.addView(description.getLayout())
         form.addView(policeStation.getLayout())
@@ -162,19 +170,26 @@ class UnauthorizedPerson : AppCompatActivity() {
     }
 
     private fun renderFields() {
-        fileUtil.hide()
-        locationUtil.hide()
+        if (mode == Mode.SEARCH_FORM){
+            fileUtil.hide()
+            locationUtil.hide()
+            description.hide()
+            placeOfCheck.hide()
 
-        if (mode == Mode.SEARCH_FORM) {
             actionBT.text = "Search"
-        } else {
-            fileUtil.show()
-            locationUtil.show()
+        } else if(mode == Mode.VIEW_FORM || mode== Mode.UPDATE_FORM || mode == Mode.NEW_FORM){
+            search.hide()
 
-            if(mode == Mode.VIEW_FORM){
-                actionBT.visibility = View.GONE
-            } else{
-                actionBT.text = "Save"
+            when (mode) {
+                Mode.VIEW_FORM -> {
+                    actionBT.visibility = View.GONE
+                }
+                Mode.UPDATE_FORM -> {
+                    actionBT.text = "Update"
+                }
+                Mode.NEW_FORM -> {
+                    actionBT.text = "Save"
+                }
             }
         }
     }

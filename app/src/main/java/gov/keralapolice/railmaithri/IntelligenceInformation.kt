@@ -31,6 +31,7 @@ class IntelligenceInformation : AppCompatActivity() {
     private lateinit var mobileNumber:      FieldEditText
     private lateinit var information:       FieldEditText
     private lateinit var remarks:           FieldEditText
+    private lateinit var search:            FieldEditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -95,6 +96,12 @@ class IntelligenceInformation : AppCompatActivity() {
     }
 
     private fun generateFields() {
+        search = FieldEditText(this,
+            fieldType = "text",
+            fieldLabel = "search",
+            fieldName = "Search",
+            isRequired = false
+        )
         dateFrom = FieldEditText(this,
             fieldType  = "date",
             fieldLabel = "utc_timestamp__gte",
@@ -143,6 +150,7 @@ class IntelligenceInformation : AppCompatActivity() {
         )
 
         val form = findViewById<LinearLayout>(R.id.form)
+        form.addView(search.getLayout())
         form.addView(dateFrom.getLayout())
         form.addView(dateTo.getLayout())
         form.addView(intelligenceType.getLayout())
@@ -208,23 +216,28 @@ class IntelligenceInformation : AppCompatActivity() {
     }
 
     private fun renderFields() {
-        dateFrom.hide()
-        dateTo.hide()
-        fileUtil.hide()
-        locationUtil.hide()
+        if (mode == Mode.SEARCH_FORM){
+            fileUtil.hide()
+            locationUtil.hide()
+            mobileNumber.hide()
+            information.hide()
+            remarks.hide()
 
-        if (mode == Mode.SEARCH_FORM) {
-            dateFrom.show()
-            dateTo.show()
             actionBT.text = "Search"
-        } else {
-            fileUtil.show()
-            locationUtil.show()
-
-            if(mode == Mode.VIEW_FORM){
-                actionBT.visibility = View.GONE
-            } else{
-                actionBT.text = "Save"
+        } else if(mode == Mode.VIEW_FORM || mode== Mode.UPDATE_FORM || mode == Mode.NEW_FORM){
+            dateFrom.hide()
+            dateTo.hide()
+            search.hide()
+            when (mode) {
+                Mode.VIEW_FORM -> {
+                    actionBT.visibility = View.GONE
+                }
+                Mode.UPDATE_FORM -> {
+                    actionBT.text = "Update"
+                }
+                Mode.NEW_FORM -> {
+                    actionBT.text = "Save"
+                }
             }
         }
     }

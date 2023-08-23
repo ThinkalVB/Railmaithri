@@ -28,6 +28,7 @@ class POI : AppCompatActivity() {
     private lateinit var name:              FieldEditText
     private lateinit var policeStation:     FieldSpinner
     private lateinit var district:          FieldSpinner
+    private lateinit var search:            FieldEditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -89,6 +90,12 @@ class POI : AppCompatActivity() {
     }
 
     private fun generateFields() {
+        search = FieldEditText(this,
+            fieldType = "text",
+            fieldLabel = "search",
+            fieldName = "Search",
+            isRequired = false
+        )
         poiCategory = FieldSpinner(this,
             JSONArray(Helper.getData(this, Storage.POI_TYPES)!!),
             "poi_category",
@@ -118,6 +125,7 @@ class POI : AppCompatActivity() {
         )
 
         val form = findViewById<LinearLayout>(R.id.form)
+        form.addView(search.getLayout())
         form.addView(poiCategory.getLayout())
         form.addView(name.getLayout())
         form.addView(policeStation.getLayout())
@@ -163,24 +171,27 @@ class POI : AppCompatActivity() {
     }
 
     private fun renderFields() {
-        fileUtil.hide()
-        locationUtil.hide()
+        if (mode == Mode.SEARCH_FORM){
+            fileUtil.hide()
+            locationUtil.hide()
 
-        if (mode == Mode.SEARCH_FORM) {
-            policeStation.hide()
             actionBT.text = "Search"
-        } else {
-            fileUtil.show()
-            locationUtil.show()
+        } else if(mode == Mode.VIEW_FORM || mode== Mode.UPDATE_FORM || mode == Mode.NEW_FORM){
+            search.hide()
 
-            if(mode == Mode.VIEW_FORM){
-                actionBT.visibility = View.GONE
-            } else{
-                actionBT.text = "Save"
+            when (mode) {
+                Mode.VIEW_FORM -> {
+                    actionBT.visibility = View.GONE
+                }
+                Mode.UPDATE_FORM -> {
+                    actionBT.text = "Update"
+                }
+                Mode.NEW_FORM -> {
+                    actionBT.text = "Save"
+                }
             }
         }
     }
-
     private fun getFormData(formData: JSONObject = JSONObject()): JSONObject? {
         try{
             poiCategory.exportData(formData)

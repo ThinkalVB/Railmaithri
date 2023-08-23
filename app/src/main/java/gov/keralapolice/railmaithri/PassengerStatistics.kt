@@ -28,6 +28,7 @@ class PassengerStatistics : AppCompatActivity() {
     private lateinit var coachNumber:       FieldEditText
     private lateinit var density:           FieldSpinner
     private lateinit var compartmentType:   FieldSpinner
+    private lateinit var search:            FieldEditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -84,6 +85,12 @@ class PassengerStatistics : AppCompatActivity() {
     }
 
     private fun generateFields() {
+        search = FieldEditText(this,
+            fieldType = "text",
+            fieldLabel = "search",
+            fieldName = "Search",
+            isRequired = false
+        )
         dateFrom = FieldEditText(this,
             fieldType  = "date",
             fieldLabel = "last_updated__gte",
@@ -125,6 +132,7 @@ class PassengerStatistics : AppCompatActivity() {
         )
 
         val form = findViewById<LinearLayout>(R.id.form)
+        form.addView(search.getLayout())
         form.addView(dateFrom.getLayout())
         form.addView(dateTo.getLayout())
         form.addView(train.getLayout())
@@ -160,18 +168,25 @@ class PassengerStatistics : AppCompatActivity() {
     }
 
     private fun renderFields() {
-        dateFrom.hide()
-        dateTo.hide()
+        if (mode == Mode.SEARCH_FORM){
+            coachNumber.hide()
 
-        if (mode == Mode.SEARCH_FORM) {
-            dateFrom.show()
-            dateTo.show()
             actionBT.text = "Search"
-        } else {
-            if(mode == Mode.VIEW_FORM){
-                actionBT.visibility = View.GONE
-            } else{
-                actionBT.text = "Save"
+        } else if(mode == Mode.VIEW_FORM || mode== Mode.UPDATE_FORM || mode == Mode.NEW_FORM){
+            dateFrom.hide()
+            dateTo.hide()
+            search.hide()
+
+            when (mode) {
+                Mode.VIEW_FORM -> {
+                    actionBT.visibility = View.GONE
+                }
+                Mode.UPDATE_FORM -> {
+                    actionBT.text = "Update"
+                }
+                Mode.NEW_FORM -> {
+                    actionBT.text = "Save"
+                }
             }
         }
     }

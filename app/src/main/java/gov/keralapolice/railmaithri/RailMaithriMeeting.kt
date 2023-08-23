@@ -30,6 +30,7 @@ class RailMaithriMeeting : AppCompatActivity() {
     private lateinit var participants:          FieldEditText
     private lateinit var gistOfDecisionTaken:   FieldEditText
     private lateinit var nextMeetingDate:       FieldEditText
+    private lateinit var search:                FieldEditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -84,6 +85,12 @@ class RailMaithriMeeting : AppCompatActivity() {
     }
 
     private fun generateFields() {
+        search = FieldEditText(this,
+            fieldType = "text",
+            fieldLabel = "search",
+            fieldName = "Search",
+            isRequired = false
+        )
         dateFrom = FieldEditText(this,
             fieldType  = "date",
             fieldLabel = "meeting_date__gte",
@@ -143,6 +150,7 @@ class RailMaithriMeeting : AppCompatActivity() {
         )
 
         val form = findViewById<LinearLayout>(R.id.form)
+        form.addView(search.getLayout())
         form.addView(dateFrom.getLayout())
         form.addView(dateTo.getLayout())
         form.addView(meetingType.getLayout())
@@ -180,23 +188,29 @@ class RailMaithriMeeting : AppCompatActivity() {
     }
 
     private fun renderFields() {
-        dateFrom.hide()
-        dateTo.hide()
-        meetingDate.hide()
-        nextMeetingDate.hide()
+        if (mode == Mode.SEARCH_FORM){
+            participants.hide()
+            gistOfDecisionTaken.hide()
+            nextMeetingDate.hide()
+            policeStation.hide()
+            meetingDate.hide()
 
-        if (mode == Mode.SEARCH_FORM) {
-            dateFrom.show()
-            dateTo.show()
             actionBT.text = "Search"
-        } else {
-            meetingDate.show()
-            nextMeetingDate.show()
+        } else if(mode == Mode.VIEW_FORM || mode== Mode.UPDATE_FORM || mode == Mode.NEW_FORM){
+            dateFrom.hide()
+            dateTo.hide()
+            search.hide()
 
-            if(mode == Mode.VIEW_FORM){
-                actionBT.visibility = View.GONE
-            } else{
-                actionBT.text = "Save"
+            when (mode) {
+                Mode.VIEW_FORM -> {
+                    actionBT.visibility = View.GONE
+                }
+                Mode.UPDATE_FORM -> {
+                    actionBT.text = "Update"
+                }
+                Mode.NEW_FORM -> {
+                    actionBT.text = "Save"
+                }
             }
         }
     }

@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ImageButton
@@ -141,14 +142,17 @@ class SearchData : AppCompatActivity() {
         parameters.put("page", pageNumber)
         val profile   = JSONObject(Helper.getData(this, Storage.PROFILE)!!)
         val officerID = profile.getInt("id")
-        val stationID = profile.getJSONArray("police_station").getJSONObject(0).getInt("id")
+        try {
+            if (searchURL == URL.RELIABLE_PERSON){
+                val stationID = profile.getJSONArray("police_station").getJSONObject(0).getInt("id")
+                parameters.put("police_station", stationID)
+            }
+        } catch (_: Exception){}
 
         if (searchURL == URL.BEAT_DIARY){
             parameters.put("beat_officer", officerID)
-        }else if (searchURL == URL.INCIDENT_REPORT){
+        } else if (searchURL == URL.INCIDENT_REPORT){
             parameters.put("informer", officerID)
-        } else if (searchURL == URL.RELIABLE_PERSON){
-            parameters.put("police_station", stationID)
         }
 
         val token    = Helper.getData(this, Storage.TOKEN)!!

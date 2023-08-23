@@ -220,9 +220,14 @@ class Home : AppCompatActivity() {
 
         // Beat diary
         findViewById<ImageView>(R.id.add_beat_diary).setOnClickListener {
-            val intent = Intent(this, BeatDiary::class.java)
-            intent.putExtra("mode", Mode.NEW_FORM)
-            startActivity(intent)
+            try {
+                profile.getJSONObject("last_beat_assignment").getInt("id")
+                val intent = Intent(this, BeatDiary::class.java)
+                intent.putExtra("mode", Mode.NEW_FORM)
+                startActivity(intent)
+            } catch(_: Exception){
+                Helper.showToast(this, "No tasks assigned")
+            }
         }
         findViewById<Button>(R.id.search_beat_diary).setOnClickListener {
             val intent = Intent(this, SearchData::class.java)

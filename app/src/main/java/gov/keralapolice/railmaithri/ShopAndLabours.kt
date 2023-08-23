@@ -33,6 +33,7 @@ class ShopAndLabours : AppCompatActivity() {
     private lateinit var licenseNumber:     FieldEditText
     private lateinit var railwayStation:    FieldSpinner
     private lateinit var platformNumber:    FieldEditText
+    private lateinit var search:            FieldEditText
     private var labourData                  = JSONArray()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -65,6 +66,12 @@ class ShopAndLabours : AppCompatActivity() {
     }
 
     private fun generateFields() {
+        search = FieldEditText(this,
+            fieldType = "text",
+            fieldLabel = "search",
+            fieldName = "Search",
+            isRequired = false
+        )
         shopCategory = FieldSpinner(this,
             JSONArray(Helper.getData(this, Storage.SHOP_TYPES)!!),
             "shop_category",
@@ -117,6 +124,7 @@ class ShopAndLabours : AppCompatActivity() {
         )
 
         val form = findViewById<LinearLayout>(R.id.form)
+        form.addView(search.getLayout())
         form.addView(shopCategory.getLayout())
         form.addView(shopName.getLayout())
         form.addView(ownerName.getLayout())
@@ -128,21 +136,33 @@ class ShopAndLabours : AppCompatActivity() {
     }
 
     private fun renderFields() {
-        locationUtil.hide()
+        if (mode == Mode.SEARCH_FORM){
+            locationUtil.hide()
+            shopName.hide()
+            ownerName.hide()
+            aadhaarNumber.hide()
+            mobileNumber.hide()
+            licenseNumber.hide()
+            platformNumber.hide()
+            addLaboursBT.visibility = View.GONE
 
-        if (mode == Mode.SEARCH_FORM) {
             actionBT.text = "Search"
-        } else {
-            locationUtil.show()
+        } else if(mode == Mode.VIEW_FORM || mode== Mode.UPDATE_FORM || mode == Mode.NEW_FORM){
+            search.hide()
 
-            if(mode == Mode.VIEW_FORM){
-                actionBT.visibility = View.GONE
-            } else{
-                actionBT.text = "Save"
+            when (mode) {
+                Mode.VIEW_FORM -> {
+                    actionBT.visibility = View.GONE
+                }
+                Mode.UPDATE_FORM -> {
+                    actionBT.text = "Update"
+                }
+                Mode.NEW_FORM -> {
+                    actionBT.text = "Save"
+                }
             }
         }
     }
-
     private fun performAction() {
         if (mode == Mode.NEW_FORM){
             val formData = getFormData()

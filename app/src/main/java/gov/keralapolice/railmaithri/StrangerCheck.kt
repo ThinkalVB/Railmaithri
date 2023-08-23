@@ -43,6 +43,7 @@ class StrangerCheck : AppCompatActivity() {
     private lateinit var remarks:               FieldEditText
     private lateinit var landPhoneNumber:       FieldEditText
     private lateinit var idCardDetails:         FieldEditText
+    private lateinit var search:                FieldEditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -106,6 +107,12 @@ class StrangerCheck : AppCompatActivity() {
     }
 
     private fun generateFields() {
+        search = FieldEditText(this,
+            fieldType = "text",
+            fieldLabel = "search",
+            fieldName = "Search",
+            isRequired = false
+        )
         dateFrom = FieldEditText(this,
             fieldType  = "date",
             fieldLabel = "checking_date_time__gte",
@@ -222,6 +229,7 @@ class StrangerCheck : AppCompatActivity() {
         )
 
         val form = findViewById<LinearLayout>(R.id.form)
+        form.addView(search.getLayout())
         form.addView(dateFrom.getLayout())
         form.addView(dateTo.getLayout())
         form.addView(policeStation.getLayout())
@@ -281,24 +289,39 @@ class StrangerCheck : AppCompatActivity() {
     }
 
     private fun renderFields() {
-        dateFrom.hide()
-        dateTo.hide()
-        fileUtil.hide()
-        locationUtil.hide()
+        if (mode == Mode.SEARCH_FORM){
+            fileUtil.hide()
+            locationUtil.hide()
+            name.hide()
+            identificationMarks.hide()
+            purposeOfVisit.hide()
+            age.hide()
+            emailID.hide()
+            mobileNumber.hide()
+            landPhoneNumber.hide()
+            languagesKnown.hide()
+            placeOfCheck.hide()
+            nativePoliceStation.hide()
+            nativeAddress.hide()
+            idCardDetails.hide()
+            remarks.hide()
 
-        if (mode == Mode.SEARCH_FORM) {
-            policeStation.hide()
-            dateFrom.show()
-            dateTo.show()
             actionBT.text = "Search"
-        } else {
-            fileUtil.show()
-            locationUtil.show()
+        } else if(mode == Mode.VIEW_FORM || mode== Mode.UPDATE_FORM || mode == Mode.NEW_FORM){
+            dateFrom.hide()
+            dateTo.hide()
+            search.hide()
 
-            if(mode == Mode.VIEW_FORM){
-                actionBT.visibility = View.GONE
-            } else{
-                actionBT.text = "Save"
+            when (mode) {
+                Mode.VIEW_FORM -> {
+                    actionBT.visibility = View.GONE
+                }
+                Mode.UPDATE_FORM -> {
+                    actionBT.text = "Update"
+                }
+                Mode.NEW_FORM -> {
+                    actionBT.text = "Save"
+                }
             }
         }
     }

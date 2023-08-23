@@ -27,6 +27,7 @@ class SurakshaSamithiMember : AppCompatActivity() {
     private lateinit var address:           FieldEditText
     private lateinit var mobileNumber:      FieldEditText
     private lateinit var email:             FieldEditText
+    private lateinit var search:            FieldEditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -84,6 +85,12 @@ class SurakshaSamithiMember : AppCompatActivity() {
     }
 
     private fun generateFields() {
+        search = FieldEditText(this,
+            fieldType = "text",
+            fieldLabel = "search",
+            fieldName = "Search",
+            isRequired = false
+        )
         surakshaSamithi = FieldSpinner(this,
             JSONArray(Helper.getData(this, Storage.SURAKSHA_SAMITHI_LIST)!!),
             "suraksha_samithi",
@@ -118,6 +125,7 @@ class SurakshaSamithiMember : AppCompatActivity() {
         )
 
         val form = findViewById<LinearLayout>(R.id.form)
+        form.addView(search.getLayout())
         form.addView(surakshaSamithi.getLayout())
         form.addView(name.getLayout())
         form.addView(address.getLayout())
@@ -152,16 +160,26 @@ class SurakshaSamithiMember : AppCompatActivity() {
     }
 
     private fun renderFields() {
-        surakshaSamithi.hide()
+        if (mode == Mode.SEARCH_FORM){
+            surakshaSamithi.hide()
+            address.hide()
+            mobileNumber.hide()
+            email.hide()
 
-        if (mode == Mode.SEARCH_FORM) {
             actionBT.text = "Search"
-        } else {
-            surakshaSamithi.show()
-            if(mode == Mode.VIEW_FORM){
-                actionBT.visibility = View.GONE
-            } else{
-                actionBT.text = "Save"
+        } else if(mode == Mode.VIEW_FORM || mode== Mode.UPDATE_FORM || mode == Mode.NEW_FORM){
+            search.hide()
+
+            when (mode) {
+                Mode.VIEW_FORM -> {
+                    actionBT.visibility = View.GONE
+                }
+                Mode.UPDATE_FORM -> {
+                    actionBT.text = "Update"
+                }
+                Mode.NEW_FORM -> {
+                    actionBT.text = "Save"
+                }
             }
         }
     }
