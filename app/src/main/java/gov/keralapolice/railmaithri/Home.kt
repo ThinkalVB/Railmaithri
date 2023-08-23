@@ -341,8 +341,10 @@ class Home : AppCompatActivity() {
             Log.e("Railmaithri", response.code.toString())
             if (response.isSuccessful || response.code == 401) {
                 Helper.saveData(this, Storage.TOKEN, "")
-                stopLocationService()
-                unregisterReceiver(locationStateReceiver)
+                try{
+                    stopLocationService()
+                    unregisterReceiver(locationStateReceiver)
+                } catch (_: Exception){ }
                 startActivity(Intent(this, Login::class.java))
                 finish()
             } else {
@@ -392,6 +394,11 @@ class Home : AppCompatActivity() {
                                 .taskLocation()
                                 .delete(task)
                         }
+                    } else if (response.code == 401){
+                        try{
+                            stopLocationService()
+                            unregisterReceiver(locationStateReceiver)
+                        } catch (_: Exception){ }
                     }
                 } catch (_: Exception) {
                 }
