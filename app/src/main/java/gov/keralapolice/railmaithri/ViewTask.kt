@@ -1,16 +1,17 @@
 package gov.keralapolice.railmaithri
 
-import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
+import android.graphics.Typeface
 import android.os.Bundle
-import android.util.Log
-import android.view.View
-import android.widget.*
+import android.widget.Button
+import android.widget.LinearLayout
+import android.widget.ProgressBar
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.json.JSONObject
-
 
 class ViewTask : AppCompatActivity() {
     private lateinit var formNameTV:    TextView
@@ -46,7 +47,33 @@ class ViewTask : AppCompatActivity() {
         CoroutineScope(Dispatchers.IO).launch { fetchAndPopulate() }
     }
 
+    private fun generateLayout(label: String, value: String): LinearLayout {
+        val scale      = this.resources.displayMetrics.density
+        val padding4dp = (4 * scale + 0.5f).toInt()
+        val width128dp = (128 * scale + 0.5f).toInt()
+        val linearLayout = LinearLayout(this)
+        linearLayout.layoutParams = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        )
+        linearLayout.orientation = LinearLayout.HORIZONTAL
+        linearLayout.setPadding(padding4dp, padding4dp, padding4dp, padding4dp)
+
+        val textViewLabel    = TextView(this)
+        textViewLabel.width  = width128dp
+        textViewLabel.setTextColor(ContextCompat.getColor(this, R.color.black))
+        textViewLabel.text   = label
+        textViewLabel.setTypeface(null, Typeface.BOLD)
+        val textViewValue    = TextView(this)
+        textViewValue.text   = value
+
+        linearLayout.addView(textViewLabel)
+        linearLayout.addView(textViewValue)
+        return linearLayout
+    }
+
     private fun fetchAndPopulate() {
+        val fields = findViewById<LinearLayout>(R.id.fields)
         when (taskType) {
             "Lonely Passenger" -> {
                 patchURL = URL.LONELY_PASSENGER + "${taskID}/"
@@ -55,32 +82,19 @@ class ViewTask : AppCompatActivity() {
                     val response        = Helper.getFormData(fetchURL, JSONObject(), token)
                     val lonelyPassenger = JSONObject(response.second).getJSONArray("results").getJSONObject(0)
                     runOnUiThread {
-                        findViewById<LinearLayout>(R.id.ly_train).visibility = View.VISIBLE
-                        findViewById<TextView>(R.id.val_train).text = lonelyPassenger.optString("train_name")
-                        findViewById<LinearLayout>(R.id.ly_coach_number).visibility = View.VISIBLE
-                        findViewById<TextView>(R.id.val_coach_number).text = lonelyPassenger.optString("coach")
-                        findViewById<LinearLayout>(R.id.ly_contact_number).visibility = View.VISIBLE
-                        findViewById<TextView>(R.id.val_contact_number).text = lonelyPassenger.optString("mobile_number")
-                        findViewById<LinearLayout>(R.id.ly_age).visibility = View.VISIBLE
-                        findViewById<TextView>(R.id.val_age).text = lonelyPassenger.optString("age")
-                        findViewById<LinearLayout>(R.id.ly_name).visibility = View.VISIBLE
-                        findViewById<TextView>(R.id.val_name).text = lonelyPassenger.optString("name")
-                        findViewById<LinearLayout>(R.id.ly_remarks).visibility = View.VISIBLE
-                        findViewById<TextView>(R.id.val_remarks).text = lonelyPassenger.optString("remarks")
-                        findViewById<LinearLayout>(R.id.ly_from_station).visibility = View.VISIBLE
-                        findViewById<TextView>(R.id.val_from_station).text = lonelyPassenger.optString("entrain_station_label")
-                        findViewById<LinearLayout>(R.id.ly_to_station).visibility = View.VISIBLE
-                        findViewById<TextView>(R.id.val_to_station).text = lonelyPassenger.optString("detrain_station_label")
-                        findViewById<LinearLayout>(R.id.ly_gender).visibility = View.VISIBLE
-                        findViewById<TextView>(R.id.val_gender).text = lonelyPassenger.optString("gender")
-                        findViewById<LinearLayout>(R.id.ly_seat_number).visibility = View.VISIBLE
-                        findViewById<TextView>(R.id.val_seat_number).text = lonelyPassenger.optString("seat")
-                        findViewById<LinearLayout>(R.id.ly_date_of_journey).visibility = View.VISIBLE
-                        findViewById<TextView>(R.id.val_date_of_journey).text = lonelyPassenger.optString("date_of_journey")
-                        findViewById<LinearLayout>(R.id.ly_pnr_number).visibility = View.VISIBLE
-                        findViewById<TextView>(R.id.val_pnr_number).text = lonelyPassenger.optString("pnr_number")
-                        findViewById<LinearLayout>(R.id.ly_dress_code).visibility = View.VISIBLE
-                        findViewById<TextView>(R.id.val_dress_code).text = lonelyPassenger.optString("dress_code")
+                        fields.addView(generateLayout("Train",      lonelyPassenger.optString("train_name")))
+                        fields.addView(generateLayout("Coach",      lonelyPassenger.optString("coach")))
+                        fields.addView(generateLayout("Mobile",     lonelyPassenger.optString("mobile_number")))
+                        fields.addView(generateLayout("Age",        lonelyPassenger.optString("age")))
+                        fields.addView(generateLayout("Name",       lonelyPassenger.optString("name")))
+                        fields.addView(generateLayout("Starting",   lonelyPassenger.optString("entrain_station_label")))
+                        fields.addView(generateLayout("Ending",     lonelyPassenger.optString("detrain_station_label")))
+                        fields.addView(generateLayout("Gender",     lonelyPassenger.optString("gender")))
+                        fields.addView(generateLayout("Seat",       lonelyPassenger.optString("seat")))
+                        fields.addView(generateLayout("Date",       lonelyPassenger.optString("date_of_journey")))
+                        fields.addView(generateLayout("PNR",        lonelyPassenger.optString("pnr_number")))
+                        fields.addView(generateLayout("Dress code", lonelyPassenger.optString("dress_code")))
+                        fields.addView(generateLayout("Remarks",    lonelyPassenger.optString("remarks")))
                         locationUtil.hide()
                     }
                 }
@@ -92,16 +106,11 @@ class ViewTask : AppCompatActivity() {
                     val response = Helper.getFormData(fetchURL, JSONObject(), token)
                     val incidentInTrain = JSONObject(response.second).getJSONArray("results").getJSONObject(0)
                     runOnUiThread {
-                        findViewById<LinearLayout>(R.id.ly_incident_type).visibility = View.VISIBLE
-                        findViewById<TextView>(R.id.val_incident_type).text = incidentInTrain.optString("incident_type")
-                        findViewById<LinearLayout>(R.id.ly_train).visibility = View.VISIBLE
-                        findViewById<TextView>(R.id.val_train).text = incidentInTrain.optString("train")
-                        findViewById<LinearLayout>(R.id.ly_coach_number).visibility = View.VISIBLE
-                        findViewById<TextView>(R.id.val_coach_number).text = incidentInTrain.optString("coach")
-                        findViewById<LinearLayout>(R.id.ly_contact_number).visibility = View.VISIBLE
-                        findViewById<TextView>(R.id.val_contact_number).text = incidentInTrain.optString("mobile_number")
-                        findViewById<LinearLayout>(R.id.ly_details).visibility = View.VISIBLE
-                        findViewById<TextView>(R.id.val_details).text = incidentInTrain.optString("incident_details")
+                        fields.addView(generateLayout("Incident", incidentInTrain.optString("incident_type")))
+                        fields.addView(generateLayout("Train",    incidentInTrain.optString("train")))
+                        fields.addView(generateLayout("Coach",    incidentInTrain.optString("coach")))
+                        fields.addView(generateLayout("Mobile",   incidentInTrain.optString("mobile_number")))
+                        fields.addView(generateLayout("Details",  incidentInTrain.optString("incident_details")))
                         updateLocation(incidentInTrain)
                     }
                 }
@@ -113,14 +122,10 @@ class ViewTask : AppCompatActivity() {
                     val response = Helper.getFormData(fetchURL, JSONObject(), token)
                     val incidentInPlatform = JSONObject(response.second).getJSONArray("results").getJSONObject(0)
                     runOnUiThread {
-                        findViewById<LinearLayout>(R.id.ly_platform_number).visibility = View.VISIBLE
-                        findViewById<TextView>(R.id.val_platform_number).text = incidentInPlatform.optString("platform_number")
-                        findViewById<LinearLayout>(R.id.ly_incident_type).visibility = View.VISIBLE
-                        findViewById<TextView>(R.id.val_incident_type).text = incidentInPlatform.optString("incident_type")
-                        findViewById<LinearLayout>(R.id.ly_railway_station).visibility = View.VISIBLE
-                        findViewById<TextView>(R.id.val_railway_station).text = incidentInPlatform.optString("railway_station_label")
-                        findViewById<LinearLayout>(R.id.ly_details).visibility = View.VISIBLE
-                        findViewById<TextView>(R.id.val_details).text = incidentInPlatform.optString("incident_details")
+                        fields.addView(generateLayout("Incident", incidentInPlatform.optString("incident_type")))
+                        fields.addView(generateLayout("Platform", incidentInPlatform.optString("platform_number")))
+                        fields.addView(generateLayout("Station",  incidentInPlatform.optString("railway_station_label")))
+                        fields.addView(generateLayout("Details",  incidentInPlatform.optString("incident_details")))
                         updateLocation(incidentInPlatform)
                     }
                 }
@@ -132,12 +137,9 @@ class ViewTask : AppCompatActivity() {
                     val response = Helper.getFormData(fetchURL, JSONObject(), token)
                     val incidentInTrack = JSONObject(response.second).getJSONArray("results").getJSONObject(0)
                     runOnUiThread {
-                        findViewById<LinearLayout>(R.id.ly_track_location).visibility = View.VISIBLE
-                        findViewById<TextView>(R.id.val_track_location).text = incidentInTrack.optString("track_location")
-                        findViewById<LinearLayout>(R.id.ly_incident_type).visibility = View.VISIBLE
-                        findViewById<TextView>(R.id.val_incident_type).text = incidentInTrack.optString("incident_type")
-                        findViewById<LinearLayout>(R.id.ly_details).visibility = View.VISIBLE
-                        findViewById<TextView>(R.id.val_details).text = incidentInTrack.optString("incident_details")
+                        fields.addView(generateLayout("Incident", incidentInTrack.optString("incident_type")))
+                        fields.addView(generateLayout("Track",    incidentInTrack.optString("track_location")))
+                        fields.addView(generateLayout("Details",  incidentInTrack.optString("incident_details")))
                         updateLocation(incidentInTrack)
                     }
                 }
@@ -149,12 +151,9 @@ class ViewTask : AppCompatActivity() {
                     val response = Helper.getFormData(fetchURL, JSONObject(), token)
                     val intruderAlert = JSONObject(response.second).getJSONArray("results").getJSONObject(0)
                     runOnUiThread {
-                        findViewById<LinearLayout>(R.id.ly_train).visibility = View.VISIBLE
-                        findViewById<TextView>(R.id.val_train).text = intruderAlert.optString("train_label")
-                        findViewById<LinearLayout>(R.id.ly_contact_number).visibility = View.VISIBLE
-                        findViewById<TextView>(R.id.val_contact_number).text = intruderAlert.optString("mobile_number")
-                        findViewById<LinearLayout>(R.id.ly_remarks).visibility = View.VISIBLE
-                        findViewById<TextView>(R.id.val_remarks).text = intruderAlert.optString("remarks")
+                        fields.addView(generateLayout("Train ",  intruderAlert.optString("train_label")))
+                        fields.addView(generateLayout("Mobile",  intruderAlert.optString("mobile_number")))
+                        fields.addView(generateLayout("Remarks", intruderAlert.optString("remarks")))
                         updateLocation(intruderAlert)
                     }
                 }
@@ -166,16 +165,11 @@ class ViewTask : AppCompatActivity() {
                     val response = Helper.getFormData(fetchURL, JSONObject(), token)
                     val intelligenceInformation = JSONObject(response.second).getJSONArray("results").optJSONObject(0)
                     runOnUiThread {
-                        findViewById<LinearLayout>(R.id.ly_severity).visibility = View.VISIBLE
-                        findViewById<TextView>(R.id.val_severity).text = intelligenceInformation.optString("severity")
-                        findViewById<LinearLayout>(R.id.ly_contact_number).visibility = View.VISIBLE
-                        findViewById<TextView>(R.id.val_contact_number).text = intelligenceInformation.optString("mobile_number")
-                        findViewById<LinearLayout>(R.id.ly_information).visibility = View.VISIBLE
-                        findViewById<TextView>(R.id.val_information).text = intelligenceInformation.optString("information")
-                        findViewById<LinearLayout>(R.id.ly_remarks).visibility = View.VISIBLE
-                        findViewById<TextView>(R.id.val_remarks).text = intelligenceInformation.optString("remarks")
-                        findViewById<LinearLayout>(R.id.ly_intelligence_type).visibility = View.VISIBLE
-                        findViewById<TextView>(R.id.val_intelligence_type).text = intelligenceInformation.optString("intelligence_type")
+                        fields.addView(generateLayout("Type",        intelligenceInformation.optString("intelligence_type")))
+                        fields.addView(generateLayout("Severity",    intelligenceInformation.optString("severity")))
+                        fields.addView(generateLayout("Mobile",      intelligenceInformation.optString("mobile_number")))
+                        fields.addView(generateLayout("Information", intelligenceInformation.optString("information")))
+                        fields.addView(generateLayout("Remarks",     intelligenceInformation.optString("remarks")))
                         updateLocation(intelligenceInformation)
                     }
                 }
@@ -187,8 +181,7 @@ class ViewTask : AppCompatActivity() {
                     val response = Helper.getFormData(fetchURL, JSONObject(), token)
                     val sosAlert = JSONObject(response.second).getJSONArray("results").optJSONObject(0)
                     runOnUiThread {
-                        findViewById<LinearLayout>(R.id.ly_sos_message).visibility = View.VISIBLE
-                        findViewById<TextView>(R.id.val_sos_message).text = sosAlert.optString("sos_message")
+                        fields.addView(generateLayout("Message", sosAlert.optString("remarks")))
                         updateLocation(sosAlert)
                     }
                 }
