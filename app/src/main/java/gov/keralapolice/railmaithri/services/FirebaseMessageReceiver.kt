@@ -9,6 +9,7 @@ import androidx.core.app.NotificationCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import gov.keralapolice.railmaithri.Home
+import gov.keralapolice.railmaithri.TaskList
 
 class FirebaseMessageReceiver : FirebaseMessagingService() {
 
@@ -21,7 +22,7 @@ class FirebaseMessageReceiver : FirebaseMessagingService() {
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         var intent: Intent? = null
         super.onMessageReceived(remoteMessage)
-        intent = Intent(applicationContext, Home::class.java)
+        intent = Intent(applicationContext, TaskList::class.java)
         intent!!.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
 
         val pendingIntent: PendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {

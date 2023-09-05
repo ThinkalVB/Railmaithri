@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "486145514748",
-    "project_id": "railmaithri-393605",
-    "storage_bucket": "railmaithri-393605.appspot.com"
+    "project_number": "1092729132023",
+    "project_id": "railmaithri",
+    "storage_bucket": "railmaithri.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:486145514748:android:b4a8f55d61129316300b79",
+        "mobilesdk_app_id": "1:1092729132023:android:d42500e656909dda6f54f2",
         "android_client_info": {
           "package_name": "gov.keralapolice.railmaithri"
         }
       },
       "oauth_client": [
         {
-          "client_id": "486145514748-0mc4os1kijb48fhgtrnr7v3et8mpa3p1.apps.googleusercontent.com",
+          "client_id": "1092729132023-vdo5h10ljkdag3hgvhcle0lrp99ph8uo.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDbfeIKGG2_boT2dvVrEktGAm0FZUqGuNE"
+          "current_key": "AIzaSyDOg9e66HoocL1U3e6gxF-3epVo1ODMm0w"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "486145514748-0mc4os1kijb48fhgtrnr7v3et8mpa3p1.apps.googleusercontent.com",
+              "client_id": "1092729132023-vdo5h10ljkdag3hgvhcle0lrp99ph8uo.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
