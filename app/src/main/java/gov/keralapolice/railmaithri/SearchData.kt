@@ -121,6 +121,11 @@ class SearchData : AppCompatActivity() {
                     intent.putExtra("mode", Mode.SEARCH_FORM)
                     startActivityForResult(intent, 1000)
                 }
+                URL.RUN_OVER -> {
+                    val intent = Intent(this, RunOver::class.java)
+                    intent.putExtra("mode", Mode.SEARCH_FORM)
+                    startActivityForResult(intent, 1000)
+                }
             }
         }
     }
@@ -222,12 +227,14 @@ class SearchData : AppCompatActivity() {
                 button = IncidentReport.generateButton(this, formDatum)
             } else if (searchURL == URL.SHOPS){
                 button = ShopAndLabours.generateButton(this, formDatum)
+            } else if (searchURL == URL.RUN_OVER){
+                button = RunOver.generateButton(this, formDatum)
             }
             resultLayout.addView(button)
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, resultIntent: Intent?) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, resultIntent: Intent?)  {
         super.onActivityResult(requestCode, resultCode, intent)
         parameters = if (requestCode == 1000 && resultCode == RESULT_OK) {
             JSONObject(resultIntent!!.getStringExtra("parameters")!!)

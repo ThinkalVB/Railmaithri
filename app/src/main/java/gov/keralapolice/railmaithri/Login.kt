@@ -184,6 +184,11 @@ class Login : AppCompatActivity() {
         val booleanAnswers = "[{\"id\":\"true\",\"name\":\"Yes\"},{\"id\":\"false\",\"name\":\"No\"}]"
         Helper.saveData(this, Storage.BOOLEAN_ANSWERS, booleanAnswers)
 
+        // Cache station type
+        val stationType = "[{\"id\":\"Railway Police Station\",\"name\":\"Railway Police Station\"},{\"id\":\"Local Police Station\",\"name\":\"Local Police Station\"}]"
+        Helper.saveData(this, Storage.STATION_TYPE, stationType)
+
+
         registerWatchZones()
         return status
     }
