@@ -23,6 +23,9 @@ class RunOver : AppCompatActivity() {
     private lateinit var progressPB:    ProgressBar
     private lateinit var actionBT:      Button
 
+    private lateinit var search:                FieldEditText
+    private lateinit var dateFrom:              FieldEditText
+    private lateinit var dateTo:                FieldEditText
     private lateinit var dateOfOccurrence:      FieldEditText
     private lateinit var timeOfOccurrence:      FieldEditText
     private lateinit var placeOfOccurrence:     FieldEditText
@@ -100,6 +103,9 @@ class RunOver : AppCompatActivity() {
 
             actionBT.text = "Search"
         } else if(mode == Mode.VIEW_FORM || mode== Mode.UPDATE_FORM || mode == Mode.NEW_FORM){
+            search.hide()
+            dateFrom.hide()
+            dateTo.hide()
             railwayPoliceStation.hide()
             localPoliceStation.hide()
             name.hide()
@@ -280,6 +286,24 @@ class RunOver : AppCompatActivity() {
     }
 
     private fun generateFields() {
+        search = FieldEditText(this,
+            fieldType = "text",
+            fieldLabel = "search",
+            fieldName = "Search",
+            isRequired = false
+        )
+        dateFrom = FieldEditText(this,
+            fieldType  = "date",
+            fieldLabel = "utc_timestamp__gte",
+            fieldName  = "Date from",
+            isRequired = false
+        )
+        dateTo = FieldEditText(this,
+            fieldType  = "date",
+            fieldLabel = "utc_timestamp__lte",
+            fieldName  = "Date to",
+            isRequired = false
+        )
         dateOfOccurrence = FieldEditText(this,
             fieldType = "date",
             fieldLabel = "doc",
@@ -428,6 +452,9 @@ class RunOver : AppCompatActivity() {
         )
 
         val form = findViewById<LinearLayout>(R.id.dynamic_fields)
+        form.addView(search.getLayout())
+        form.addView(dateFrom.getLayout())
+        form.addView(dateTo.getLayout())
         form.addView(dateOfOccurrence.getLayout())
         form.addView(timeOfOccurrence.getLayout())
         form.addView(placeOfOccurrence.getLayout())
