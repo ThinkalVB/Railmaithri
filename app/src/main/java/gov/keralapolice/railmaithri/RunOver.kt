@@ -62,6 +62,12 @@ class RunOver : AppCompatActivity() {
                 renderFields()
             }
         }
+        caseRegisteredIn.getSpinner().onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                renderFields()
+            }
+        }
 
         actionBT.setOnClickListener { performAction() }
         if (mode == Mode.VIEW_FORM || mode == Mode.UPDATE_FORM) {
@@ -87,15 +93,13 @@ class RunOver : AppCompatActivity() {
             crimeNumber.hide()
             caseRegisteredIn.hide()
             localPoliceStation.hide()
-            district.hide()
             railwayPoliceStation.hide()
+            district.hide()
             identificationDetails.hide()
             remarks.hide()
 
             actionBT.text = "Search"
         } else if(mode == Mode.VIEW_FORM || mode== Mode.UPDATE_FORM || mode == Mode.NEW_FORM){
-            victimDetails.hide()
-            crimeNumber.hide()
             railwayPoliceStation.hide()
             localPoliceStation.hide()
             name.hide()
@@ -103,6 +107,15 @@ class RunOver : AppCompatActivity() {
             address.hide()
             gender.hide()
             relativesContact.hide()
+
+            when (caseRegisteredIn.getData().toString()) {
+                "Local Police Station" -> {
+                    localPoliceStation.show()
+                }
+                "Railway Police Station" -> {
+                    railwayPoliceStation.show()
+                }
+            }
             
             when (bodyIdentified.getData().toString()) {
                 "true" -> {
@@ -111,12 +124,6 @@ class RunOver : AppCompatActivity() {
                     address.show()
                     gender.show()
                     relativesContact.show()
-                }
-                "false" -> {
-                    victimDetails.show()
-                    crimeNumber.show()
-                    railwayPoliceStation.show()
-                    localPoliceStation.show()
                 }
             }
 
@@ -144,11 +151,14 @@ class RunOver : AppCompatActivity() {
                 address.importData(formData)
                 relativesContact.importData(formData)
             }
-            "false" -> {
-                victimDetails.importData(formData)
-                crimeNumber.importData(formData)
-                railwayPoliceStation.importData(formData)
+        }
+        caseRegisteredIn.importData(formData)
+        when (caseRegisteredIn.getData().toString()) {
+            "Local Police Station" -> {
                 localPoliceStation.importData(formData)
+            }
+            "Railway Police Station" -> {
+                railwayPoliceStation.importData(formData)
             }
         }
 
@@ -168,6 +178,8 @@ class RunOver : AppCompatActivity() {
         district.importData(formData)
         identificationDetails.importData(formData)
         remarks.importData(formData)
+        victimDetails.importData(formData)
+        crimeNumber.importData(formData)
     }
 
     private fun getFormData(formData: JSONObject = JSONObject()): JSONObject? {
@@ -287,14 +299,14 @@ class RunOver : AppCompatActivity() {
             isRequired = Helper.resolveIsRequired(true, mode)
         )
         betweenStation1 = FieldSpinner(this,
-            JSONArray(Helper.getData(this, Storage.POLICE_STATIONS_LIST)!!),
+            JSONArray(Helper.getData(this, Storage.RAILWAY_STATIONS_LIST)!!),
             "between_station_1",
             "Between station 1",
             addEmptyValue = Helper.resolveAddEmptyValue(false, mode),
             isRequired = Helper.resolveIsRequired(true, mode)
         )
         betweenStation2 = FieldSpinner(this,
-            JSONArray(Helper.getData(this, Storage.POLICE_STATIONS_LIST)!!),
+            JSONArray(Helper.getData(this, Storage.RAILWAY_STATIONS_LIST)!!),
             "between_station_2",
             "Between station 2",
             addEmptyValue = Helper.resolveAddEmptyValue(false, mode),
@@ -434,8 +446,8 @@ class RunOver : AppCompatActivity() {
         form.addView(victimDetails.getLayout())
         form.addView(crimeNumber.getLayout())
         form.addView(localPoliceStation.getLayout())
-        form.addView(district.getLayout())
         form.addView(railwayPoliceStation.getLayout())
+        form.addView(district.getLayout())
         form.addView(identificationDetails.getLayout())
         form.addView(remarks.getLayout())
     }
