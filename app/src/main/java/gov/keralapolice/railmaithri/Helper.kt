@@ -205,6 +205,21 @@ class Helper {
             }
         }
 
+        fun getValueFromID(context: Context, formData: JSONObject, fieldLabel: String, storage: String): String{
+            var value       = ""
+            val idValue     = formData.get(fieldLabel)
+            val valueArray  = JSONArray(getData(context, storage)!!)
+            for (i in 0 until valueArray.length()) {
+                val arrayElement = valueArray.getJSONObject(i)
+                val id = arrayElement.getInt("id")
+                if (id == idValue) {
+                    value = arrayElement.getString("name")
+                    break
+                }
+            }
+            return value
+        }
+
         // Save form data
         fun saveFormData(context: Context, formData: JSONObject, formType: String, key: String) {
             val savedStr = getData(context, formType)

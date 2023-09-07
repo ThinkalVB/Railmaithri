@@ -264,11 +264,11 @@ class RailVolunteer : AppCompatActivity() {
 
     companion object{
         fun generateButton(context: Context, formData: JSONObject, mode: String? = Mode.VIEW_FORM): Button {
-            val formID    = formData.optString("id", "Not assigned")
-            val category  = formData.getString("rail_volunteer_category")
+            val formID    = formData.optString("id", "Rail Volunteer")
+            val name      = formData.getString("name")
             val createdOn = formData.getString("utc_timestamp")
                 .take(16).replace("T", "\t")
-            val shortData = "ID ${formID}\nCategory: ${category}\nDate: $createdOn"
+            val shortData = "ID ${formID}\nName: ${name}\nDate: $createdOn"
 
             val button = Button(context)
             button.isAllCaps = false

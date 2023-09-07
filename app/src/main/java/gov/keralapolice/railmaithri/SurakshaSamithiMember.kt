@@ -208,11 +208,11 @@ class SurakshaSamithiMember : AppCompatActivity() {
 
     companion object{
         fun generateButton(context: Context, formData: JSONObject, mode: String? = Mode.VIEW_FORM): Button {
-            val formID           = formData.optString("id", "Not assigned")
-            val surakshaSamithi  = formData.getString("suraksha_samithi")
-            val createdOn        = formData.getString("utc_timestamp")
+            val formID      = formData.optString("id", "Suraksha Samithi Member")
+            val name        = formData.getString("name")
+            val createdOn   = formData.getString("utc_timestamp")
                 .take(16).replace("T", "\t")
-            val shortData = "ID ${formID}\nSurakshaSamithi: ${surakshaSamithi}\nDate: $createdOn"
+            val shortData = "ID ${formID}\nName: ${name}\nDate: $createdOn"
 
             val button = Button(context)
             button.isAllCaps = false

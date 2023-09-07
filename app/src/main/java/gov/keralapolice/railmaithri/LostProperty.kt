@@ -271,8 +271,8 @@ class LostProperty : AppCompatActivity() {
 
     companion object{
         fun generateButton(context: Context, formData: JSONObject, mode: String? = Mode.VIEW_FORM): Button {
-            val formID    = formData.optString("id", "Not assigned")
-            val category  = formData.getString("lost_property_category")
+            val formID    = formData.optString("id", "Lost Property")
+            val category  = Helper.getValueFromID(context, formData, "lost_property_category", Storage.LOST_PROPERTY_TYPES)
             val createdOn = formData.getString("utc_timestamp")
                 .take(16).replace("T", "\t")
             val shortData = "ID ${formID}\ncategory: ${category}\nDate: $createdOn"

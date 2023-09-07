@@ -340,7 +340,7 @@ class IncidentReport : AppCompatActivity() {
 
     companion object{
         fun generateButton(context: Context, formData: JSONObject, mode: String? = Mode.VIEW_FORM): Button {
-            val formID       = formData.optString("id", "Not assigned")
+            val formID       = formData.optString("id", "Incident Report")
             val incidentType = formData.getString("incident_type")
             val createdOn    = formData.getString("utc_timestamp")
                 .take(16).replace("T", "\t")

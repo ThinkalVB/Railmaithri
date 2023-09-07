@@ -386,7 +386,7 @@ class StrangerCheck : AppCompatActivity() {
 
     companion object{
         fun generateButton(context: Context, formData: JSONObject, mode: String? = Mode.VIEW_FORM): Button {
-            val formID    = formData.optString("id", "Not assigned")
+            val formID    = formData.optString("id", "Stranger Check")
             val name      = formData.getString("name")
             val createdOn = formData.getString("checking_date_time")
                 .take(16).replace("T", "\t")

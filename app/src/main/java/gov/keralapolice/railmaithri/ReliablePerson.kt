@@ -206,7 +206,7 @@ class ReliablePerson : AppCompatActivity() {
 
     companion object{
         fun generateButton(context: Context, formData: JSONObject, mode: String? = Mode.VIEW_FORM): Button {
-            val formID    = formData.optString("id", "Not assigned")
+            val formID    = formData.optString("id", "Reliable Person")
             val name      = formData.getString("name")
             val createdOn = formData.getString("utc_timestamp")
                 .take(16).replace("T", "\t")

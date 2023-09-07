@@ -247,8 +247,8 @@ class RailMaithriMeeting : AppCompatActivity() {
             formData: JSONObject,
             mode: String? = Mode.VIEW_FORM
         ): Button {
-            val formID = formData.optString("id", "Not assigned")
-            val type = formData.getString("meeting_type")
+            val formID    = formData.optString("id", "Railmaithri Meeting")
+            val type      = Helper.getValueFromID(context, formData, "meeting_type", Storage.MEETING_TYPES)
             val createdOn = formData.getString("utc_timestamp")
                 .take(16).replace("T", "\t")
             val shortData = "ID ${formID}\nMeeting: ${type}\nDate: $createdOn"

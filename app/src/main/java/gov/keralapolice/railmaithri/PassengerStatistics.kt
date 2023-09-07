@@ -215,8 +215,8 @@ class PassengerStatistics : AppCompatActivity() {
 
     companion object{
         fun generateButton(context: Context, formData: JSONObject, mode: String? = Mode.VIEW_FORM): Button {
-            val formID    = formData.optString("id", "Not assigned")
-            val train     = formData.getString("train")
+            val formID    = formData.optString("id", "Passenger Statistics")
+            val train     = Helper.getValueFromID(context, formData, "train", Storage.TRAINS_LIST)
             val createdOn = formData.getString("last_updated")
                 .take(16).replace("T", "\t")
             val shortData = "ID ${formID}\nTrain: ${train}\nDate: $createdOn"

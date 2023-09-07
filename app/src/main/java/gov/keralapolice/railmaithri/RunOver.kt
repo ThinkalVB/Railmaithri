@@ -485,11 +485,11 @@ class RunOver : AppCompatActivity() {
             formData: JSONObject,
             mode: String? = Mode.VIEW_FORM
         ): Button {
-            val formID       = formData.optString("id", "Not assigned")
-            val isIdentified = formData.getString("is_identified")
-            val createdOn    = formData.getString("utc_timestamp")
+            val formID      = formData.optString("id", "Run Over")
+            val place       = formData.getString("place_of_occurance")
+            val createdOn   = formData.getString("utc_timestamp")
                 .take(16).replace("T", "\t")
-            val shortData = "ID ${formID}\nIdentified: ${isIdentified}\nDate: $createdOn"
+            val shortData = "ID ${formID}\nPlace: ${place}\nDate: $createdOn"
 
             val button = Button(context)
             button.isAllCaps = false

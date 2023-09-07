@@ -74,7 +74,7 @@ class BeatDiary : AppCompatActivity() {
 
     companion object{
         fun generateButton(context: Context, formData: JSONObject, mode: String? = Mode.VIEW_FORM): Button {
-            val noteID           = formData.optString("id", "Not assigned")
+            val noteID           = formData.optString("id", "Diary Notes")
             val createdOn        = formData.getString("utc_timestamp")
                 .take(16).replace("T", "\t")
             val shortData = "ID ${noteID}\nDate: $createdOn"
