@@ -131,7 +131,7 @@ class Mode {
 
 class App {
     companion object{
-        const val APP_VERSION               = "1.0.0"
+        const val APP_VERSION               = "1.0.1"
         const val API_VERSION               = "1.0.0"
     }
 }
