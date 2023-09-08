@@ -347,6 +347,7 @@ class StrangerCheck : AppCompatActivity() {
             nativeAddress.exportData(formData)
             idCardDetails.exportData(formData)
             remarks.exportData(formData)
+            search.exportData(formData)
         } catch (e: Exception){
             Helper.showToast(this, e.message!!)
             return null

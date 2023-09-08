@@ -196,7 +196,7 @@ class RunOver : AppCompatActivity() {
                 val occurredOn = dateOfOccurrence.getData() + "T"+ timeOfOccurrence.getData()
                 formData.put("date_time_of_occurance", occurredOn)
             }
-
+            search.exportData(formData)
             placeOfOccurrence.exportData(formData)
             betweenStation1.exportData(formData)
             betweenStation2.exportData(formData)

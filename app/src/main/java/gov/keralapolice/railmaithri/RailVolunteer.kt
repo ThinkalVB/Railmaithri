@@ -227,6 +227,7 @@ class RailVolunteer : AppCompatActivity() {
 
     private fun getFormData(formData: JSONObject = JSONObject()): JSONObject? {
         try{
+            search.exportData(formData)
             railVolunteerCategory.exportData(formData)
             name.exportData(formData)
             age.exportData(formData)

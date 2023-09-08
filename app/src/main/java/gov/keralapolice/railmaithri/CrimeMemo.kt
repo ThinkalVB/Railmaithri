@@ -181,6 +181,7 @@ class CrimeMemo : AppCompatActivity() {
 
     private fun getFormData(formData: JSONObject = JSONObject()): JSONObject? {
         try{
+            search.exportData(formData)
             crimeMemoCategory.exportData(formData)
             crimeDetails.exportData(formData)
             policeStation.exportData(formData)

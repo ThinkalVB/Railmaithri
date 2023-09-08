@@ -186,6 +186,7 @@ class SurakshaSamithiMember : AppCompatActivity() {
 
     private fun getFormData(formData: JSONObject = JSONObject()): JSONObject? {
         try{
+            search.exportData(formData)
             surakshaSamithi.exportData(formData)
             name.exportData(formData)
             address.exportData(formData)

@@ -235,6 +235,7 @@ class AbandonedProperty : AppCompatActivity() {
         try{
             dateFrom.exportData(formData, tailPadding = "T00:00:00")
             dateTo.exportData(formData, tailPadding = "T23:59:59")
+            search.exportData(formData)
             policeStation.exportData(formData)
             category.exportData(formData)
             foundBy.exportData(formData)

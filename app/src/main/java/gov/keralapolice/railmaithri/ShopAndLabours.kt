@@ -238,6 +238,7 @@ class ShopAndLabours : AppCompatActivity() {
 
     private fun getFormData(formData: JSONObject = JSONObject()): JSONObject? {
         try{
+            search.exportData(formData)
             shopCategory.exportData(formData)
             shopName.exportData(formData)
             ownerName.exportData(formData)

@@ -184,6 +184,7 @@ class ReliablePerson : AppCompatActivity() {
 
     private fun getFormData(formData: JSONObject = JSONObject()): JSONObject? {
         try{
+            search.exportData(formData)
             name.exportData(formData)
             mobileNumber.exportData(formData)
             policeStation.exportData(formData)

@@ -194,6 +194,7 @@ class POI : AppCompatActivity() {
     }
     private fun getFormData(formData: JSONObject = JSONObject()): JSONObject? {
         try{
+            search.exportData(formData)
             poiCategory.exportData(formData)
             name.exportData(formData)
             policeStation.exportData(formData)

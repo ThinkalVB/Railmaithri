@@ -240,6 +240,7 @@ class LostProperty : AppCompatActivity() {
         try{
             dateFrom.exportData(formData, tailPadding = "T00:00:00")
             dateTo.exportData(formData, tailPadding = "T23:59:59")
+            search.exportData(formData)
             lostPropertyCategory.exportData(formData)
             descrption.exportData(formData)
             foundIn.exportData(formData)

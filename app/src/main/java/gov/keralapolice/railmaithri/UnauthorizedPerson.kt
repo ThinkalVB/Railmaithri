@@ -196,6 +196,7 @@ class UnauthorizedPerson : AppCompatActivity() {
 
     private fun getFormData(formData: JSONObject = JSONObject()): JSONObject? {
         try{
+            search.exportData(formData)
             locationUtil.exportLocation(formData)
             category.exportData(formData)
             description.exportData(formData)

@@ -118,9 +118,11 @@ class LocationUtil(_activity: Activity, _locationLY: ConstraintLayout) {
 
     fun exportLocation(data: JSONObject): JSONObject {
         if(haveLocation()){
-            data.put("latitude",  latitude)
-            data.put("longitude", longitude)
-            data.put("accuracy",  accuracy)
+            if(!isHidden){
+                data.put("latitude",  latitude)
+                data.put("longitude", longitude)
+                data.put("accuracy",  accuracy)
+            }
         } else {
             if(isRequired) {
                 val errorMessage = "Location is mandatory"
