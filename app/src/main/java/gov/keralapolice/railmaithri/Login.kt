@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.app.PendingIntent
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.location.Location
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -30,6 +31,7 @@ import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient
 import org.json.JSONArray
 import org.json.JSONObject
+
 
 class Login : AppCompatActivity() {
     private lateinit var token:         String
@@ -219,7 +221,15 @@ class Login : AppCompatActivity() {
             val midX  = (start.getDouble(0) + end.getDouble(0))/2
             val midY  = (start.getDouble(1) + end.getDouble(1))/2
 
-            val geoFenceRequest  = makeGeofencingRequest(name, midY, midX, 1000.0f)
+            val starLoc = Location("")
+            val endLoc  = Location("")
+            starLoc.latitude    = start.getDouble(1)
+            starLoc.longitude   = start.getDouble(0)
+            endLoc.latitude     = end.getDouble(1)
+            endLoc.longitude    = end.getDouble(0)
+            val distance        = starLoc.distanceTo(endLoc) + 1000.0f
+
+            val geoFenceRequest  = makeGeofencingRequest(name, midY, midX, distance)
             geofencingClient.addGeofences(geoFenceRequest, geofencePendingIntent).run {
                 addOnSuccessListener {
                     Log.e("Railmaithri", "Geofence added")
