@@ -227,7 +227,7 @@ class Login : AppCompatActivity() {
             starLoc.longitude   = start.getDouble(0)
             endLoc.latitude     = end.getDouble(1)
             endLoc.longitude    = end.getDouble(0)
-            val distance        = starLoc.distanceTo(endLoc) + 1000.0f
+            val distance        = (starLoc.distanceTo(endLoc)/2) + 500.0f
 
             val geoFenceRequest  = makeGeofencingRequest(name, midY, midX, distance)
             geofencingClient.addGeofences(geoFenceRequest, geofencePendingIntent).run {
