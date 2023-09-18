@@ -190,7 +190,6 @@ class Login : AppCompatActivity() {
         val stationType = "[{\"id\":\"Railway Police Station\",\"name\":\"Railway Police Station\"},{\"id\":\"Local Police Station\",\"name\":\"Local Police Station\"}]"
         Helper.saveData(this, Storage.STATION_TYPE, stationType)
 
-
         registerWatchZones()
         return status
     }
