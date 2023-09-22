@@ -46,12 +46,12 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
                 if(geofenceTransition == Geofence.GEOFENCE_TRANSITION_ENTER){
                         Log.e("Railmaithri", "Entering watch zone")
                         showNotification(context!!, "Railmaithri", "Watch zone alert",
-                                "You are in $geofenceID"
+                                "You are entering $geofenceID"
                         )
                 } else if(geofenceTransition == Geofence.GEOFENCE_TRANSITION_EXIT){
                         Log.e("Railmaithri", "Exiting watch zone")
                         showNotification(context!!, "Railmaithri", "Watch zone alert",
-                                "You are in $geofenceID"
+                                "You are exiting $geofenceID"
                         )
                 }
         }
