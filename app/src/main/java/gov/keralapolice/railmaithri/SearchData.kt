@@ -243,12 +243,13 @@ public class SearchData : AppCompatActivity() {
         } else if (searchURL == URL.STRANGER_CHECK) {
             val strangerData =
                 gson.fromJson(formData!!.toString(), Array<StrangerModel>::class.java).toList()
-
+            dialog.setContentView(R.layout.stranger_check_popup)
             myListAdapter = ListAdapterStrangerCheck(this@SearchData, strangerData)
             listData.adapter = myListAdapter
 
             listData.setOnItemClickListener { parent, view, position, id ->
                 Log.e("test", "test")
+                // var image = dialog.findViewById<View>(R.id.re_id) as ImageButton
                 (dialog.findViewById<View>(R.id.name) as TextView).text = HtmlCompat.fromHtml(
                     "<b><i>" + strangerData[position].name + "</i></b>",
                     HtmlCompat.FROM_HTML_MODE_LEGACY
