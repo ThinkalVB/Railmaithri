@@ -4,7 +4,7 @@
     android:layout_height="match_parent">
 
     <LinearLayout
-android:id="@+id/top_layout"
+        android:id="@+id/top_layout"
         android:background="@color/AliceBlue"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -17,9 +17,6 @@ android:id="@+id/top_layout"
             android:layout_margin="5dp"
             android:orientation="horizontal"
             android:weightSum="2">
-
-
-
             <TextView
                 android:id="@+id/name"
                 android:layout_width="0dp"
@@ -28,16 +25,12 @@ android:id="@+id/top_layout"
                 android:textColor="@color/Blue"
                 android:text="Name:"
                 android:textSize="17sp" />
-
             <ImageView
                 android:id="@+id/image"
                 android:layout_width="0dp"
                 android:layout_height="30dp"
                 android:layout_weight="1"
-                android:text="Id"
-                />
-
-
+                android:text="Id" />
         </LinearLayout>
 
         <LinearLayout
@@ -46,7 +39,6 @@ android:id="@+id/top_layout"
             android:layout_margin="5dp"
             android:orientation="horizontal"
             android:weightSum="2">
-
             <TextView
                 android:id="@+id/age"
                 android:layout_width="match_parent"
@@ -54,9 +46,7 @@ android:id="@+id/top_layout"
                 android:layout_weight="1"
                 android:text=""
                 android:textColor="@color/black"
-
                 android:textSize="13sp" />
-
             <TextView
                 android:id="@+id/purpose"
                 android:layout_width="match_parent"
@@ -64,10 +54,7 @@ android:id="@+id/top_layout"
                 android:layout_weight="1"
                 android:text=""
                 android:textColor="@color/black"
-
                 android:textSize="13sp" />
-
-
         </LinearLayout>
 
         <LinearLayout
@@ -82,23 +69,17 @@ android:id="@+id/top_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/black"
-
                 android:layout_weight="1"
                 android:text=""
-
                 android:textSize="13sp" />
-
             <TextView
                 android:id="@+id/mobile"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:textColor="@color/black"
-
                 android:text=""
                 android:textSize="13sp" />
-
-
         </LinearLayout>
 
     </LinearLayout>
