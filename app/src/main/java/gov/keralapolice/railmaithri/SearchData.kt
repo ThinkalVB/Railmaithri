@@ -247,7 +247,7 @@ public class SearchData : AppCompatActivity() {
                     addAttribute(dialog, R.id.att5, "Mobile", R.id.val5, strangerData[position].mobile_number)
                     addAttribute(dialog, R.id.att6, "Purpose of visit", R.id.val6, strangerData[position].purpose_of_visit)
                     addAttribute(dialog, R.id.att7, "Is foreigner", R.id.val7, strangerData[position].is_foreigner.toString())
-                    if (strangerData[position].is_foreigner){
+                    if (strangerData[position].is_foreigner) {
                         addAttribute(dialog, R.id.att8, "Country", R.id.val8, strangerData[position].country_name)
                     } else {
                         addAttribute(dialog, R.id.att8, "State", R.id.val8, strangerData[position].native_state_label)
@@ -330,8 +330,13 @@ public class SearchData : AppCompatActivity() {
     }
 
     private fun addAttribute(dialog: Dialog, attrID: Int, attrName: String, valID: Int, valName: String) {
-        (dialog.findViewById<View>(attrID) as TextView).text = attrName
-        (dialog.findViewById<View>(valID)  as TextView).text = valName
+        val attributeField = (dialog.findViewById<View>(attrID) as TextView)
+        val valueField     = (dialog.findViewById<View>(valID)  as TextView)
+
+        attributeField.visibility = View.VISIBLE
+        valueField.visibility     = View.VISIBLE
+        attributeField.text       = attrName
+        valueField.text           = valName
     }
 
     private fun openMap(latitude: Float, longitude: Float) {

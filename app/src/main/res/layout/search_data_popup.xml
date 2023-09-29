@@ -22,249 +22,291 @@
             android:layout_width="match_parent"
             android:layout_height="140dp" />
 
-        <TableLayout
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="8dp">
-
-            <TableRow>
-                <TextView
-                    android:layout_marginHorizontal="8dp"
-                    android:id="@+id/att1"
-                    android:textColor="@color/black"
-                    android:textStyle="bold" />
-                <TextView
-                    android:singleLine="false"
-                    android:layout_weight="1"
-                    android:id="@+id/val1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="15sp" />
-            </TableRow>
-
-            <TableRow>
-                <TextView
-                    android:layout_marginHorizontal="8dp"
-                    android:id="@+id/att2"
-                    android:textColor="@color/black"
-                    android:textStyle="bold" />
-                <TextView
-                    android:singleLine="false"
-                    android:layout_weight="1"
-                    android:id="@+id/val2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="15sp" />
-            </TableRow>
-
-            <TableRow>
-                <TextView
-                    android:layout_marginHorizontal="8dp"
-                    android:id="@+id/att3"
-                    android:textColor="@color/black"
-                    android:textStyle="bold" />
-                <TextView
-                    android:singleLine="false"
-                    android:layout_weight="1"
-                    android:id="@+id/val3"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="15sp" />
-            </TableRow>
-
-            <TableRow>
-                <TextView
-                    android:layout_marginHorizontal="8dp"
-                    android:id="@+id/att4"
-                    android:textColor="@color/black"
-                    android:textStyle="bold" />
-                <TextView
-                    android:singleLine="false"
-                    android:layout_weight="1"
-                    android:id="@+id/val4"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="15sp" />
-            </TableRow>
-
-            <TableRow>
-                <TextView
-                    android:layout_marginHorizontal="8dp"
-                    android:id="@+id/att5"
-                    android:textColor="@color/black"
-                    android:textStyle="bold" />
-                <TextView
-                    android:singleLine="false"
-                    android:layout_weight="1"
-                    android:id="@+id/val5"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="15sp" />
-            </TableRow>
-
-            <TableRow>
-                <TextView
-                    android:layout_marginHorizontal="8dp"
-                    android:id="@+id/att6"
-                    android:textColor="@color/black"
-                    android:textStyle="bold" />
-                <TextView
-                    android:singleLine="false"
-                    android:layout_weight="1"
-                    android:id="@+id/val6"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="15sp" />
-            </TableRow>
-
-            <TableRow>
-                <TextView
-                    android:layout_marginHorizontal="8dp"
-                    android:id="@+id/att7"
-                    android:textColor="@color/black"
-                    android:textStyle="bold" />
-                <TextView
-                    android:singleLine="false"
-                    android:layout_weight="1"
-                    android:id="@+id/val7"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="15sp" />
-            </TableRow>
-
-            <TableRow>
-                <TextView
-                    android:layout_marginHorizontal="8dp"
-                    android:id="@+id/att8"
-                    android:textColor="@color/black"
-                    android:textStyle="bold" />
-                <TextView
-                    android:singleLine="false"
-                    android:layout_weight="1"
-                    android:id="@+id/val8"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="15sp" />
-            </TableRow>
-
-            <TableRow>
-                <TextView
-                    android:layout_marginHorizontal="8dp"
-                    android:id="@+id/att9"
-                    android:textColor="@color/black"
-                    android:textStyle="bold" />
-                <TextView
-                    android:singleLine="false"
-                    android:layout_weight="1"
-                    android:id="@+id/val9"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="15sp" />
-            </TableRow>
-
-            <TableRow>
-                <TextView
-                    android:layout_marginHorizontal="8dp"
-                    android:id="@+id/att10"
-                    android:textColor="@color/black"
-                    android:textStyle="bold" />
-                <TextView
-                    android:singleLine="false"
-                    android:layout_weight="1"
-                    android:id="@+id/val10"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="15sp" />
-            </TableRow>
-
-            <TableRow>
-                <TextView
-                    android:layout_marginHorizontal="8dp"
-                    android:id="@+id/att11"
-                    android:textColor="@color/black"
-                    android:textStyle="bold" />
-                <TextView
-                    android:singleLine="false"
-                    android:layout_weight="1"
-                    android:id="@+id/val11"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="15sp" />
-            </TableRow>
-
-            <TableRow>
-                <TextView
-                    android:layout_marginHorizontal="8dp"
-                    android:id="@+id/att12"
-                    android:textColor="@color/black"
-                    android:textStyle="bold" />
-                <TextView
-                    android:singleLine="false"
-                    android:layout_weight="1"
-                    android:id="@+id/val12"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="15sp" />
-            </TableRow>
-
-            <TableRow>
-                <TextView
-                    android:layout_marginHorizontal="8dp"
-                    android:id="@+id/att13"
-                    android:textColor="@color/black"
-                    android:textStyle="bold" />
-                <TextView
-                    android:singleLine="false"
-                    android:layout_weight="1"
-                    android:id="@+id/val13"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="15sp" />
-            </TableRow>
-
-            <TableRow>
-                <TextView
-                    android:layout_marginHorizontal="8dp"
-                    android:id="@+id/att14"
-                    android:textColor="@color/black"
-                    android:textStyle="bold" />
-                <TextView
-                    android:singleLine="false"
-                    android:layout_weight="1"
-                    android:id="@+id/val14"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="15sp" />
-            </TableRow>
-
-            <TableRow>
-                <TextView
-                    android:layout_marginHorizontal="8dp"
-                    android:id="@+id/att15"
-                    android:textColor="@color/black"
-                    android:textStyle="bold" />
-                <TextView
-                    android:singleLine="false"
-                    android:layout_weight="1"
-                    android:id="@+id/val15"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="15sp" />
-            </TableRow>
-
+            android:layout_height="wrap_content">
             <LinearLayout
-                android:layout_height="wrap_content"
-                android:gravity="center">
-                <Button
-                    android:id="@+id/open_location"
-                    android:gravity="center"
-                    android:layout_width="128dp"
-                    android:layout_height="64dp"
-                    android:drawableTop="@drawable/ic_open_map"
-                    android:paddingVertical="16dp"
-                    android:backgroundTint="@color/FireBrick" />
-            </LinearLayout>
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-        </TableLayout>
+                <TableLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="8dp">
+
+                    <TableRow>
+                        <TextView
+                            android:visibility="gone"
+                            android:layout_marginHorizontal="8dp"
+                            android:id="@+id/att1"
+                            android:textColor="@color/black"
+                            android:textStyle="bold" />
+                        <TextView
+                            android:visibility="gone"
+                            android:singleLine="false"
+                            android:layout_weight="1"
+                            android:id="@+id/val1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="15sp" />
+                    </TableRow>
+
+                    <TableRow>
+                        <TextView
+                            android:visibility="gone"
+                            android:layout_marginHorizontal="8dp"
+                            android:id="@+id/att2"
+                            android:textColor="@color/black"
+                            android:textStyle="bold" />
+                        <TextView
+                            android:visibility="gone"
+                            android:singleLine="false"
+                            android:layout_weight="1"
+                            android:id="@+id/val2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="15sp" />
+                    </TableRow>
+
+                    <TableRow>
+                        <TextView
+                            android:visibility="gone"
+                            android:layout_marginHorizontal="8dp"
+                            android:id="@+id/att3"
+                            android:textColor="@color/black"
+                            android:textStyle="bold" />
+                        <TextView
+                            android:visibility="gone"
+                            android:singleLine="false"
+                            android:layout_weight="1"
+                            android:id="@+id/val3"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="15sp" />
+                    </TableRow>
+
+                    <TableRow>
+                        <TextView
+                            android:visibility="gone"
+                            android:layout_marginHorizontal="8dp"
+                            android:id="@+id/att4"
+                            android:textColor="@color/black"
+                            android:textStyle="bold" />
+                        <TextView
+                            android:visibility="gone"
+                            android:singleLine="false"
+                            android:layout_weight="1"
+                            android:id="@+id/val4"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="15sp" />
+                    </TableRow>
+
+                    <TableRow>
+                        <TextView
+                            android:visibility="gone"
+                            android:layout_marginHorizontal="8dp"
+                            android:id="@+id/att5"
+                            android:textColor="@color/black"
+                            android:textStyle="bold" />
+                        <TextView
+                            android:visibility="gone"
+                            android:singleLine="false"
+                            android:layout_weight="1"
+                            android:id="@+id/val5"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="15sp" />
+                    </TableRow>
+
+                    <TableRow>
+                        <TextView
+                            android:visibility="gone"
+                            android:layout_marginHorizontal="8dp"
+                            android:id="@+id/att6"
+                            android:textColor="@color/black"
+                            android:textStyle="bold" />
+                        <TextView
+                            android:visibility="gone"
+                            android:singleLine="false"
+                            android:layout_weight="1"
+                            android:id="@+id/val6"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="15sp" />
+                    </TableRow>
+
+                    <TableRow>
+                        <TextView
+                            android:visibility="gone"
+                            android:layout_marginHorizontal="8dp"
+                            android:id="@+id/att7"
+                            android:textColor="@color/black"
+                            android:textStyle="bold" />
+                        <TextView
+                            android:visibility="gone"
+                            android:singleLine="false"
+                            android:layout_weight="1"
+                            android:id="@+id/val7"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="15sp" />
+                    </TableRow>
+
+                    <TableRow>
+                        <TextView
+                            android:visibility="gone"
+                            android:layout_marginHorizontal="8dp"
+                            android:id="@+id/att8"
+                            android:textColor="@color/black"
+                            android:textStyle="bold" />
+                        <TextView
+                            android:visibility="gone"
+                            android:singleLine="false"
+                            android:layout_weight="1"
+                            android:id="@+id/val8"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="15sp" />
+                    </TableRow>
+
+                    <TableRow>
+                        <TextView
+                            android:visibility="gone"
+                            android:layout_marginHorizontal="8dp"
+                            android:id="@+id/att9"
+                            android:textColor="@color/black"
+                            android:textStyle="bold" />
+                        <TextView
+                            android:visibility="gone"
+                            android:singleLine="false"
+                            android:layout_weight="1"
+                            android:id="@+id/val9"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="15sp" />
+                    </TableRow>
+
+                    <TableRow>
+                        <TextView
+                            android:visibility="gone"
+                            android:layout_marginHorizontal="8dp"
+                            android:id="@+id/att10"
+                            android:textColor="@color/black"
+                            android:textStyle="bold" />
+                        <TextView
+                            android:visibility="gone"
+                            android:singleLine="false"
+                            android:layout_weight="1"
+                            android:id="@+id/val10"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="15sp" />
+                    </TableRow>
+
+                    <TableRow>
+                        <TextView
+                            android:visibility="gone"
+                            android:layout_marginHorizontal="8dp"
+                            android:id="@+id/att11"
+                            android:textColor="@color/black"
+                            android:textStyle="bold" />
+                        <TextView
+                            android:visibility="gone"
+                            android:singleLine="false"
+                            android:layout_weight="1"
+                            android:id="@+id/val11"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="15sp" />
+                    </TableRow>
+
+                    <TableRow>
+                        <TextView
+                            android:visibility="gone"
+                            android:layout_marginHorizontal="8dp"
+                            android:id="@+id/att12"
+                            android:textColor="@color/black"
+                            android:textStyle="bold" />
+                        <TextView
+                            android:visibility="gone"
+                            android:singleLine="false"
+                            android:layout_weight="1"
+                            android:id="@+id/val12"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="15sp" />
+                    </TableRow>
+
+                    <TableRow>
+                        <TextView
+                            android:visibility="gone"
+                            android:layout_marginHorizontal="8dp"
+                            android:id="@+id/att13"
+                            android:textColor="@color/black"
+                            android:textStyle="bold" />
+                        <TextView
+                            android:visibility="gone"
+                            android:singleLine="false"
+                            android:layout_weight="1"
+                            android:id="@+id/val13"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="15sp" />
+                    </TableRow>
+
+                    <TableRow>
+                        <TextView
+                            android:visibility="gone"
+                            android:layout_marginHorizontal="8dp"
+                            android:id="@+id/att14"
+                            android:textColor="@color/black"
+                            android:textStyle="bold" />
+                        <TextView
+                            android:visibility="gone"
+                            android:singleLine="false"
+                            android:layout_weight="1"
+                            android:id="@+id/val14"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="15sp" />
+                    </TableRow>
+
+                    <TableRow>
+                        <TextView
+                            android:visibility="gone"
+                            android:layout_marginHorizontal="8dp"
+                            android:id="@+id/att15"
+                            android:textColor="@color/black"
+                            android:textStyle="bold" />
+                        <TextView
+                            android:visibility="gone"
+                            android:singleLine="false"
+                            android:layout_weight="1"
+                            android:id="@+id/val15"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="15sp" />
+                    </TableRow>
+
+                    <LinearLayout
+                        android:layout_height="wrap_content"
+                        android:gravity="center">
+                        <Button
+                            android:id="@+id/open_location"
+                            android:gravity="center"
+                            android:layout_width="128dp"
+                            android:layout_height="64dp"
+                            android:drawableTop="@drawable/ic_open_map"
+                            android:paddingVertical="16dp"
+                            android:backgroundTint="@color/FireBrick" />
+                    </LinearLayout>
+
+                </TableLayout>
+
+            </LinearLayout>
+        </ScrollView>
+
     </LinearLayout>
 </LinearLayout>
