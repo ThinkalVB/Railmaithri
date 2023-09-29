@@ -147,6 +147,111 @@
                     android:textSize="15sp" />
             </TableRow>
 
+            <TableRow>
+                <TextView
+                    android:layout_marginHorizontal="8dp"
+                    android:id="@+id/att9"
+                    android:textColor="@color/black"
+                    android:textStyle="bold" />
+                <TextView
+                    android:singleLine="false"
+                    android:layout_weight="1"
+                    android:id="@+id/val9"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="15sp" />
+            </TableRow>
+
+            <TableRow>
+                <TextView
+                    android:layout_marginHorizontal="8dp"
+                    android:id="@+id/att10"
+                    android:textColor="@color/black"
+                    android:textStyle="bold" />
+                <TextView
+                    android:singleLine="false"
+                    android:layout_weight="1"
+                    android:id="@+id/val10"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="15sp" />
+            </TableRow>
+
+            <TableRow>
+                <TextView
+                    android:layout_marginHorizontal="8dp"
+                    android:id="@+id/att11"
+                    android:textColor="@color/black"
+                    android:textStyle="bold" />
+                <TextView
+                    android:singleLine="false"
+                    android:layout_weight="1"
+                    android:id="@+id/val11"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="15sp" />
+            </TableRow>
+
+            <TableRow>
+                <TextView
+                    android:layout_marginHorizontal="8dp"
+                    android:id="@+id/att12"
+                    android:textColor="@color/black"
+                    android:textStyle="bold" />
+                <TextView
+                    android:singleLine="false"
+                    android:layout_weight="1"
+                    android:id="@+id/val12"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="15sp" />
+            </TableRow>
+
+            <TableRow>
+                <TextView
+                    android:layout_marginHorizontal="8dp"
+                    android:id="@+id/att13"
+                    android:textColor="@color/black"
+                    android:textStyle="bold" />
+                <TextView
+                    android:singleLine="false"
+                    android:layout_weight="1"
+                    android:id="@+id/val13"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="15sp" />
+            </TableRow>
+
+            <TableRow>
+                <TextView
+                    android:layout_marginHorizontal="8dp"
+                    android:id="@+id/att14"
+                    android:textColor="@color/black"
+                    android:textStyle="bold" />
+                <TextView
+                    android:singleLine="false"
+                    android:layout_weight="1"
+                    android:id="@+id/val14"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="15sp" />
+            </TableRow>
+
+            <TableRow>
+                <TextView
+                    android:layout_marginHorizontal="8dp"
+                    android:id="@+id/att15"
+                    android:textColor="@color/black"
+                    android:textStyle="bold" />
+                <TextView
+                    android:singleLine="false"
+                    android:layout_weight="1"
+                    android:id="@+id/val15"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="15sp" />
+            </TableRow>
+
             <LinearLayout
                 android:layout_height="wrap_content"
                 android:gravity="center">

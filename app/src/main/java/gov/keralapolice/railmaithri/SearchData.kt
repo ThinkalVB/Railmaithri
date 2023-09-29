@@ -246,6 +246,15 @@ public class SearchData : AppCompatActivity() {
                     addAttribute(dialog, R.id.att4, "Identification", R.id.val4, strangerData[position].identification_marks_details)
                     addAttribute(dialog, R.id.att5, "Mobile", R.id.val5, strangerData[position].mobile_number)
                     addAttribute(dialog, R.id.att6, "Purpose of visit", R.id.val6, strangerData[position].purpose_of_visit)
+                    addAttribute(dialog, R.id.att7, "Is foreigner", R.id.val7, strangerData[position].is_foreigner.toString())
+                    if (strangerData[position].is_foreigner){
+                        addAttribute(dialog, R.id.att8, "Country", R.id.val8, strangerData[position].country_name)
+                    } else {
+                        addAttribute(dialog, R.id.att8, "State", R.id.val8, strangerData[position].native_state_label)
+                        addAttribute(dialog, R.id.att9, "Police station", R.id.val9, strangerData[position].native_police_station)
+                        addAttribute(dialog, R.id.att10, "Address", R.id.val10, strangerData[position].native_address)
+                        addAttribute(dialog, R.id.att11, "Remarks", R.id.val11, strangerData[position].remarks)
+                    }
 
                     // For opening location in google maps
                     val locationButton = (dialog.findViewById<View>(R.id.open_location) as Button)
