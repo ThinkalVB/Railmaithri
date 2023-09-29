@@ -1,7 +1,9 @@
 package gov.keralapolice.railmaithri
 
 import android.app.Dialog
+import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -9,12 +11,15 @@ import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ListView
 import android.widget.ProgressBar
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.HtmlCompat
+import com.bumptech.glide.Glide
 import com.google.gson.GsonBuilder
 import gov.keralapolice.railmaithri.adapters.StrangerCheckLA
 import gov.keralapolice.railmaithri.models.StrangerCheckMD
@@ -234,12 +239,33 @@ public class SearchData : AppCompatActivity() {
                 listData.adapter = myListAdapter
 
                 listData.setOnItemClickListener { parent, view, position, id ->
+                    // For loading attribute values
                     addAttribute(dialog, R.id.att1, "Name", R.id.val1, strangerData[position].name)
                     addAttribute(dialog, R.id.att2, "Age", R.id.val2, strangerData[position].age.toString())
                     addAttribute(dialog, R.id.att3, "Languages", R.id.val3, strangerData[position].languages_known)
                     addAttribute(dialog, R.id.att4, "Identification", R.id.val4, strangerData[position].identification_marks_details)
                     addAttribute(dialog, R.id.att5, "Mobile", R.id.val5, strangerData[position].mobile_number)
                     addAttribute(dialog, R.id.att6, "Purpose of visit", R.id.val6, strangerData[position].purpose_of_visit)
+
+                    // For opening location in google maps
+                    val locationButton = (dialog.findViewById<View>(R.id.open_location) as Button)
+                    if (strangerData[position].latitude != null) {
+                        locationButton.visibility = View.VISIBLE
+                        locationButton.setOnClickListener {
+                            dialog.hide()
+                            openMap(strangerData[position].latitude, strangerData[position].longitude)
+                        }
+                    } else {
+                        locationButton.visibility = View.INVISIBLE
+                    }
+
+                    // For loading image
+                    val imageView = (dialog.findViewById<View>(R.id.search_data_image) as ImageView)
+                    if (strangerData[position].photo != null) {
+                        Glide.with(this).load(strangerData[position].photo).into(imageView)
+                    } else {
+                        imageView.setImageResource(R.drawable.im_stranger_check)
+                    }
                     dialog.show()
                 }
             }
@@ -297,6 +323,18 @@ public class SearchData : AppCompatActivity() {
     private fun addAttribute(dialog: Dialog, attrID: Int, attrName: String, valID: Int, valName: String) {
         (dialog.findViewById<View>(attrID) as TextView).text = attrName
         (dialog.findViewById<View>(valID)  as TextView).text = valName
+    }
+
+    private fun openMap(latitude: Float, longitude: Float) {
+            val mapUri = Uri.parse("geo:0,0?q=${latitude},${longitude}")
+            val mapIntent = Intent(Intent.ACTION_VIEW, mapUri)
+            mapIntent.setPackage("com.google.android.apps.maps")
+            try {
+                this.startActivity(mapIntent)
+            } catch (e: ActivityNotFoundException) {
+                val message = "Failed to open map"
+                Toast.makeText(this.applicationContext, message, Toast.LENGTH_SHORT).show()
+            }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, resultIntent: Intent?) {
