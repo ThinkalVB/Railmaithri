@@ -229,34 +229,45 @@ public class SearchData : AppCompatActivity() {
 
         if (searchURL == URL.STRANGER_CHECK) {
             val strangerData = gson.fromJson(formData!!.toString(), Array<StrangerCheckMD>::class.java).toList()
-            dialog.setContentView(R.layout.stranger_check_popup)
+            dialog.setContentView(R.layout.search_data_popup)
             myListAdapter    = StrangerCheckLA(this@SearchData, strangerData)
             listData.adapter = myListAdapter
 
             listData.setOnItemClickListener { parent, view, position, id ->
-                (dialog.findViewById<View>(R.id.name) as TextView).text = HtmlCompat.fromHtml(
+                // Name
+                (dialog.findViewById<View>(R.id.att1) as TextView).text ="Name"
+                (dialog.findViewById<View>(R.id.val1) as TextView).text = HtmlCompat.fromHtml(
                     "<b><i>" + strangerData[position].name + "</i></b>",
                     HtmlCompat.FROM_HTML_MODE_LEGACY
                 )
-                (dialog.findViewById<View>(R.id.age) as TextView).text = HtmlCompat.fromHtml(
-                    "<b>Age :  </b>" + strangerData[position].age.toString(),
+                // Age
+                (dialog.findViewById<View>(R.id.att2) as TextView).text ="Age"
+                (dialog.findViewById<View>(R.id.val2) as TextView).text = HtmlCompat.fromHtml(
+                    "<b><i>" + strangerData[position].age + "</i></b>",
                     HtmlCompat.FROM_HTML_MODE_LEGACY
                 )
-                (dialog.findViewById<View>(R.id.language) as TextView).text = HtmlCompat.fromHtml(
-                    "<b>Language Known :   </b> " + strangerData[position].languages_known.toString(),
+                // Known languages
+                (dialog.findViewById<View>(R.id.att3) as TextView).text ="Languages"
+                (dialog.findViewById<View>(R.id.val3) as TextView).text = HtmlCompat.fromHtml(
+                    "<b><i>" + strangerData[position].languages_known + "</i></b>",
                     HtmlCompat.FROM_HTML_MODE_LEGACY
                 )
-                (dialog.findViewById<View>(R.id.idantification) as TextView).text =
-                    HtmlCompat.fromHtml(
-                        "<b>Identification Mark :  </b> " + strangerData[position].identification_marks_details.toString(),
-                        HtmlCompat.FROM_HTML_MODE_LEGACY
-                    )
-                (dialog.findViewById<View>(R.id.mobile) as TextView).text = HtmlCompat.fromHtml(
-                    "<b>Mobile Number :  </b> " + strangerData[position].mobile_number,
+                // Identification
+                (dialog.findViewById<View>(R.id.att4) as TextView).text ="Identification"
+                (dialog.findViewById<View>(R.id.val4) as TextView).text = HtmlCompat.fromHtml(
+                    "<b><i>" + strangerData[position].identification_marks_details + "</i></b>",
                     HtmlCompat.FROM_HTML_MODE_LEGACY
                 )
-                (dialog.findViewById<View>(R.id.purpose) as TextView).text = HtmlCompat.fromHtml(
-                    "<b>Purpose of Visit :  </b> " + strangerData[position].purpose_of_visit,
+                // Mobile number
+                (dialog.findViewById<View>(R.id.att5) as TextView).text ="Mobile"
+                (dialog.findViewById<View>(R.id.val5) as TextView).text = HtmlCompat.fromHtml(
+                    "<b><i>" + strangerData[position].mobile_number + "</i></b>",
+                    HtmlCompat.FROM_HTML_MODE_LEGACY
+                )
+                // Purpose of visit
+                (dialog.findViewById<View>(R.id.att6) as TextView).text ="Purpose"
+                (dialog.findViewById<View>(R.id.val6) as TextView).text = HtmlCompat.fromHtml(
+                    "<b><i>" + strangerData[position].purpose_of_visit + "</i></b>",
                     HtmlCompat.FROM_HTML_MODE_LEGACY
                 )
                 dialog.show()
