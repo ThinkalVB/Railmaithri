@@ -226,85 +226,77 @@ public class SearchData : AppCompatActivity() {
 
     private fun renderFormData(formData: JSONArray) {
         val gson = GsonBuilder().create()
+        when (searchURL) {
+            URL.STRANGER_CHECK -> {
+                val strangerData = gson.fromJson(formData!!.toString(), Array<StrangerCheckMD>::class.java).toList()
+                dialog.setContentView(R.layout.search_data_popup)
+                myListAdapter    = StrangerCheckLA(this@SearchData, strangerData)
+                listData.adapter = myListAdapter
 
-        if (searchURL == URL.STRANGER_CHECK) {
-            val strangerData = gson.fromJson(formData!!.toString(), Array<StrangerCheckMD>::class.java).toList()
-            dialog.setContentView(R.layout.search_data_popup)
-            myListAdapter    = StrangerCheckLA(this@SearchData, strangerData)
-            listData.adapter = myListAdapter
-
-            listData.setOnItemClickListener { parent, view, position, id ->
-                // Name
-                (dialog.findViewById<View>(R.id.att1) as TextView).text ="Name"
-                (dialog.findViewById<View>(R.id.val1) as TextView).text = HtmlCompat.fromHtml(
-                    "<b><i>" + strangerData[position].name + "</i></b>",
-                    HtmlCompat.FROM_HTML_MODE_LEGACY
-                )
-                // Age
-                (dialog.findViewById<View>(R.id.att2) as TextView).text ="Age"
-                (dialog.findViewById<View>(R.id.val2) as TextView).text = HtmlCompat.fromHtml(
-                    "<b><i>" + strangerData[position].age + "</i></b>",
-                    HtmlCompat.FROM_HTML_MODE_LEGACY
-                )
-                // Known languages
-                (dialog.findViewById<View>(R.id.att3) as TextView).text ="Languages"
-                (dialog.findViewById<View>(R.id.val3) as TextView).text = HtmlCompat.fromHtml(
-                    "<b><i>" + strangerData[position].languages_known + "</i></b>",
-                    HtmlCompat.FROM_HTML_MODE_LEGACY
-                )
-                // Identification
-                (dialog.findViewById<View>(R.id.att4) as TextView).text ="Identification"
-                (dialog.findViewById<View>(R.id.val4) as TextView).text = HtmlCompat.fromHtml(
-                    "<b><i>" + strangerData[position].identification_marks_details + "</i></b>",
-                    HtmlCompat.FROM_HTML_MODE_LEGACY
-                )
-                // Mobile number
-                (dialog.findViewById<View>(R.id.att5) as TextView).text ="Mobile"
-                (dialog.findViewById<View>(R.id.val5) as TextView).text = HtmlCompat.fromHtml(
-                    "<b><i>" + strangerData[position].mobile_number + "</i></b>",
-                    HtmlCompat.FROM_HTML_MODE_LEGACY
-                )
-                // Purpose of visit
-                (dialog.findViewById<View>(R.id.att6) as TextView).text ="Purpose"
-                (dialog.findViewById<View>(R.id.val6) as TextView).text = HtmlCompat.fromHtml(
-                    "<b><i>" + strangerData[position].purpose_of_visit + "</i></b>",
-                    HtmlCompat.FROM_HTML_MODE_LEGACY
-                )
-                dialog.show()
+                listData.setOnItemClickListener { parent, view, position, id ->
+                    addAttribute(dialog, R.id.att1, "Name", R.id.val1, strangerData[position].name)
+                    addAttribute(dialog, R.id.att2, "Age", R.id.val2, strangerData[position].age.toString())
+                    addAttribute(dialog, R.id.att3, "Languages", R.id.val3, strangerData[position].languages_known)
+                    addAttribute(dialog, R.id.att4, "Identification", R.id.val4, strangerData[position].identification_marks_details)
+                    addAttribute(dialog, R.id.att5, "Mobile", R.id.val5, strangerData[position].mobile_number)
+                    addAttribute(dialog, R.id.att6, "Purpose of visit", R.id.val6, strangerData[position].purpose_of_visit)
+                    dialog.show()
+                }
             }
-        }else  if (searchURL == URL.PASSENGER_STATISTICS) {
+            URL.PASSENGER_STATISTICS -> {
 
-        } else if (searchURL == URL.INTELLIGENCE_INFORMATION) {
+            }
+            URL.INTELLIGENCE_INFORMATION -> {
 
-        } else if (searchURL == URL.LOST_PROPERTY) {
+            }
+            URL.LOST_PROPERTY -> {
 
-        } else if (searchURL == URL.ABANDONED_PROPERTY) {
+            }
+            URL.ABANDONED_PROPERTY -> {
 
-        } else if (searchURL == URL.RELIABLE_PERSON) {
+            }
+            URL.RELIABLE_PERSON -> {
 
-        } else if (searchURL == URL.EMERGENCY_CONTACTS) {
+            }
+            URL.EMERGENCY_CONTACTS -> {
 
-        } else if (searchURL == URL.POI) {
+            }
+            URL.POI -> {
 
-        } else if (searchURL == URL.UNAUTHORIZED_PEOPLE) {
+            }
+            URL.UNAUTHORIZED_PEOPLE -> {
 
-        } else if (searchURL == URL.CRIME_MEMO) {
+            }
+            URL.CRIME_MEMO -> {
 
-        } else if (searchURL == URL.SURAKSHA_SAMITHI_MEMBERS) {
+            }
+            URL.SURAKSHA_SAMITHI_MEMBERS -> {
 
-        } else if (searchURL == URL.RAIL_VOLUNTEER) {
+            }
+            URL.RAIL_VOLUNTEER -> {
 
-        } else if (searchURL == URL.RAILMAITHRI_MEETING) {
+            }
+            URL.RAILMAITHRI_MEETING -> {
 
-        } else if (searchURL == URL.BEAT_DIARY) {
+            }
+            URL.BEAT_DIARY -> {
 
-        } else if (searchURL == URL.INCIDENT_REPORT) {
+            }
+            URL.INCIDENT_REPORT -> {
 
-        } else if (searchURL == URL.SHOPS) {
+            }
+            URL.SHOPS -> {
 
-        } else if (searchURL == URL.RUN_OVER) {
+            }
+            URL.RUN_OVER -> {
 
+            }
         }
+    }
+
+    private fun addAttribute(dialog: Dialog, attrID: Int, attrName: String, valID: Int, valName: String) {
+        (dialog.findViewById<View>(attrID) as TextView).text = attrName
+        (dialog.findViewById<View>(valID)  as TextView).text = valName
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, resultIntent: Intent?) {
