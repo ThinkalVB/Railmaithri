@@ -35,17 +35,26 @@ class StrangerCheckLA(
             listItemView = inflater.inflate(R.layout.search_data_view, parent, false)
         }
 
-        val name          = listItemView?.findViewById<TextView>(R.id.name)
-        val languageKnown = listItemView?.findViewById<TextView>(R.id.language)
-        val age           = listItemView?.findViewById<TextView>(R.id.age)
-        val purpose       = listItemView?.findViewById<TextView>(R.id.purpose)
-        val mobile        = listItemView?.findViewById<TextView>(R.id.mobile)
+        val attr1   = listItemView?.findViewById<TextView>(R.id.attr1)
+        val val1    = listItemView?.findViewById<TextView>(R.id.val1)
+        val attr2   = listItemView?.findViewById<TextView>(R.id.attr2)
+        val val2    = listItemView?.findViewById<TextView>(R.id.val2)
+        val attr3   = listItemView?.findViewById<TextView>(R.id.attr3)
+        val val3    = listItemView?.findViewById<TextView>(R.id.val3)
+        val attr4   = listItemView?.findViewById<TextView>(R.id.attr4)
+        val val4    = listItemView?.findViewById<TextView>(R.id.val4)
 
-        name?.text          = strangerDatum[position]?.name
-        languageKnown?.text = "Language Known: " + strangerDatum[position]?.languages_known
-        age?.text           = "Age: " + strangerDatum[position]?.age
-        purpose?.text       = "Purpose: " + strangerDatum[position]?.purpose_of_visit
-        mobile?.text        = "Mobile: " + strangerDatum[position]?.mobile_number
+        attr1?.text = "Name"
+        val1?.text  = strangerDatum[position].name
+
+        attr2?.text = "Age"
+        val2?.text  = strangerDatum[position].age.toString()
+
+        attr3?.text = "Mobile"
+        val3?.text  = strangerDatum[position].mobile_number
+
+        attr4?.text = "Purpose"
+        val4?.text  = strangerDatum[position]?.purpose_of_visit
         return listItemView!!
     }
 }
