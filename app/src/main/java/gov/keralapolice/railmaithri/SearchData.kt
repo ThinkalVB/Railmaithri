@@ -268,9 +268,13 @@ public class SearchData : AppCompatActivity() {
                         locationButton.visibility = View.INVISIBLE
                     }
 
-                    // For loading image
+                    // For loading and opening image
                     val imageView = (dialog.findViewById<View>(R.id.search_data_image) as ImageView)
                     if (strangerData[position].photo != null) {
+                        imageView.setOnClickListener {
+                            dialog.hide()
+                            openImage(strangerData[position].photo)
+                        }
                         Glide.with(this).load(strangerData[position].photo).into(imageView)
                     } else {
                         imageView.setImageResource(R.drawable.im_stranger_check)
@@ -339,6 +343,10 @@ public class SearchData : AppCompatActivity() {
         valueField.text           = valName
     }
 
+    private fun openImage(imageURL: String){
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(imageURL))
+        this.startActivity(intent)
+    }
     private fun openMap(latitude: Float, longitude: Float) {
             val mapUri = Uri.parse("geo:0,0?q=${latitude},${longitude}")
             val mapIntent = Intent(Intent.ACTION_VIEW, mapUri)
