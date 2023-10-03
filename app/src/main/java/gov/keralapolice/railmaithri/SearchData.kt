@@ -22,8 +22,10 @@ import androidx.core.text.HtmlCompat
 import com.bumptech.glide.Glide
 import com.google.gson.GsonBuilder
 import gov.keralapolice.railmaithri.adapters.LostPropertyLA
+import gov.keralapolice.railmaithri.adapters.PoiLA
 import gov.keralapolice.railmaithri.adapters.StrangerCheckLA
 import gov.keralapolice.railmaithri.models.LostPropertyMD
+import gov.keralapolice.railmaithri.models.PoiMD
 import gov.keralapolice.railmaithri.models.StrangerCheckMD
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -304,7 +306,7 @@ public class SearchData : AppCompatActivity() {
                     addAttribute(dialog, R.id.att5, "Found on", R.id.val5, lostPropertyData[position].found_on)
                     addAttribute(dialog, R.id.att6, "Remarks", R.id.val6, lostPropertyData[position].return_remarks)
                     addAttribute(dialog, R.id.att7, "Description", R.id.val7, lostPropertyData[position].description)
-                    
+
                     // For opening location in google maps
                     val locationButton = (dialog.findViewById<View>(R.id.open_location) as Button)
                     locationButton.visibility = View.INVISIBLE
@@ -333,7 +335,44 @@ public class SearchData : AppCompatActivity() {
 
             }
             URL.POI -> {
+                val poiData = gson.fromJson(formData!!.toString(), Array<PoiMD>::class.java).toList()
+                dialog.setContentView(R.layout.search_data_popup)
+                val myListAdapter    = PoiLA(this@SearchData, poiData)
+                listData.adapter     = myListAdapter
 
+                listData.setOnItemClickListener { parent, view, position, id ->
+                    // For loading attribute values
+                    addAttribute(dialog, R.id.att1, "Name", R.id.val1, poiData[position].name)
+                    addAttribute(dialog, R.id.att2, "Category", R.id.val2, poiData[position].poi_category_label)
+                    addAttribute(dialog, R.id.att3, "Added by", R.id.val3, poiData[position].added_by_label)
+                    addAttribute(dialog, R.id.att4, "Police station", R.id.val4, poiData[position].police_station_label)
+                    addAttribute(dialog, R.id.att5, "District", R.id.val5, poiData[position].district_label)
+
+                    // For opening location in google maps
+                    val locationButton = (dialog.findViewById<View>(R.id.open_location) as Button)
+                    if (poiData[position].latitude != null) {
+                        locationButton.visibility = View.VISIBLE
+                        locationButton.setOnClickListener {
+                            dialog.hide()
+                            openMap(poiData[position].latitude, poiData[position].longitude)
+                        }
+                    } else {
+                        locationButton.visibility = View.INVISIBLE
+                    }
+
+                    // For loading and opening image
+                    val imageView = (dialog.findViewById<View>(R.id.search_data_image) as ImageView)
+                    if (poiData[position].photo != null) {
+                        imageView.setOnClickListener {
+                            dialog.hide()
+                            openImage(poiData[position].photo)
+                        }
+                        Glide.with(this).load(poiData[position].photo).into(imageView)
+                    } else {
+                        imageView.setImageResource(R.drawable.im_lost_property)
+                    }
+                    dialog.show()
+                }
             }
             URL.UNAUTHORIZED_PEOPLE -> {
 
