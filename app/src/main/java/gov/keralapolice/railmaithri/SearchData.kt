@@ -21,7 +21,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.HtmlCompat
 import com.bumptech.glide.Glide
 import com.google.gson.GsonBuilder
+import gov.keralapolice.railmaithri.adapters.LostPropertyLA
 import gov.keralapolice.railmaithri.adapters.StrangerCheckLA
+import gov.keralapolice.railmaithri.models.LostPropertyMD
 import gov.keralapolice.railmaithri.models.StrangerCheckMD
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -38,7 +40,6 @@ public class SearchData : AppCompatActivity() {
     private lateinit var filterBT: ImageButton
     private var pageNumber = 1
 
-    private lateinit var myListAdapter: StrangerCheckLA
     private lateinit var listData:      ListView
     lateinit var dialog:                Dialog
 
@@ -233,10 +234,10 @@ public class SearchData : AppCompatActivity() {
         val gson = GsonBuilder().create()
         when (searchURL) {
             URL.STRANGER_CHECK -> {
-                val strangerData = gson.fromJson(formData!!.toString(), Array<StrangerCheckMD>::class.java).toList()
+                val strangerData  = gson.fromJson(formData!!.toString(), Array<StrangerCheckMD>::class.java).toList()
                 dialog.setContentView(R.layout.search_data_popup)
-                myListAdapter    = StrangerCheckLA(this@SearchData, strangerData)
-                listData.adapter = myListAdapter
+                val myListAdapter = StrangerCheckLA(this@SearchData, strangerData)
+                listData.adapter  = myListAdapter
 
                 listData.setOnItemClickListener { parent, view, position, id ->
                     // For loading attribute values
@@ -289,7 +290,38 @@ public class SearchData : AppCompatActivity() {
 
             }
             URL.LOST_PROPERTY -> {
+                val lostPropertyData = gson.fromJson(formData!!.toString(), Array<LostPropertyMD>::class.java).toList()
+                dialog.setContentView(R.layout.search_data_popup)
+                val myListAdapter    = LostPropertyLA(this@SearchData, lostPropertyData)
+                listData.adapter     = myListAdapter
 
+                listData.setOnItemClickListener { parent, view, position, id ->
+                    // For loading attribute values
+                    addAttribute(dialog, R.id.att1, "Category", R.id.val1, lostPropertyData[position].lost_property_category_label)
+                    addAttribute(dialog, R.id.att2, "Police station", R.id.val2, lostPropertyData[position].police_station_label)
+                    addAttribute(dialog, R.id.att3, "Station number", R.id.val3, lostPropertyData[position].police_station_number)
+                    addAttribute(dialog, R.id.att4, "Found in", R.id.val4, lostPropertyData[position].found_in)
+                    addAttribute(dialog, R.id.att5, "Found on", R.id.val5, lostPropertyData[position].found_on)
+                    addAttribute(dialog, R.id.att6, "Remarks", R.id.val6, lostPropertyData[position].return_remarks)
+                    addAttribute(dialog, R.id.att7, "Description", R.id.val7, lostPropertyData[position].description)
+                    
+                    // For opening location in google maps
+                    val locationButton = (dialog.findViewById<View>(R.id.open_location) as Button)
+                    locationButton.visibility = View.INVISIBLE
+
+                    // For loading and opening image
+                    val imageView = (dialog.findViewById<View>(R.id.search_data_image) as ImageView)
+                    if (lostPropertyData[position].photo != null) {
+                        imageView.setOnClickListener {
+                            dialog.hide()
+                            openImage(lostPropertyData[position].photo)
+                        }
+                        Glide.with(this).load(lostPropertyData[position].photo).into(imageView)
+                    } else {
+                        imageView.setImageResource(R.drawable.im_lost_property)
+                    }
+                    dialog.show()
+                }
             }
             URL.ABANDONED_PROPERTY -> {
 
