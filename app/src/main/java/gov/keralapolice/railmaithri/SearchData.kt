@@ -23,9 +23,11 @@ import com.bumptech.glide.Glide
 import com.google.gson.GsonBuilder
 import gov.keralapolice.railmaithri.adapters.LostPropertyLA
 import gov.keralapolice.railmaithri.adapters.PoiLA
+import gov.keralapolice.railmaithri.adapters.RailVolunteerLA
 import gov.keralapolice.railmaithri.adapters.StrangerCheckLA
 import gov.keralapolice.railmaithri.models.LostPropertyMD
 import gov.keralapolice.railmaithri.models.PoiMD
+import gov.keralapolice.railmaithri.models.RailVolunteerMD
 import gov.keralapolice.railmaithri.models.StrangerCheckMD
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -369,7 +371,7 @@ public class SearchData : AppCompatActivity() {
                         }
                         Glide.with(this).load(poiData[position].photo).into(imageView)
                     } else {
-                        imageView.setImageResource(R.drawable.im_lost_property)
+                        imageView.setImageResource(R.drawable.im_poi)
                     }
                     dialog.show()
                 }
@@ -384,7 +386,40 @@ public class SearchData : AppCompatActivity() {
 
             }
             URL.RAIL_VOLUNTEER -> {
+                val railVolunteerData  = gson.fromJson(formData!!.toString(), Array<RailVolunteerMD>::class.java).toList()
+                dialog.setContentView(R.layout.search_data_popup)
+                val myListAdapter = RailVolunteerLA(this@SearchData, railVolunteerData)
+                listData.adapter  = myListAdapter
 
+                listData.setOnItemClickListener { parent, view, position, id ->
+                    // For loading attribute values
+                    addAttribute(dialog, R.id.att1, "Name", R.id.val1, railVolunteerData[position].name)
+                    addAttribute(dialog, R.id.att2, "Category", R.id.val2, railVolunteerData[position].rail_volunteer_category_label)
+                    addAttribute(dialog, R.id.att3, "Age", R.id.val3, railVolunteerData[position].age.toString())
+                    addAttribute(dialog, R.id.att4, "Email ID", R.id.val4, railVolunteerData[position].email)
+                    addAttribute(dialog, R.id.att5, "Gender", R.id.val5, railVolunteerData[position].gender)
+                    addAttribute(dialog, R.id.att6, "Mobile number", R.id.val6, railVolunteerData[position].mobile_number)
+                    addAttribute(dialog, R.id.att7, "Entrain station", R.id.val7, railVolunteerData[position].entrain_station_label)
+                    addAttribute(dialog, R.id.att8, "Detrain station", R.id.val8, railVolunteerData[position].detrain_station_label)
+                    addAttribute(dialog, R.id.att9, "Nearest station", R.id.val9, railVolunteerData[position].nearest_railway_station_label)
+
+                    // For opening location in google maps
+                    val locationButton = (dialog.findViewById<View>(R.id.open_location) as Button)
+                    locationButton.visibility = View.INVISIBLE
+
+                    // For loading and opening image
+                    val imageView = (dialog.findViewById<View>(R.id.search_data_image) as ImageView)
+                    if (railVolunteerData[position].photo != null) {
+                        imageView.setOnClickListener {
+                            dialog.hide()
+                            openImage(railVolunteerData[position].photo)
+                        }
+                        Glide.with(this).load(railVolunteerData[position].photo).into(imageView)
+                    } else {
+                        imageView.setImageResource(R.drawable.im_rail_volunteer)
+                    }
+                    dialog.show()
+                }
             }
             URL.RAILMAITHRI_MEETING -> {
 
