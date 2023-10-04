@@ -289,6 +289,86 @@
                             android:layout_height="wrap_content"
                             android:textSize="15sp" />
                     </TableRow>
+                    <TableRow>
+                        <TextView
+                            android:visibility="gone"
+                            android:layout_marginHorizontal="8dp"
+                            android:id="@+id/att16"
+                            android:textColor="@color/black"
+                            android:textStyle="bold" />
+                        <TextView
+                            android:visibility="gone"
+                            android:singleLine="false"
+                            android:layout_weight="1"
+                            android:id="@+id/val16"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="15sp" />
+                    </TableRow>
+                    <TableRow>
+                        <TextView
+                            android:visibility="gone"
+                            android:layout_marginHorizontal="8dp"
+                            android:id="@+id/att17"
+                            android:textColor="@color/black"
+                            android:textStyle="bold" />
+                        <TextView
+                            android:visibility="gone"
+                            android:singleLine="false"
+                            android:layout_weight="1"
+                            android:id="@+id/val17"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="15sp" />
+                    </TableRow>
+                    <TableRow>
+                        <TextView
+                            android:visibility="gone"
+                            android:layout_marginHorizontal="8dp"
+                            android:id="@+id/att18"
+                            android:textColor="@color/black"
+                            android:textStyle="bold" />
+                        <TextView
+                            android:visibility="gone"
+                            android:singleLine="false"
+                            android:layout_weight="1"
+                            android:id="@+id/val18"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="15sp" />
+                    </TableRow>
+                    <TableRow>
+                        <TextView
+                            android:visibility="gone"
+                            android:layout_marginHorizontal="8dp"
+                            android:id="@+id/att19"
+                            android:textColor="@color/black"
+                            android:textStyle="bold" />
+                        <TextView
+                            android:visibility="gone"
+                            android:singleLine="false"
+                            android:layout_weight="1"
+                            android:id="@+id/val19"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="15sp" />
+                    </TableRow>
+                    <TableRow>
+                        <TextView
+                            android:visibility="gone"
+                            android:layout_marginHorizontal="8dp"
+                            android:id="@+id/att20"
+                            android:textColor="@color/black"
+                            android:textStyle="bold" />
+                        <TextView
+                            android:visibility="gone"
+                            android:singleLine="false"
+                            android:layout_weight="1"
+                            android:id="@+id/val20"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="15sp" />
+                    </TableRow>
 
                     <LinearLayout
                         android:layout_height="wrap_content"

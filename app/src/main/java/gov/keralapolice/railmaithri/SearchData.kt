@@ -18,18 +18,19 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.text.HtmlCompat
 import com.bumptech.glide.Glide
 import com.google.gson.GsonBuilder
 import gov.keralapolice.railmaithri.adapters.IncidentReportLA
 import gov.keralapolice.railmaithri.adapters.LostPropertyLA
 import gov.keralapolice.railmaithri.adapters.PoiLA
 import gov.keralapolice.railmaithri.adapters.RailVolunteerLA
+import gov.keralapolice.railmaithri.adapters.RunOverLA
 import gov.keralapolice.railmaithri.adapters.StrangerCheckLA
 import gov.keralapolice.railmaithri.models.IncidentReportMD
 import gov.keralapolice.railmaithri.models.LostPropertyMD
 import gov.keralapolice.railmaithri.models.PoiMD
 import gov.keralapolice.railmaithri.models.RailVolunteerMD
+import gov.keralapolice.railmaithri.models.RunOverMD
 import gov.keralapolice.railmaithri.models.StrangerCheckMD
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -254,8 +255,12 @@ public class SearchData : AppCompatActivity() {
                     addAttribute(dialog, R.id.att5, "Mobile", R.id.val5, strangerData[position].mobile_number)
                     addAttribute(dialog, R.id.att6, "Purpose of visit", R.id.val6, strangerData[position].purpose_of_visit)
                     addAttribute(dialog, R.id.att7, "Is foreigner", R.id.val7, strangerData[position].is_foreigner.toString())
+
                     if (strangerData[position].is_foreigner) {
                         addAttribute(dialog, R.id.att8, "Country", R.id.val8, strangerData[position].country_name)
+                        hideAttribute(dialog, R.id.att9, R.id.val9)
+                        hideAttribute(dialog, R.id.att10, R.id.val10)
+                        hideAttribute(dialog, R.id.att11, R.id.val11)
                     } else {
                         addAttribute(dialog, R.id.att8, "State", R.id.val8, strangerData[position].native_state_label)
                         addAttribute(dialog, R.id.att9, "Police station", R.id.val9, strangerData[position].native_police_station)
@@ -443,6 +448,7 @@ public class SearchData : AppCompatActivity() {
                         "Platform" -> {
                             addAttribute(dialog, R.id.att3, "Railway station", R.id.val3, incidentData[position].railway_station_label)
                             addAttribute(dialog, R.id.att4, "Platform", R.id.val4, incidentData[position].platform_number)
+                            hideAttribute(dialog, R.id.att5, R.id.val5)
                         }
                         "Train" -> {
                             addAttribute(dialog, R.id.att3, "Train", R.id.val3, incidentData[position].train_name)
@@ -452,6 +458,7 @@ public class SearchData : AppCompatActivity() {
                         "Track" -> {
                             addAttribute(dialog, R.id.att3, "Railway station", R.id.val3, incidentData[position].railway_station_label)
                             addAttribute(dialog, R.id.att4, "Track", R.id.val4, incidentData[position].track_location)
+                            hideAttribute(dialog, R.id.att5, R.id.val5)
                         }
                     }
 
@@ -485,7 +492,64 @@ public class SearchData : AppCompatActivity() {
 
             }
             URL.RUN_OVER -> {
+                val runOverData  = gson.fromJson(formData!!.toString(), Array<RunOverMD>::class.java).toList()
+                dialog.setContentView(R.layout.search_data_popup)
+                val myListAdapter = RunOverLA(this@SearchData, runOverData)
+                listData.adapter  = myListAdapter
 
+                listData.setOnItemClickListener { parent, view, position, id ->
+                    // For loading attribute values
+                    addAttribute(dialog, R.id.att1, "Occurred on", R.id.val1, runOverData[position].date_time_of_occurance)
+                    addAttribute(dialog, R.id.att2, "Category", R.id.val2, runOverData[position].category)
+                    addAttribute(dialog, R.id.att3, "Place", R.id.val3, runOverData[position].place_of_occurance)
+                    addAttribute(dialog, R.id.att4, "B/w Station 1", R.id.val4, runOverData[position].between_station_1_label)
+                    addAttribute(dialog, R.id.att5, "B/w Station 2", R.id.val5, runOverData[position].between_station_2_label)
+                    addAttribute(dialog, R.id.att6, "Information from", R.id.val6, runOverData[position].source_of_information)
+                    addAttribute(dialog, R.id.att7, "Remarks", R.id.val7, runOverData[position].remarks)
+                    addAttribute(dialog, R.id.att8, "Cause", R.id.val8, runOverData[position].cause_label)
+                    addAttribute(dialog, R.id.att9, "Victim Details", R.id.val9, runOverData[position].victim_details)
+                    addAttribute(dialog, R.id.att10, "Crime Number", R.id.val10, runOverData[position].crime_number)
+                    addAttribute(dialog, R.id.att11, "District", R.id.val11, runOverData[position].district_label)
+                    addAttribute(dialog, R.id.att12, "Cause", R.id.val12, runOverData[position].cause_label)
+                    addAttribute(dialog, R.id.att13, "Details", R.id.val13, runOverData[position].identification_details)
+
+                    if (runOverData[position].is_identified) {
+                        addAttribute(dialog, R.id.att14, "Name", R.id.val14, runOverData[position].name)
+                        addAttribute(dialog, R.id.att15, "Age", R.id.val15, runOverData[position].age.toString())
+                        addAttribute(dialog, R.id.att16, "Gender", R.id.val16, runOverData[position].gender)
+                        addAttribute(dialog, R.id.att17, "Address", R.id.val17, runOverData[position].address)
+                        addAttribute(dialog, R.id.att18, "Contact", R.id.val18, runOverData[position].contact_number)
+                    } else {
+                        hideAttribute(dialog, R.id.att14, R.id.val14)
+                        hideAttribute(dialog, R.id.att15, R.id.val15)
+                        hideAttribute(dialog, R.id.att16, R.id.val16)
+                        hideAttribute(dialog, R.id.att17, R.id.val17)
+                        hideAttribute(dialog, R.id.att18, R.id.val18)
+                    }
+
+                    if (runOverData[position].case_registered_in == "Local Police Station") {
+                        addAttribute(dialog, R.id.att20, "Local PS", R.id.val20, runOverData[position].local_police_station)
+                    } else {
+                        addAttribute(dialog, R.id.att20, "Railway PS", R.id.val20, runOverData[position].railway_police_station_label)
+                    }
+
+                    // For opening location in google maps
+                    val locationButton = (dialog.findViewById<View>(R.id.open_location) as Button)
+                    locationButton.visibility = View.INVISIBLE
+
+                    // For loading and opening image
+                    val imageView = (dialog.findViewById<View>(R.id.search_data_image) as ImageView)
+                    if (runOverData[position].photo != null) {
+                        imageView.setOnClickListener {
+                            dialog.hide()
+                            openImage(runOverData[position].photo)
+                        }
+                        Glide.with(this).load(runOverData[position].photo).into(imageView)
+                    } else {
+                        imageView.setImageResource(R.drawable.im_run_over)
+                    }
+                    dialog.show()
+                }
             }
         }
     }
@@ -498,6 +562,14 @@ public class SearchData : AppCompatActivity() {
         valueField.visibility     = View.VISIBLE
         attributeField.text       = attrName
         valueField.text           = valName
+    }
+
+    private fun hideAttribute(dialog: Dialog, attrID: Int, valID: Int){
+        val attributeField = (dialog.findViewById<View>(attrID) as TextView)
+        val valueField     = (dialog.findViewById<View>(valID)  as TextView)
+
+        attributeField.visibility = View.GONE
+        valueField.visibility     = View.GONE
     }
 
     private fun openImage(imageURL: String){
