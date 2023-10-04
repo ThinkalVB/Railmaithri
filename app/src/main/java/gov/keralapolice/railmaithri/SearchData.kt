@@ -21,10 +21,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.HtmlCompat
 import com.bumptech.glide.Glide
 import com.google.gson.GsonBuilder
+import gov.keralapolice.railmaithri.adapters.IncidentReportLA
 import gov.keralapolice.railmaithri.adapters.LostPropertyLA
 import gov.keralapolice.railmaithri.adapters.PoiLA
 import gov.keralapolice.railmaithri.adapters.RailVolunteerLA
 import gov.keralapolice.railmaithri.adapters.StrangerCheckLA
+import gov.keralapolice.railmaithri.models.IncidentReportMD
 import gov.keralapolice.railmaithri.models.LostPropertyMD
 import gov.keralapolice.railmaithri.models.PoiMD
 import gov.keralapolice.railmaithri.models.RailVolunteerMD
@@ -428,7 +430,56 @@ public class SearchData : AppCompatActivity() {
 
             }
             URL.INCIDENT_REPORT -> {
+                val incidentData  = gson.fromJson(formData!!.toString(), Array<IncidentReportMD>::class.java).toList()
+                dialog.setContentView(R.layout.search_data_popup)
+                val myListAdapter = IncidentReportLA(this@SearchData, incidentData)
+                listData.adapter  = myListAdapter
 
+                listData.setOnItemClickListener { parent, view, position, id ->
+                    // For loading attribute values
+                    addAttribute(dialog, R.id.att1, "Type", R.id.val1, incidentData[position].incident_type)
+                    addAttribute(dialog, R.id.att2, "Description", R.id.val2, incidentData[position].incident_details)
+                    when (incidentData[position].incident_type) {
+                        "Platform" -> {
+                            addAttribute(dialog, R.id.att3, "Railway station", R.id.val3, incidentData[position].railway_station_label)
+                            addAttribute(dialog, R.id.att4, "Platform", R.id.val4, incidentData[position].platform_number)
+                        }
+                        "Train" -> {
+                            addAttribute(dialog, R.id.att3, "Train", R.id.val3, incidentData[position].train_name)
+                            addAttribute(dialog, R.id.att4, "Coach", R.id.val4, incidentData[position].coach)
+                            addAttribute(dialog, R.id.att5, "Mobile", R.id.val5, incidentData[position].mobile_number)
+                        }
+                        "Track" -> {
+                            addAttribute(dialog, R.id.att3, "Railway station", R.id.val3, incidentData[position].railway_station_label)
+                            addAttribute(dialog, R.id.att4, "Track", R.id.val4, incidentData[position].track_location)
+                        }
+                    }
+
+                    // For opening location in google maps
+                    val locationButton = (dialog.findViewById<View>(R.id.open_location) as Button)
+                    if (incidentData[position].latitude != null) {
+                        locationButton.visibility = View.VISIBLE
+                        locationButton.setOnClickListener {
+                            dialog.hide()
+                            openMap(incidentData[position].latitude, incidentData[position].longitude)
+                        }
+                    } else {
+                        locationButton.visibility = View.INVISIBLE
+                    }
+
+                    // For loading and opening image
+                    val imageView = (dialog.findViewById<View>(R.id.search_data_image) as ImageView)
+                    if (incidentData[position].photo != null) {
+                        imageView.setOnClickListener {
+                            dialog.hide()
+                            openImage(incidentData[position].photo)
+                        }
+                        Glide.with(this).load(incidentData[position].photo).into(imageView)
+                    } else {
+                        imageView.setImageResource(R.drawable.im_incident_report)
+                    }
+                    dialog.show()
+                }
             }
             URL.SHOPS -> {
 
