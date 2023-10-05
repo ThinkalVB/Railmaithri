@@ -24,6 +24,7 @@ import gov.keralapolice.railmaithri.adapters.IncidentReportLA
 import gov.keralapolice.railmaithri.adapters.LostPropertyLA
 import gov.keralapolice.railmaithri.adapters.PoiLA
 import gov.keralapolice.railmaithri.adapters.RailVolunteerLA
+import gov.keralapolice.railmaithri.adapters.ReliablePersonLA
 import gov.keralapolice.railmaithri.adapters.RunOverLA
 import gov.keralapolice.railmaithri.adapters.StrangerCheckLA
 import gov.keralapolice.railmaithri.adapters.SurakshaSamithiMemberLA
@@ -32,6 +33,7 @@ import gov.keralapolice.railmaithri.models.IncidentReportMD
 import gov.keralapolice.railmaithri.models.LostPropertyMD
 import gov.keralapolice.railmaithri.models.PoiMD
 import gov.keralapolice.railmaithri.models.RailVolunteerMD
+import gov.keralapolice.railmaithri.models.ReliablePersonMD
 import gov.keralapolice.railmaithri.models.RunOverMD
 import gov.keralapolice.railmaithri.models.StrangerCheckMD
 import gov.keralapolice.railmaithri.models.SurakshaSamithiMemberMD
@@ -342,7 +344,36 @@ public class SearchData : AppCompatActivity() {
 
             }
             URL.RELIABLE_PERSON -> {
+                val reliablePersonData = gson.fromJson(formData!!.toString(), Array<ReliablePersonMD>::class.java).toList()
+                dialog.setContentView(R.layout.search_data_popup)
+                val myListAdapter    = ReliablePersonLA(this@SearchData, reliablePersonData)
+                listData.adapter     = myListAdapter
 
+                listData.setOnItemClickListener { parent, view, position, id ->
+                    // For loading attribute values
+                    addAttribute(dialog, R.id.att1, "Name", R.id.val1, reliablePersonData[position].name)
+                    addAttribute(dialog, R.id.att2, "Mobile Number", R.id.val2, reliablePersonData[position].mobile_number)
+                    addAttribute(dialog, R.id.att3, "Police Number", R.id.val3, reliablePersonData[position].police_station_label)
+                    addAttribute(dialog, R.id.att4, "Place", R.id.val4, reliablePersonData[position].place)
+                    addAttribute(dialog, R.id.att5, "Description", R.id.val5, reliablePersonData[position].description)
+
+                    // For opening location in google maps
+                    val locationButton = (dialog.findViewById<View>(R.id.open_location) as Button)
+                    locationButton.visibility = View.INVISIBLE
+
+                    // For loading and opening image
+                    val imageView = (dialog.findViewById<View>(R.id.search_data_image) as ImageView)
+                    if (reliablePersonData[position].photo != null) {
+                        imageView.setOnClickListener {
+                            dialog.hide()
+                            openImage(reliablePersonData[position].photo)
+                        }
+                        Glide.with(this).load(reliablePersonData[position].photo).into(imageView)
+                    } else {
+                        imageView.setImageResource(R.drawable.im_reliable_person)
+                    }
+                    dialog.show()
+                }
             }
             URL.EMERGENCY_CONTACTS -> {
 
