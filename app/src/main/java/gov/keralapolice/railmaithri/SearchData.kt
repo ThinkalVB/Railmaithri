@@ -26,12 +26,14 @@ import gov.keralapolice.railmaithri.adapters.PoiLA
 import gov.keralapolice.railmaithri.adapters.RailVolunteerLA
 import gov.keralapolice.railmaithri.adapters.RunOverLA
 import gov.keralapolice.railmaithri.adapters.StrangerCheckLA
+import gov.keralapolice.railmaithri.adapters.UnauthorizedPersonLA
 import gov.keralapolice.railmaithri.models.IncidentReportMD
 import gov.keralapolice.railmaithri.models.LostPropertyMD
 import gov.keralapolice.railmaithri.models.PoiMD
 import gov.keralapolice.railmaithri.models.RailVolunteerMD
 import gov.keralapolice.railmaithri.models.RunOverMD
 import gov.keralapolice.railmaithri.models.StrangerCheckMD
+import gov.keralapolice.railmaithri.models.UnauthorizedPersonMD
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -384,6 +386,43 @@ public class SearchData : AppCompatActivity() {
                 }
             }
             URL.UNAUTHORIZED_PEOPLE -> {
+                val unauthorizedPersonData = gson.fromJson(formData!!.toString(), Array<UnauthorizedPersonMD>::class.java).toList()
+                dialog.setContentView(R.layout.search_data_popup)
+                val myListAdapter    = UnauthorizedPersonLA(this@SearchData, unauthorizedPersonData)
+                listData.adapter     = myListAdapter
+
+                listData.setOnItemClickListener { parent, view, position, id ->
+                    // For loading attribute values
+                    addAttribute(dialog, R.id.att1, "Category", R.id.val1, unauthorizedPersonData[position].category_label)
+                    addAttribute(dialog, R.id.att2, "Police station", R.id.val2, unauthorizedPersonData[position].police_station_label)
+                    addAttribute(dialog, R.id.att3, "Place Of Check", R.id.val3, unauthorizedPersonData[position].place_of_check)
+                    addAttribute(dialog, R.id.att4, "Description", R.id.val4, unauthorizedPersonData[position].description)
+
+                    // For opening location in google maps
+                    val locationButton = (dialog.findViewById<View>(R.id.open_location) as Button)
+                    if (unauthorizedPersonData[position].latitude != null) {
+                        locationButton.visibility = View.VISIBLE
+                        locationButton.setOnClickListener {
+                            dialog.hide()
+                            openMap(unauthorizedPersonData[position].latitude, unauthorizedPersonData[position].longitude)
+                        }
+                    } else {
+                        locationButton.visibility = View.INVISIBLE
+                    }
+
+                    // For loading and opening image
+                    val imageView = (dialog.findViewById<View>(R.id.search_data_image) as ImageView)
+                    if (unauthorizedPersonData[position].photo != null) {
+                        imageView.setOnClickListener {
+                            dialog.hide()
+                            openImage(unauthorizedPersonData[position].photo)
+                        }
+                        Glide.with(this).load(unauthorizedPersonData[position].photo).into(imageView)
+                    } else {
+                        imageView.setImageResource(R.drawable.im_unauthorized_person)
+                    }
+                    dialog.show()
+                }
 
             }
             URL.CRIME_MEMO -> {
@@ -576,6 +615,7 @@ public class SearchData : AppCompatActivity() {
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(imageURL))
         this.startActivity(intent)
     }
+
     private fun openMap(latitude: Float, longitude: Float) {
             val mapUri = Uri.parse("geo:0,0?q=${latitude},${longitude}")
             val mapIntent = Intent(Intent.ACTION_VIEW, mapUri)
