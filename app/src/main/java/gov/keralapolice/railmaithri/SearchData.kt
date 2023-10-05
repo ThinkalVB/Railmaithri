@@ -26,6 +26,7 @@ import gov.keralapolice.railmaithri.adapters.PoiLA
 import gov.keralapolice.railmaithri.adapters.RailVolunteerLA
 import gov.keralapolice.railmaithri.adapters.RunOverLA
 import gov.keralapolice.railmaithri.adapters.StrangerCheckLA
+import gov.keralapolice.railmaithri.adapters.SurakshaSamithiMemberLA
 import gov.keralapolice.railmaithri.adapters.UnauthorizedPersonLA
 import gov.keralapolice.railmaithri.models.IncidentReportMD
 import gov.keralapolice.railmaithri.models.LostPropertyMD
@@ -33,6 +34,7 @@ import gov.keralapolice.railmaithri.models.PoiMD
 import gov.keralapolice.railmaithri.models.RailVolunteerMD
 import gov.keralapolice.railmaithri.models.RunOverMD
 import gov.keralapolice.railmaithri.models.StrangerCheckMD
+import gov.keralapolice.railmaithri.models.SurakshaSamithiMemberMD
 import gov.keralapolice.railmaithri.models.UnauthorizedPersonMD
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -429,7 +431,36 @@ public class SearchData : AppCompatActivity() {
 
             }
             URL.SURAKSHA_SAMITHI_MEMBERS -> {
+                val surakshaSamithiMemberData = gson.fromJson(formData!!.toString(), Array<SurakshaSamithiMemberMD>::class.java).toList()
+                dialog.setContentView(R.layout.search_data_popup)
+                val myListAdapter    = SurakshaSamithiMemberLA(this@SearchData, surakshaSamithiMemberData)
+                listData.adapter     = myListAdapter
 
+                listData.setOnItemClickListener { parent, view, position, id ->
+                    // For loading attribute values
+                    addAttribute(dialog, R.id.att1, "Suraksha Samithi", R.id.val1, surakshaSamithiMemberData[position].suraksha_samithi_label)
+                    addAttribute(dialog, R.id.att2, "Name", R.id.val2, surakshaSamithiMemberData[position].name)
+                    addAttribute(dialog, R.id.att3, "Address", R.id.val3, surakshaSamithiMemberData[position].address)
+                    addAttribute(dialog, R.id.att4, "Mobile Number", R.id.val4, surakshaSamithiMemberData[position].mobile_number)
+                    addAttribute(dialog, R.id.att5, "Email", R.id.val5, surakshaSamithiMemberData[position].email)
+
+                    // For opening location in google maps
+                    val locationButton = (dialog.findViewById<View>(R.id.open_location) as Button)
+                    locationButton.visibility = View.INVISIBLE
+
+                    // For loading and opening image
+                    val imageView = (dialog.findViewById<View>(R.id.search_data_image) as ImageView)
+                    if (surakshaSamithiMemberData[position].photo != null) {
+                        imageView.setOnClickListener {
+                            dialog.hide()
+                            openImage(surakshaSamithiMemberData[position].photo)
+                        }
+                        Glide.with(this).load(surakshaSamithiMemberData[position].photo).into(imageView)
+                    } else {
+                        imageView.setImageResource(R.drawable.im_suraksha_samithi_member)
+                    }
+                    dialog.show()
+                }
             }
             URL.RAIL_VOLUNTEER -> {
                 val railVolunteerData  = gson.fromJson(formData!!.toString(), Array<RailVolunteerMD>::class.java).toList()
