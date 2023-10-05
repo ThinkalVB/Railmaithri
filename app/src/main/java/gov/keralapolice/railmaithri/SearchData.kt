@@ -21,6 +21,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.google.gson.GsonBuilder
 import gov.keralapolice.railmaithri.adapters.AbandonedPropertyLA
+import gov.keralapolice.railmaithri.adapters.CrimeMemoLA
 import gov.keralapolice.railmaithri.adapters.EmergencyContactLA
 import gov.keralapolice.railmaithri.adapters.IncidentReportLA
 import gov.keralapolice.railmaithri.adapters.IntelligenceInformationLA
@@ -35,6 +36,7 @@ import gov.keralapolice.railmaithri.adapters.StrangerCheckLA
 import gov.keralapolice.railmaithri.adapters.SurakshaSamithiMemberLA
 import gov.keralapolice.railmaithri.adapters.UnauthorizedPersonLA
 import gov.keralapolice.railmaithri.models.AbandonedPropertyMD
+import gov.keralapolice.railmaithri.models.CrimeMemoMD
 import gov.keralapolice.railmaithri.models.EmergencyContactMD
 import gov.keralapolice.railmaithri.models.IncidentReportMD
 import gov.keralapolice.railmaithri.models.IntelligenceInformationMD
@@ -591,7 +593,35 @@ public class SearchData : AppCompatActivity() {
 
             }
             URL.CRIME_MEMO -> {
+                val crimeMemoData = gson.fromJson(formData!!.toString(), Array<CrimeMemoMD>::class.java).toList()
+                dialog.setContentView(R.layout.search_data_popup)
+                val myListAdapter    = CrimeMemoLA(this@SearchData, crimeMemoData)
+                listData.adapter     = myListAdapter
 
+                listData.setOnItemClickListener { parent, view, position, id ->
+                    // For loading attribute values
+                    addAttribute(dialog, R.id.att1, "Category ", R.id.val1, crimeMemoData[position].crime_memo_category_label)
+                    addAttribute(dialog, R.id.att2, "Memo Details", R.id.val2, crimeMemoData[position].memo_details)
+                    addAttribute(dialog, R.id.att3, "Police Station", R.id.val3, crimeMemoData[position].police_station_label.toString())
+
+
+                    // For opening location in google maps
+                    val locationButton = (dialog.findViewById<View>(R.id.open_location) as Button)
+                    locationButton.visibility = View.INVISIBLE
+
+                    // For loading and opening image
+                    val imageView = (dialog.findViewById<View>(R.id.search_data_image) as ImageView)
+                    if (crimeMemoData[position].photo != null) {
+                        imageView.setOnClickListener {
+                            dialog.hide()
+                            openImage(crimeMemoData[position].photo)
+                        }
+                        Glide.with(this).load(crimeMemoData[position].photo).into(imageView)
+                    } else {
+                        imageView.setImageResource(R.drawable.im_crime_memo)
+                    }
+                    dialog.show()
+                }
             }
             URL.SURAKSHA_SAMITHI_MEMBERS -> {
                 val surakshaSamithiMemberData = gson.fromJson(formData!!.toString(), Array<SurakshaSamithiMemberMD>::class.java).toList()
