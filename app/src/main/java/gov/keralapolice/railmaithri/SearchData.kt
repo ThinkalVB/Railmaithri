@@ -23,6 +23,7 @@ import com.google.gson.GsonBuilder
 import gov.keralapolice.railmaithri.adapters.IncidentReportLA
 import gov.keralapolice.railmaithri.adapters.LostPropertyLA
 import gov.keralapolice.railmaithri.adapters.PoiLA
+import gov.keralapolice.railmaithri.adapters.RailMaithriMeetingLA
 import gov.keralapolice.railmaithri.adapters.RailVolunteerLA
 import gov.keralapolice.railmaithri.adapters.ReliablePersonLA
 import gov.keralapolice.railmaithri.adapters.RunOverLA
@@ -32,6 +33,7 @@ import gov.keralapolice.railmaithri.adapters.UnauthorizedPersonLA
 import gov.keralapolice.railmaithri.models.IncidentReportMD
 import gov.keralapolice.railmaithri.models.LostPropertyMD
 import gov.keralapolice.railmaithri.models.PoiMD
+import gov.keralapolice.railmaithri.models.RailMaithriMeetingMD
 import gov.keralapolice.railmaithri.models.RailVolunteerMD
 import gov.keralapolice.railmaithri.models.ReliablePersonMD
 import gov.keralapolice.railmaithri.models.RunOverMD
@@ -530,7 +532,39 @@ public class SearchData : AppCompatActivity() {
                 }
             }
             URL.RAILMAITHRI_MEETING -> {
+                val railMaithriMeetingData = gson.fromJson(formData!!.toString(), Array<RailMaithriMeetingMD>::class.java).toList()
+                dialog.setContentView(R.layout.search_data_popup)
+                val myListAdapter    = RailMaithriMeetingLA(this@SearchData, railMaithriMeetingData)
+                listData.adapter     = myListAdapter
 
+                listData.setOnItemClickListener { parent, view, position, id ->
+                    // For loading attribute values
+                    addAttribute(dialog, R.id.att1, "Police Station", R.id.val1, railMaithriMeetingData[position].police_station_label)
+                    addAttribute(dialog, R.id.att2, "Meeting Type", R.id.val2, railMaithriMeetingData[position].meeting_type_label)
+                    addAttribute(dialog, R.id.att3, "Meeting Date", R.id.val3, railMaithriMeetingData[position].meeting_date
+                        .take(16).replace("T", "\t"))
+                    addAttribute(dialog, R.id.att4, "Participants", R.id.val4, railMaithriMeetingData[position].participants)
+                    addAttribute(dialog, R.id.att5, "Next Meeting Date", R.id.val5, railMaithriMeetingData[position].next_meeting_date
+                        .take(16).replace("T", "\t"))
+                    addAttribute(dialog, R.id.att6, "Gist Of Decision Taken", R.id.val6, railMaithriMeetingData[position].gist_of_decisions_taken)
+
+                    // For opening location in google maps
+                    val locationButton = (dialog.findViewById<View>(R.id.open_location) as Button)
+                    locationButton.visibility = View.INVISIBLE
+
+                    // For loading and opening image
+                    val imageView = (dialog.findViewById<View>(R.id.search_data_image) as ImageView)
+                    if (railMaithriMeetingData[position].photo != null) {
+                        imageView.setOnClickListener {
+                            dialog.hide()
+                            openImage(railMaithriMeetingData[position].photo)
+                        }
+                        Glide.with(this).load(railMaithriMeetingData[position].photo).into(imageView)
+                    } else {
+                        imageView.setImageResource(R.drawable.im_railmaithri_meeting)
+                    }
+                    dialog.show()
+                }
             }
             URL.BEAT_DIARY -> {
 
