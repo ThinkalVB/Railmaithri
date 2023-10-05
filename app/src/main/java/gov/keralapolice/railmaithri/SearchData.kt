@@ -20,6 +20,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.google.gson.GsonBuilder
+import gov.keralapolice.railmaithri.adapters.AbandonedPropertyLA
 import gov.keralapolice.railmaithri.adapters.EmergencyContactLA
 import gov.keralapolice.railmaithri.adapters.IncidentReportLA
 import gov.keralapolice.railmaithri.adapters.IntelligenceInformationLA
@@ -33,6 +34,7 @@ import gov.keralapolice.railmaithri.adapters.RunOverLA
 import gov.keralapolice.railmaithri.adapters.StrangerCheckLA
 import gov.keralapolice.railmaithri.adapters.SurakshaSamithiMemberLA
 import gov.keralapolice.railmaithri.adapters.UnauthorizedPersonLA
+import gov.keralapolice.railmaithri.models.AbandonedPropertyMD
 import gov.keralapolice.railmaithri.models.EmergencyContactMD
 import gov.keralapolice.railmaithri.models.IncidentReportMD
 import gov.keralapolice.railmaithri.models.IntelligenceInformationMD
@@ -399,7 +401,38 @@ public class SearchData : AppCompatActivity() {
                 }
             }
             URL.ABANDONED_PROPERTY -> {
+                val abandonedPropertyData = gson.fromJson(formData!!.toString(), Array<AbandonedPropertyMD>::class.java).toList()
+                dialog.setContentView(R.layout.search_data_popup)
+                val myListAdapter    = AbandonedPropertyLA(this@SearchData, abandonedPropertyData)
+                listData.adapter     = myListAdapter
 
+                listData.setOnItemClickListener { parent, view, position, id ->
+                    // For loading attribute values
+                    addAttribute(dialog, R.id.att1, "Category ", R.id.val1, abandonedPropertyData[position].abandoned_property_category_label)
+                    addAttribute(dialog, R.id.att2, "Crime Case Details", R.id.val2, abandonedPropertyData[position].crime_case_details)
+                    addAttribute(dialog, R.id.att3, "Whether Seized", R.id.val3, abandonedPropertyData[position].seized_or_not.toString())
+                    addAttribute(dialog, R.id.att4, "Remarks", R.id.val4, abandonedPropertyData[position].remarks)
+                    addAttribute(dialog, R.id.att5, "Action Remarks", R.id.val5, abandonedPropertyData[position].action_remarks)
+                    addAttribute(dialog, R.id.att6, "Phone Number", R.id.val6, abandonedPropertyData[position].phone_no)
+                    addAttribute(dialog, R.id.att7, "Police Station", R.id.val7, abandonedPropertyData[position].police_station_label)
+
+                    // For opening location in google maps
+                    val locationButton = (dialog.findViewById<View>(R.id.open_location) as Button)
+                    locationButton.visibility = View.INVISIBLE
+
+                    // For loading and opening image
+                    val imageView = (dialog.findViewById<View>(R.id.search_data_image) as ImageView)
+                    if (abandonedPropertyData[position].photo != null) {
+                        imageView.setOnClickListener {
+                            dialog.hide()
+                            openImage(abandonedPropertyData[position].photo)
+                        }
+                        Glide.with(this).load(abandonedPropertyData[position].photo).into(imageView)
+                    } else {
+                        imageView.setImageResource(R.drawable.im_abandoned_property)
+                    }
+                    dialog.show()
+                }
             }
             URL.RELIABLE_PERSON -> {
                 val reliablePersonData = gson.fromJson(formData!!.toString(), Array<ReliablePersonMD>::class.java).toList()
