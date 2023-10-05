@@ -20,6 +20,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.google.gson.GsonBuilder
+import gov.keralapolice.railmaithri.adapters.EmergencyContactLA
 import gov.keralapolice.railmaithri.adapters.IncidentReportLA
 import gov.keralapolice.railmaithri.adapters.IntelligenceInformationLA
 import gov.keralapolice.railmaithri.adapters.LostPropertyLA
@@ -32,6 +33,7 @@ import gov.keralapolice.railmaithri.adapters.RunOverLA
 import gov.keralapolice.railmaithri.adapters.StrangerCheckLA
 import gov.keralapolice.railmaithri.adapters.SurakshaSamithiMemberLA
 import gov.keralapolice.railmaithri.adapters.UnauthorizedPersonLA
+import gov.keralapolice.railmaithri.models.EmergencyContactMD
 import gov.keralapolice.railmaithri.models.IncidentReportMD
 import gov.keralapolice.railmaithri.models.IntelligenceInformationMD
 import gov.keralapolice.railmaithri.models.LostPropertyMD
@@ -432,7 +434,48 @@ public class SearchData : AppCompatActivity() {
                 }
             }
             URL.EMERGENCY_CONTACTS -> {
+                val emergencyContactData = gson.fromJson(formData!!.toString(), Array<EmergencyContactMD>::class.java).toList()
+                dialog.setContentView(R.layout.search_data_popup)
+                val myListAdapter    = EmergencyContactLA(this@SearchData, emergencyContactData)
+                listData.adapter     = myListAdapter
 
+                listData.setOnItemClickListener { parent, view, position, id ->
+                    // For loading attribute values
+                    addAttribute(dialog, R.id.att1, "Category ", R.id.val1, emergencyContactData[position].contacts_category_label)
+                    addAttribute(dialog, R.id.att2, "Name", R.id.val2, emergencyContactData[position].name)
+                    addAttribute(dialog, R.id.att3, "Mobile Number", R.id.val3, emergencyContactData[position].contact_number)
+                    addAttribute(dialog, R.id.att4, "Email", R.id.val4, emergencyContactData[position].email)
+                    addAttribute(dialog, R.id.att5, "District", R.id.val5, emergencyContactData[position].district_label)
+                    addAttribute(dialog, R.id.att6, "Remarks", R.id.val6, emergencyContactData[position].remarks)
+                    addAttribute(dialog, R.id.att7, "Police Station", R.id.val7, emergencyContactData[position].police_station_label)
+                    addAttribute(dialog, R.id.att8, "Railway Station", R.id.val8, emergencyContactData[position].railway_station_label)
+
+                    // For opening location in google maps
+                    val locationButton = (dialog.findViewById<View>(R.id.open_location) as Button)
+                    if (emergencyContactData[position].latitude != null) {
+                        locationButton.visibility = View.VISIBLE
+                        locationButton.setOnClickListener {
+                            dialog.hide()
+                            openMap(emergencyContactData[position].latitude, emergencyContactData[position].longitude)
+                        }
+                    } else {
+                        locationButton.visibility = View.INVISIBLE
+                    }
+
+
+                    // For loading and opening image
+                    val imageView = (dialog.findViewById<View>(R.id.search_data_image) as ImageView)
+                    if (emergencyContactData[position].photo != null) {
+                        imageView.setOnClickListener {
+                            dialog.hide()
+                            openImage(emergencyContactData[position].photo)
+                        }
+                        Glide.with(this).load(emergencyContactData[position].photo).into(imageView)
+                    } else {
+                        imageView.setImageResource(R.drawable.im_emergency_contact)
+                    }
+                    dialog.show()
+                }
             }
             URL.POI -> {
                 val poiData = gson.fromJson(formData!!.toString(), Array<PoiMD>::class.java).toList()
