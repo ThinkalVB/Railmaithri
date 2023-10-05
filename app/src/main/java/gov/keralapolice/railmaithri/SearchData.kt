@@ -22,6 +22,7 @@ import com.bumptech.glide.Glide
 import com.google.gson.GsonBuilder
 import gov.keralapolice.railmaithri.adapters.IncidentReportLA
 import gov.keralapolice.railmaithri.adapters.LostPropertyLA
+import gov.keralapolice.railmaithri.adapters.PassengerStatisticsLA
 import gov.keralapolice.railmaithri.adapters.PoiLA
 import gov.keralapolice.railmaithri.adapters.RailMaithriMeetingLA
 import gov.keralapolice.railmaithri.adapters.RailVolunteerLA
@@ -32,6 +33,7 @@ import gov.keralapolice.railmaithri.adapters.SurakshaSamithiMemberLA
 import gov.keralapolice.railmaithri.adapters.UnauthorizedPersonLA
 import gov.keralapolice.railmaithri.models.IncidentReportMD
 import gov.keralapolice.railmaithri.models.LostPropertyMD
+import gov.keralapolice.railmaithri.models.PassengerStatisticsMD
 import gov.keralapolice.railmaithri.models.PoiMD
 import gov.keralapolice.railmaithri.models.RailMaithriMeetingMD
 import gov.keralapolice.railmaithri.models.RailVolunteerMD
@@ -303,7 +305,19 @@ public class SearchData : AppCompatActivity() {
                 }
             }
             URL.PASSENGER_STATISTICS -> {
+                val passengerStatisticsData = gson.fromJson(formData!!.toString(), Array<PassengerStatisticsMD>::class.java).toList()
+                dialog.setContentView(R.layout.search_data_popup)
+                val myListAdapter    = PassengerStatisticsLA(this@SearchData, passengerStatisticsData)
+                listData.adapter     = myListAdapter
 
+                listData.setOnItemClickListener { parent, view, position, id ->
+                    // For loading attribute values
+                    addAttribute(dialog, R.id.att1, "Train ", R.id.val1, passengerStatisticsData[position].train_label)
+                    addAttribute(dialog, R.id.att2, "Density", R.id.val2, passengerStatisticsData[position].density_label)
+                    addAttribute(dialog, R.id.att3, "Compartment Type", R.id.val3, passengerStatisticsData[position].compartment_type_label)
+                    addAttribute(dialog, R.id.att4, "Coach Number", R.id.val4, passengerStatisticsData[position].coach)
+                    dialog.hide()
+                }
             }
             URL.INTELLIGENCE_INFORMATION -> {
 
