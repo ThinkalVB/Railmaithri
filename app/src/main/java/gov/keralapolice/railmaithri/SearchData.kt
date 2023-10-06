@@ -33,6 +33,7 @@ import gov.keralapolice.railmaithri.adapters.RailMaithriMeetingLA
 import gov.keralapolice.railmaithri.adapters.RailVolunteerLA
 import gov.keralapolice.railmaithri.adapters.ReliablePersonLA
 import gov.keralapolice.railmaithri.adapters.RunOverLA
+import gov.keralapolice.railmaithri.adapters.ShopsLA
 import gov.keralapolice.railmaithri.adapters.StrangerCheckLA
 import gov.keralapolice.railmaithri.adapters.SurakshaSamithiMemberLA
 import gov.keralapolice.railmaithri.adapters.UnauthorizedPersonLA
@@ -49,6 +50,7 @@ import gov.keralapolice.railmaithri.models.RailMaithriMeetingMD
 import gov.keralapolice.railmaithri.models.RailVolunteerMD
 import gov.keralapolice.railmaithri.models.ReliablePersonMD
 import gov.keralapolice.railmaithri.models.RunOverMD
+import gov.keralapolice.railmaithri.models.ShopsMD
 import gov.keralapolice.railmaithri.models.StrangerCheckMD
 import gov.keralapolice.railmaithri.models.SurakshaSamithiMemberMD
 import gov.keralapolice.railmaithri.models.UnauthorizedPersonMD
@@ -780,7 +782,47 @@ public class SearchData : AppCompatActivity() {
                 }
             }
             URL.SHOPS -> {
+                val shopsData = gson.fromJson(formData!!.toString(), Array<ShopsMD>::class.java).toList()
+                dialog.setContentView(R.layout.search_data_popup)
+                val myListAdapter    = ShopsLA(this@SearchData, shopsData)
+                listData.adapter     = myListAdapter
 
+                listData.setOnItemClickListener { parent, view, position, id ->
+                    // For loading attribute values
+                    addAttribute(dialog, R.id.att1, "Shop Category ", R.id.val1, shopsData[position].shop_category_label)
+                    addAttribute(dialog, R.id.att2, "Shop Name", R.id.val2, shopsData[position].name)
+                    addAttribute(dialog, R.id.att3, "Owner Name", R.id.val3, shopsData[position].owner_name)
+                    addAttribute(dialog, R.id.att4, "Aadhar Number", R.id.val4, shopsData[position].aadhar_number)
+                    addAttribute(dialog, R.id.att5, "Mobile Number", R.id.val5, shopsData[position].contact_number)
+                    addAttribute(dialog, R.id.att6, "License Number", R.id.val6, shopsData[position].licence_number)
+                    addAttribute(dialog, R.id.att7, "Railway Station", R.id.val7, shopsData[position].railway_station_label)
+                    addAttribute(dialog, R.id.att8, "Platform Number", R.id.val8, shopsData[position].platform_number.toString())
+
+                    // For opening location in google maps
+                    val locationButton = (dialog.findViewById<View>(R.id.open_location) as Button)
+                    if (shopsData[position].latitude != null) {
+                        locationButton.visibility = View.VISIBLE
+                        locationButton.setOnClickListener {
+                            dialog.hide()
+                            openMap(shopsData[position].latitude, shopsData[position].longitude)
+                        }
+                    } else {
+                        locationButton.visibility = View.INVISIBLE
+                    }
+
+                    // For loading and opening image
+                    val imageView = (dialog.findViewById<View>(R.id.search_data_image) as ImageView)
+                    if (shopsData[position].photo != null) {
+                        imageView.setOnClickListener {
+                            dialog.hide()
+                            openImage(shopsData[position].photo)
+                        }
+                        Glide.with(this).load(shopsData[position].photo).into(imageView)
+                    } else {
+                        imageView.setImageResource(R.drawable.im_shop_and_labours)
+                    }
+                    dialog.show()
+                }
             }
             URL.RUN_OVER -> {
                 val runOverData  = gson.fromJson(formData!!.toString(), Array<RunOverMD>::class.java).toList()
