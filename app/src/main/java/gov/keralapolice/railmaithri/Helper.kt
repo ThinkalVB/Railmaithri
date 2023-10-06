@@ -29,11 +29,12 @@ class Helper {
     companion object {
         // Get current UTC timestamp
         fun getUTC() : String{
-            return TimeZone.getTimeZone("UTC").let {
-                val calendar  = Calendar.getInstance(it)
-                val formatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US)
-                formatter.format(calendar.time)
-            }
+            return java.time.LocalDateTime.now().toString()
+//            return TimeZone.getTimeZone("UTC").let {
+//                val calendar  = Calendar.getInstance(it)
+//                val formatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US)
+//                formatter.format(calendar.time)
+//            }
         }
 
         // Save a value against a key from shared preference

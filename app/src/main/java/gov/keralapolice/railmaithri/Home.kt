@@ -284,6 +284,7 @@ class Home : AppCompatActivity() {
         }
 
         startTracking()
+        Log.e("Railwayman", java.time.LocalDateTime.now().toString())
     }
 
     private fun startTracking() {
@@ -373,6 +374,16 @@ class Home : AppCompatActivity() {
         task: LocationModel? = null
     ) {
         try {
+            if (accuracy.toFloat() > 50) {
+                //remove from DB
+                if (isFromDB) {
+                    DatabaseClient.getInstance(applicationContext).appDatabase
+                        .taskLocation()
+                        .delete(task)
+                }
+                return
+            }
+
             val locationData = JSONObject()
             locationData.put("beat_officer", officerID)
             locationData.put("latitude", latitude)
