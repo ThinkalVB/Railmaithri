@@ -21,6 +21,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.google.gson.GsonBuilder
 import gov.keralapolice.railmaithri.adapters.AbandonedPropertyLA
+import gov.keralapolice.railmaithri.adapters.BeatDiaryLA
 import gov.keralapolice.railmaithri.adapters.CrimeMemoLA
 import gov.keralapolice.railmaithri.adapters.EmergencyContactLA
 import gov.keralapolice.railmaithri.adapters.IncidentReportLA
@@ -36,6 +37,7 @@ import gov.keralapolice.railmaithri.adapters.StrangerCheckLA
 import gov.keralapolice.railmaithri.adapters.SurakshaSamithiMemberLA
 import gov.keralapolice.railmaithri.adapters.UnauthorizedPersonLA
 import gov.keralapolice.railmaithri.models.AbandonedPropertyMD
+import gov.keralapolice.railmaithri.models.BeatDiaryMD
 import gov.keralapolice.railmaithri.models.CrimeMemoMD
 import gov.keralapolice.railmaithri.models.EmergencyContactMD
 import gov.keralapolice.railmaithri.models.IncidentReportMD
@@ -317,15 +319,6 @@ public class SearchData : AppCompatActivity() {
                 dialog.setContentView(R.layout.search_data_popup)
                 val myListAdapter    = PassengerStatisticsLA(this@SearchData, passengerStatisticsData)
                 listData.adapter     = myListAdapter
-
-                listData.setOnItemClickListener { parent, view, position, id ->
-                    // For loading attribute values
-                    addAttribute(dialog, R.id.att1, "Train ", R.id.val1, passengerStatisticsData[position].train_label)
-                    addAttribute(dialog, R.id.att2, "Density", R.id.val2, passengerStatisticsData[position].density_label)
-                    addAttribute(dialog, R.id.att3, "Compartment Type", R.id.val3, passengerStatisticsData[position].compartment_type_label)
-                    addAttribute(dialog, R.id.att4, "Coach Number", R.id.val4, passengerStatisticsData[position].coach)
-                    dialog.hide()
-                }
             }
             URL.INTELLIGENCE_INFORMATION -> {
                 val intelligenceInformationData = gson.fromJson(formData!!.toString(), Array<IntelligenceInformationMD>::class.java).toList()
@@ -727,7 +720,10 @@ public class SearchData : AppCompatActivity() {
                 }
             }
             URL.BEAT_DIARY -> {
-
+                val beatDiaryData    = gson.fromJson(formData!!.toString(), Array<BeatDiaryMD>::class.java).toList()
+                dialog.setContentView(R.layout.search_data_popup)
+                val myListAdapter    = BeatDiaryLA(this@SearchData, beatDiaryData)
+                listData.adapter     = myListAdapter
             }
             URL.INCIDENT_REPORT -> {
                 val incidentData  = gson.fromJson(formData!!.toString(), Array<IncidentReportMD>::class.java).toList()
