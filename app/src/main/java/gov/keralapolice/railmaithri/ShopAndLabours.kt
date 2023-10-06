@@ -247,6 +247,7 @@ class ShopAndLabours : AppCompatActivity() {
             licenseNumber.exportData(formData)
             railwayStation.exportData(formData)
             platformNumber.exportData(formData)
+            locationUtil.exportLocation(formData)
         } catch (e: Exception){
             Helper.showToast(this, e.message!!)
             return null
