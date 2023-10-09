@@ -97,6 +97,7 @@ class CrimeMemo : AppCompatActivity() {
             isRequired = Helper.resolveIsRequired(true, mode)
         )
         crimeDetails = FieldEditText(this,
+            fieldMaxLines = 16,
             fieldType = "multiline",
             fieldLabel = "memo_details",
             fieldName = "Memo Details",

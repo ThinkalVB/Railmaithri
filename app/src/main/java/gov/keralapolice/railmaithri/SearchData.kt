@@ -291,7 +291,7 @@ public class SearchData : AppCompatActivity() {
                     }
 
                     // For opening location in google maps
-                    val locationButton = (dialog.findViewById<View>(R.id.open_location) as Button)
+                    val locationButton = (dialog.findViewById<View>(R.id.open_location) as ImageButton)
                     if (strangerData[position].latitude != null) {
                         locationButton.visibility = View.VISIBLE
                         locationButton.setOnClickListener {
@@ -337,7 +337,7 @@ public class SearchData : AppCompatActivity() {
                     addAttribute(dialog, R.id.att5, "Remarks", R.id.val5, intelligenceInformationData[position].remarks)
 
                     // For opening location in google maps
-                    val locationButton = (dialog.findViewById<View>(R.id.open_location) as Button)
+                    val locationButton = (dialog.findViewById<View>(R.id.open_location) as ImageButton)
                     if (intelligenceInformationData[position].latitude != null) {
                         locationButton.visibility = View.VISIBLE
                         locationButton.setOnClickListener {
@@ -380,7 +380,7 @@ public class SearchData : AppCompatActivity() {
                     addAttribute(dialog, R.id.att7, "Description", R.id.val7, lostPropertyData[position].description)
 
                     // For opening location in google maps
-                    val locationButton = (dialog.findViewById<View>(R.id.open_location) as Button)
+                    val locationButton = (dialog.findViewById<View>(R.id.open_location) as ImageButton)
                     locationButton.visibility = View.INVISIBLE
 
                     // For loading and opening image
@@ -414,7 +414,7 @@ public class SearchData : AppCompatActivity() {
                     addAttribute(dialog, R.id.att7, "Police Station", R.id.val7, abandonedPropertyData[position].police_station_label)
 
                     // For opening location in google maps
-                    val locationButton = (dialog.findViewById<View>(R.id.open_location) as Button)
+                    val locationButton = (dialog.findViewById<View>(R.id.open_location) as ImageButton)
                     locationButton.visibility = View.INVISIBLE
 
                     // For loading and opening image
@@ -446,7 +446,7 @@ public class SearchData : AppCompatActivity() {
                     addAttribute(dialog, R.id.att5, "Description", R.id.val5, reliablePersonData[position].description)
 
                     // For opening location in google maps
-                    val locationButton = (dialog.findViewById<View>(R.id.open_location) as Button)
+                    val locationButton = (dialog.findViewById<View>(R.id.open_location) as ImageButton)
                     locationButton.visibility = View.INVISIBLE
 
                     // For loading and opening image
@@ -481,7 +481,7 @@ public class SearchData : AppCompatActivity() {
                     addAttribute(dialog, R.id.att8, "Railway Station", R.id.val8, emergencyContactData[position].railway_station_label)
 
                     // For opening location in google maps
-                    val locationButton = (dialog.findViewById<View>(R.id.open_location) as Button)
+                    val locationButton = (dialog.findViewById<View>(R.id.open_location) as ImageButton)
                     if (emergencyContactData[position].latitude != null) {
                         locationButton.visibility = View.VISIBLE
                         locationButton.setOnClickListener {
@@ -522,7 +522,7 @@ public class SearchData : AppCompatActivity() {
                     addAttribute(dialog, R.id.att5, "District", R.id.val5, poiData[position].district_label)
 
                     // For opening location in google maps
-                    val locationButton = (dialog.findViewById<View>(R.id.open_location) as Button)
+                    val locationButton = (dialog.findViewById<View>(R.id.open_location) as ImageButton)
                     if (poiData[position].latitude != null) {
                         locationButton.visibility = View.VISIBLE
                         locationButton.setOnClickListener {
@@ -561,7 +561,7 @@ public class SearchData : AppCompatActivity() {
                     addAttribute(dialog, R.id.att4, "Description", R.id.val4, unauthorizedPersonData[position].description)
 
                     // For opening location in google maps
-                    val locationButton = (dialog.findViewById<View>(R.id.open_location) as Button)
+                    val locationButton = (dialog.findViewById<View>(R.id.open_location) as ImageButton)
                     if (unauthorizedPersonData[position].latitude != null) {
                         locationButton.visibility = View.VISIBLE
                         locationButton.setOnClickListener {
@@ -601,7 +601,7 @@ public class SearchData : AppCompatActivity() {
 
 
                     // For opening location in google maps
-                    val locationButton = (dialog.findViewById<View>(R.id.open_location) as Button)
+                    val locationButton = (dialog.findViewById<View>(R.id.open_location) as ImageButton)
                     locationButton.visibility = View.INVISIBLE
 
                     // For loading and opening image
@@ -633,7 +633,7 @@ public class SearchData : AppCompatActivity() {
                     addAttribute(dialog, R.id.att5, "Email", R.id.val5, surakshaSamithiMemberData[position].email)
 
                     // For opening location in google maps
-                    val locationButton = (dialog.findViewById<View>(R.id.open_location) as Button)
+                    val locationButton = (dialog.findViewById<View>(R.id.open_location) as ImageButton)
                     locationButton.visibility = View.INVISIBLE
 
                     // For loading and opening image
@@ -669,7 +669,7 @@ public class SearchData : AppCompatActivity() {
                     addAttribute(dialog, R.id.att9, "Nearest station", R.id.val9, railVolunteerData[position].nearest_railway_station_label)
 
                     // For opening location in google maps
-                    val locationButton = (dialog.findViewById<View>(R.id.open_location) as Button)
+                    val locationButton = (dialog.findViewById<View>(R.id.open_location) as ImageButton)
                     locationButton.visibility = View.INVISIBLE
 
                     // For loading and opening image
@@ -704,7 +704,7 @@ public class SearchData : AppCompatActivity() {
                     addAttribute(dialog, R.id.att6, "Gist Of Decision Taken", R.id.val6, railMaithriMeetingData[position].gist_of_decisions_taken)
 
                     // For opening location in google maps
-                    val locationButton = (dialog.findViewById<View>(R.id.open_location) as Button)
+                    val locationButton = (dialog.findViewById<View>(R.id.open_location) as ImageButton)
                     locationButton.visibility = View.INVISIBLE
 
                     // For loading and opening image
@@ -756,7 +756,7 @@ public class SearchData : AppCompatActivity() {
                     }
 
                     // For opening location in google maps
-                    val locationButton = (dialog.findViewById<View>(R.id.open_location) as Button)
+                    val locationButton = (dialog.findViewById<View>(R.id.open_location) as ImageButton)
                     if (incidentData[position].latitude != null) {
                         locationButton.visibility = View.VISIBLE
                         locationButton.setOnClickListener {
@@ -799,7 +799,7 @@ public class SearchData : AppCompatActivity() {
                     addAttribute(dialog, R.id.att8, "Platform Number", R.id.val8, shopsData[position].platform_number.toString())
 
                     // For opening location in google maps
-                    val locationButton = (dialog.findViewById<View>(R.id.open_location) as Button)
+                    val locationButton = (dialog.findViewById<View>(R.id.open_location) as ImageButton)
                     if (shopsData[position].latitude != null) {
                         locationButton.visibility = View.VISIBLE
                         locationButton.setOnClickListener {
@@ -867,7 +867,7 @@ public class SearchData : AppCompatActivity() {
                     }
 
                     // For opening location in google maps
-                    val locationButton = (dialog.findViewById<View>(R.id.open_location) as Button)
+                    val locationButton = (dialog.findViewById<View>(R.id.open_location) as ImageButton)
                     locationButton.visibility = View.INVISIBLE
 
                     // For loading and opening image

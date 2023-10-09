@@ -373,14 +373,12 @@
                     <LinearLayout
                         android:layout_height="wrap_content"
                         android:gravity="center">
-                        <Button
+                        <ImageButton
                             android:id="@+id/open_location"
                             android:gravity="center"
-                            android:layout_width="128dp"
+                            android:layout_width="64dp"
                             android:layout_height="64dp"
-                            android:drawableTop="@drawable/ic_open_map"
-                            android:paddingVertical="16dp"
-                            android:backgroundTint="@color/FireBrick" />
+                            android:background="@drawable/im_google_map" />
                     </LinearLayout>
 
                 </TableLayout>

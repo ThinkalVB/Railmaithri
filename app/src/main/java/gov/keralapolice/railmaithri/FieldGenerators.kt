@@ -7,6 +7,7 @@ import android.graphics.Color
 import android.graphics.Typeface
 import android.icu.util.Calendar
 import android.text.InputType
+import android.view.Gravity
 import android.view.View
 import android.widget.*
 import org.json.JSONArray
@@ -77,6 +78,7 @@ class FieldEditText(context: Context,
             }
             "multiline" -> {
                 _editText.inputType = InputType.TYPE_TEXT_FLAG_MULTI_LINE
+                _editText.isVerticalScrollBarEnabled = true
             }
             "date" -> {
                 // No specific class is available hence simple text is used
@@ -114,6 +116,7 @@ class FieldEditText(context: Context,
         val adjustedFieldHeight = (fieldHeight * scale + 0.5f).toInt()
         _editText.setPadding(padding8dp, 0, padding8dp, 0)
         _editText.setBackgroundResource(R.drawable.rectangular_boarder)
+        _editText.gravity = Gravity.TOP
 
         _editText.layoutParams  = LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT,
