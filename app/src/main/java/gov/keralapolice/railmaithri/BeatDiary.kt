@@ -4,11 +4,14 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import org.json.JSONObject
+import org.w3c.dom.Text
 
 class BeatDiary : AppCompatActivity() {
     private lateinit var mode:          String
@@ -26,6 +29,22 @@ class BeatDiary : AppCompatActivity() {
         actionBT     = findViewById(R.id.action)
         note         = findViewById(R.id.note)
         utcTime      = Helper.getUTC()
+
+
+        val profile = JSONObject(Helper.getData(this, Storage.PROFILE)!!)
+        val beatData = profile.getJSONObject("last_beat_assignment")
+
+        val beatLabel = beatData.getString("beat_label")
+        val beatFrom = beatData.getString("from_time_label").slice(IntRange(0, 15)).replace("T", " ")
+        val beatTo = beatData.getString("to_time_label").slice(IntRange(0, 15)).replace("T", " ")
+        val assignmentNote = beatData.getString("assignment_note")
+
+        val assignmentNoteTV = findViewById<TextView>(R.id.assignmentNote)
+        val durationTV = findViewById<TextView>(R.id.duration)
+        val dutyNoteTV = findViewById<TextView>(R.id.dutyNote)
+        assignmentNoteTV.text = assignmentNote
+        durationTV.text = "${beatFrom} <-> ${beatTo}"
+        dutyNoteTV.text = beatLabel
 
         prepareActionButton()
         actionBT.setOnClickListener { performAction() }
