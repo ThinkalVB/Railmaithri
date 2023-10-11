@@ -156,15 +156,6 @@ class SavedData : AppCompatActivity() {
             resultLayout.addView(button)
         }
 
-        val beatDiary = loadFormData(this, Storage.BEAT_DIARY)
-        val bdKeys    = beatDiary.keys()
-        while (bdKeys.hasNext()) {
-            val bdKeys  = bdKeys.next()
-            val value   = beatDiary.getJSONObject(bdKeys)
-            val button  = BeatDiary.generateButton(this, value, Mode.UPDATE_FORM)
-            resultLayout.addView(button)
-        }
-
         val incidentReport = loadFormData(this, Storage.INCIDENT_REPORT)
         val irKeys         = incidentReport.keys()
         while (irKeys.hasNext()) {
@@ -338,17 +329,6 @@ class SavedData : AppCompatActivity() {
             val formData  = railMaithriMeeting.getJSONObject(rmKeys)
             CoroutineScope(Dispatchers.IO).launch {
                 sendFormData(URL.RAILMAITHRI_MEETING, Storage.RAILMAITHRI_MEETING, formData, token)
-            }
-        }
-
-        val beatDiary = loadFormData(this, Storage.BEAT_DIARY)
-        val bdKeys    = beatDiary.keys()
-        while (bdKeys.hasNext()) {
-            dataCount++
-            val bdKeys    = bdKeys.next()
-            val formData  = beatDiary.getJSONObject(bdKeys)
-            CoroutineScope(Dispatchers.IO).launch {
-                sendFormData(URL.BEAT_DIARY, Storage.BEAT_DIARY, formData, token)
             }
         }
 

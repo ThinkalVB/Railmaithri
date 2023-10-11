@@ -9,7 +9,9 @@ import android.view.Gravity
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.LinearLayout
 import android.widget.TextView
+import gov.keralapolice.railmaithri.Helper.Companion.loadFormData
 import org.json.JSONObject
 import org.w3c.dom.Text
 
@@ -30,7 +32,6 @@ class BeatDiary : AppCompatActivity() {
         note         = findViewById(R.id.note)
         utcTime      = Helper.getUTC()
 
-
         val profile = JSONObject(Helper.getData(this, Storage.PROFILE)!!)
         val beatData = profile.getJSONObject("last_beat_assignment")
 
@@ -38,14 +39,28 @@ class BeatDiary : AppCompatActivity() {
         val beatFrom = beatData.getString("from_time_label").slice(IntRange(0, 15)).replace("T", " ")
         val beatTo = beatData.getString("to_time_label").slice(IntRange(0, 15)).replace("T", " ")
         val assignmentNote = beatData.getString("assignment_note")
+        val assignmentOn = beatData.getString("assigned_on").slice(IntRange(0, 15)).replace("T", " ")
 
         val assignmentNoteTV = findViewById<TextView>(R.id.assignmentNote)
         val durationTV = findViewById<TextView>(R.id.duration)
         val dutyNoteTV = findViewById<TextView>(R.id.dutyNote)
+        val assignedOnTV = findViewById<TextView>(R.id.addedOn)
         assignmentNoteTV.text = assignmentNote
         durationTV.text = "${beatFrom} <-> ${beatTo}"
         dutyNoteTV.text = beatLabel
+        assignedOnTV.text = assignmentOn
 
+        val serverNotesLY = findViewById<LinearLayout>(R.id.serverNoteList)
+        val savedNotesLY = findViewById<LinearLayout>(R.id.savedNoteList)
+        val beatDiary = loadFormData(this, Storage.BEAT_DIARY)
+        val bdKeys    = beatDiary.keys()
+        while (bdKeys.hasNext()) {
+            val bdKeys  = bdKeys.next()
+            val value   = beatDiary.getJSONObject(bdKeys)
+            val button  = BeatDiary.generateButton(this, value, Mode.UPDATE_FORM)
+            savedNotesLY.addView(button)
+        }
+        
         prepareActionButton()
         actionBT.setOnClickListener { performAction() }
 
