@@ -38,6 +38,7 @@ class URL {
         const val PASSENGER_STATISTICS        = "$BASE_URL/api/v1/passenger_statistics/"
         const val STRANGER_CHECK              = "$BASE_URL/api/v1/stranger_check/"
         const val BEAT_DIARY                  = "$BASE_URL/api/v1/beat_diary/"
+        const val BEAT_ASSIGNMENT_DIARY       = "$BASE_URL/api/v1/beat_assignment_diary/"
         const val POI                         = "$BASE_URL/api/v1/poi/"
         const val EMERGENCY_CONTACTS          = "$BASE_URL/api/v1/contacts/"
         const val LOST_PROPERTY               = "$BASE_URL/api/v1/lost_property/"

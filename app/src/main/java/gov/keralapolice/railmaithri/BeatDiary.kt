@@ -43,28 +43,32 @@ class BeatDiary : AppCompatActivity() {
         beatData     = profile.getJSONObject("last_beat_assignment")
         showAssignmentData()
         showSavedData()
-        getServerData()
+        CoroutineScope(Dispatchers.IO).launch {
+            showServerData()
+        }
 
         saveBT.setOnClickListener { saveData() }
         syncBT.setOnClickListener { syncData() }
     }
 
     private fun showServerData() {
-        val serverNotesLY  = findViewById<LinearLayout>(R.id.serverNoteList)
-    }
-
-    private fun getServerData() {
-        val parameters = JSONObject()
-        val officerID = profile.getInt("id")
-        parameters.put("beat_officer", officerID)
-
+        val parameters = JSONObject().put("id", beatData.getString("id"))
         val token = Helper.getData(this, Storage.TOKEN)!!
-        val response = Helper.getFormData(URL.BEAT_DIARY, parameters, token)
+        val response = Helper.getFormData(URL.BEAT_ASSIGNMENT_DIARY, parameters, token)
         if (response.first == ResponseType.SUCCESS) {
             val resultData = JSONObject(response.second)
-            val formData = resultData.getJSONArray("results")
-            Log.e("ss", "" + formData.toString())
-//            Handler(Looper.getMainLooper()).post { renderFormData(formData) }
+            val serverNotes = resultData.getJSONArray("results").getJSONObject(0).getJSONArray("beatAssignmentToBeatDiaryPid")
+
+            Handler(Looper.getMainLooper()).post {
+                val serverNotesLY  = findViewById<LinearLayout>(R.id.serverNoteList)
+                serverNotesLY.removeAllViews()
+                (0 until serverNotes.length()).forEach {
+                    val serverNote = serverNotes.getJSONObject(it)
+                    val button   = generateButton(this, serverNote, false)
+                    serverNotesLY.addView(button)
+                    Log.e("Railmaithri", "" + serverNote.toString())
+                }
+            }
         } else {
             Helper.showToast(this, response.second)
         }
@@ -132,19 +136,21 @@ class BeatDiary : AppCompatActivity() {
         return formData
     }
 
-    fun generateButton(context: Context, formData: JSONObject): Button {
+    fun generateButton(context: Context, formData: JSONObject, isInteractive: Boolean=true): Button {
         val createdOn  = formData.getString("utc_timestamp").take(16).replace("T", "\t")
         val description= formData.getString("description")
 
-        val shortData = "$createdOn\n$description"
-        val button    = Button(context)
+        val shortData    = "$createdOn\n$description"
+        val button       = Button(context)
         button.isAllCaps = false
         button.gravity   = Gravity.START
         button.text      = shortData
-
-        button.setOnClickListener {
-            utcTime   = formData.getString("utc_timestamp")
-            note.setText(formData.getString("description"))
+        if(isInteractive){
+            button.setTextColor(getColor(R.color.Green))
+            button.setOnClickListener {
+                utcTime   = formData.getString("utc_timestamp")
+                note.setText(formData.getString("description"))
+            }
         }
         return button
     }
