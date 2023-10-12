@@ -3,6 +3,9 @@ package gov.keralapolice.railmaithri
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.widget.Button
@@ -10,11 +13,16 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
 import gov.keralapolice.railmaithri.Helper.Companion.loadFormData
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import org.json.JSONArray
 import org.json.JSONObject
 
 class BeatDiary : AppCompatActivity() {
     private lateinit var mode:          String
-    private lateinit var actionBT:      Button
+    private lateinit var saveBT:        Button
+    private lateinit var syncBT:        Button
 
     private lateinit var note:          EditText
     private lateinit var utcTime:       String
@@ -27,31 +35,52 @@ class BeatDiary : AppCompatActivity() {
         supportActionBar!!.hide()
 
         mode         = intent.getStringExtra("mode")!!
-        actionBT     = findViewById(R.id.action)
+        saveBT       = findViewById(R.id.save)
+        syncBT       = findViewById(R.id.sync)
         note         = findViewById(R.id.note)
         utcTime      = Helper.getUTC()
         profile      = JSONObject(Helper.getData(this, Storage.PROFILE)!!)
         beatData     = profile.getJSONObject("last_beat_assignment")
         showAssignmentData()
+        showSavedData()
+        getServerData()
 
+        saveBT.setOnClickListener { saveData() }
+        syncBT.setOnClickListener { syncData() }
+    }
+
+    private fun showServerData() {
         val serverNotesLY  = findViewById<LinearLayout>(R.id.serverNoteList)
+    }
+
+    private fun getServerData() {
+        val parameters = JSONObject()
+        val officerID = profile.getInt("id")
+        parameters.put("beat_officer", officerID)
+
+        val token = Helper.getData(this, Storage.TOKEN)!!
+        val response = Helper.getFormData(URL.BEAT_DIARY, parameters, token)
+        if (response.first == ResponseType.SUCCESS) {
+            val resultData = JSONObject(response.second)
+            val formData = resultData.getJSONArray("results")
+            Log.e("ss", "" + formData.toString())
+//            Handler(Looper.getMainLooper()).post { renderFormData(formData) }
+        } else {
+            Helper.showToast(this, response.second)
+        }
+    }
+
+    private fun showSavedData() {
         val savedNotesLY   = findViewById<LinearLayout>(R.id.savedNoteList)
         val beatDiary       = loadFormData(this, Storage.BEAT_DIARY)
         val bdKeys= beatDiary.keys()
+
+        savedNotesLY.removeAllViews()
         while (bdKeys.hasNext()) {
             val bdKeys   = bdKeys.next()
             val value = beatDiary.getJSONObject(bdKeys)
-            val button   = generateButton(this, value, Mode.UPDATE_FORM)
+            val button   = generateButton(this, value)
             savedNotesLY.addView(button)
-        }
-
-        prepareActionButton()
-        actionBT.setOnClickListener { performAction() }
-
-        if (mode == Mode.VIEW_FORM || mode == Mode.UPDATE_FORM) {
-            val formData = JSONObject(intent.getStringExtra("data")!!)
-            utcTime      = formData.getString("utc_timestamp")
-            note.setText(formData.getString("description"))
         }
     }
 
@@ -68,15 +97,26 @@ class BeatDiary : AppCompatActivity() {
         findViewById<TextView>(R.id.addedOn).text = assignmentOn
     }
 
-    private fun performAction() {
-        if (mode == Mode.NEW_FORM || mode == Mode.UPDATE_FORM) {
-            val formData = getFormData()
-            if (formData != null) {
-                val beatID  = beatData.getInt("id")
-                formData.put("beat_assignment", beatID)
-                formData.put("utc_timestamp", utcTime)
-                Helper.saveFormData(this, formData, Storage.BEAT_DIARY, utcTime)
-                finish()
+    private fun saveData() {
+        val formData = getFormData()
+        if (formData != null) {
+            val beatID  = beatData.getInt("id")
+            formData.put("beat_assignment", beatID)
+            formData.put("utc_timestamp", utcTime)
+            Helper.saveFormData(this, formData, Storage.BEAT_DIARY, utcTime)
+            finish()
+        }
+    }
+
+    private fun syncData() {
+        val token         = Helper.getData(this, Storage.TOKEN)!!
+        val beatDiary = loadFormData(this, Storage.BEAT_DIARY)
+        val bdKeys = beatDiary.keys()
+        while (bdKeys.hasNext()) {
+            val bdKeys    = bdKeys.next()
+            val formData  = beatDiary.getJSONObject(bdKeys)
+            CoroutineScope(Dispatchers.IO).launch {
+                sendFormData(URL.BEAT_DIARY, Storage.BEAT_DIARY, formData, token)
             }
         }
     }
@@ -92,16 +132,7 @@ class BeatDiary : AppCompatActivity() {
         return formData
     }
 
-    private fun prepareActionButton() {
-        if(mode == Mode.NEW_FORM || mode == Mode.UPDATE_FORM){
-            actionBT.text = "Save"
-        }
-        if(mode == Mode.VIEW_FORM) {
-            actionBT.visibility = View.GONE
-        }
-    }
-
-    fun generateButton(context: Context, formData: JSONObject, mode: String? = Mode.VIEW_FORM): Button {
+    fun generateButton(context: Context, formData: JSONObject): Button {
         val createdOn  = formData.getString("utc_timestamp").take(16).replace("T", "\t")
         val description= formData.getString("description")
 
@@ -118,4 +149,23 @@ class BeatDiary : AppCompatActivity() {
         return button
     }
 
+    private fun sendFormData(url: String, storage: String, formData: JSONObject, token: String) {
+        var uuid = formData.getString("utc_timestamp")
+        val response = Helper.sendFormData(url, formData, token)
+        when (response.first) {
+            ResponseType.SUCCESS -> {
+                Helper.removeFormData(this, uuid, storage)
+                Helper.purgeFile(this, uuid)
+                Handler(Looper.getMainLooper()).post {
+                    showSavedData()
+                }
+            }
+            ResponseType.API_ERROR -> {
+                Helper.showToast(this, response.second)
+            }
+            ResponseType.NETWORK_ERROR -> {
+                Helper.showToast(this, "No internet, try after some time")
+            }
+        }
+    }
 }
