@@ -29,7 +29,6 @@ class LostProperty : AppCompatActivity() {
     private lateinit var descrption:            FieldEditText
     private lateinit var foundIn:               FieldSpinner
     private lateinit var foundOn:               FieldEditText
-    private lateinit var remarks:               FieldEditText
     private lateinit var search:                FieldEditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -97,7 +96,6 @@ class LostProperty : AppCompatActivity() {
             descrption.hide()
             foundIn.hide()
             foundOn.hide()
-            remarks.hide()
 
             actionBT.text = "Search"
         } else if(mode == Mode.VIEW_FORM || mode== Mode.UPDATE_FORM || mode == Mode.NEW_FORM){
@@ -172,13 +170,6 @@ class LostProperty : AppCompatActivity() {
             fieldHeight=98,
             isRequired = Helper.resolveIsRequired(true, mode)
         )
-        remarks = FieldEditText(this,
-            fieldType = "multiline",
-            fieldLabel = "remarks",
-            fieldName = "Remarks",
-            fieldHeight=98,
-            isRequired = Helper.resolveIsRequired(false, mode)
-        )
 
         val form = findViewById<LinearLayout>(R.id.form)
         form.addView(search.getLayout())
@@ -188,7 +179,6 @@ class LostProperty : AppCompatActivity() {
         form.addView(descrption.getLayout())
         form.addView(foundIn.getLayout())
         form.addView(foundOn.getLayout())
-        form.addView(remarks.getLayout())
     }
 
     private fun sendFormData(formData: JSONObject) {
@@ -245,7 +235,6 @@ class LostProperty : AppCompatActivity() {
             descrption.exportData(formData)
             foundIn.exportData(formData)
             foundOn.exportData(formData)
-            remarks.exportData(formData)
         } catch (e: Exception){
             Helper.showToast(this, e.message!!)
             return null
@@ -258,7 +247,6 @@ class LostProperty : AppCompatActivity() {
         descrption.importData(formData)
         foundIn.importData(formData)
         foundOn.importData(formData)
-        remarks.importData(formData)
 
         if (mode == Mode.UPDATE_FORM && formData.getBoolean("__have_file")){
             val uuid     = formData.getString("utc_timestamp")

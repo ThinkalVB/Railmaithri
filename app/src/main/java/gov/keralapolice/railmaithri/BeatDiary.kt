@@ -5,9 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.Gravity
-import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
@@ -16,7 +14,6 @@ import gov.keralapolice.railmaithri.Helper.Companion.loadFormData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import org.json.JSONArray
 import org.json.JSONObject
 
 class BeatDiary : AppCompatActivity() {
@@ -24,10 +21,12 @@ class BeatDiary : AppCompatActivity() {
     private lateinit var saveBT:        Button
     private lateinit var syncBT:        Button
 
+    private lateinit var token:         String
     private lateinit var note:          EditText
     private lateinit var utcTime:       String
     private lateinit var profile:       JSONObject
     private lateinit var beatData:      JSONObject
+    private var assignmentID            = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,9 +37,13 @@ class BeatDiary : AppCompatActivity() {
         saveBT       = findViewById(R.id.save)
         syncBT       = findViewById(R.id.sync)
         note         = findViewById(R.id.note)
+
+        token        = Helper.getData(this, Storage.TOKEN)!!
         utcTime      = Helper.getUTC()
         profile      = JSONObject(Helper.getData(this, Storage.PROFILE)!!)
         beatData     = profile.getJSONObject("last_beat_assignment")
+        assignmentID = beatData.getInt("id")
+
         showAssignmentData()
         showSavedData()
         CoroutineScope(Dispatchers.IO).launch {
@@ -52,8 +55,7 @@ class BeatDiary : AppCompatActivity() {
     }
 
     private fun showServerData() {
-        val parameters = JSONObject().put("id", beatData.getString("id"))
-        val token = Helper.getData(this, Storage.TOKEN)!!
+        val parameters = JSONObject().put("id", assignmentID)
         val response = Helper.getFormData(URL.BEAT_ASSIGNMENT_DIARY, parameters, token)
         if (response.first == ResponseType.SUCCESS) {
             val resultData = JSONObject(response.second)
@@ -66,7 +68,6 @@ class BeatDiary : AppCompatActivity() {
                     val serverNote = serverNotes.getJSONObject(it)
                     val button   = generateButton(this, serverNote, false)
                     serverNotesLY.addView(button)
-                    Log.e("Railmaithri", "" + serverNote.toString())
                 }
             }
         } else {
