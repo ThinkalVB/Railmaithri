@@ -831,7 +831,7 @@ public class SearchData : AppCompatActivity() {
 
                 listData.setOnItemClickListener { parent, view, position, id ->
                     // For loading attribute values
-                    addAttribute(dialog, R.id.att1, "Occurred on", R.id.val1, runOverData[position].date_time_of_occurance)
+                    addAttribute(dialog, R.id.att1, "Occurred on", R.id.val1, runOverData[position].date_time_of_occurance.slice(IntRange(0, 15)).replace("T", " "))
                     addAttribute(dialog, R.id.att2, "Category", R.id.val2, runOverData[position].category)
                     addAttribute(dialog, R.id.att3, "Place", R.id.val3, runOverData[position].place_of_occurance)
                     addAttribute(dialog, R.id.att4, "B/w Station 1", R.id.val4, runOverData[position].between_station_1_label)
