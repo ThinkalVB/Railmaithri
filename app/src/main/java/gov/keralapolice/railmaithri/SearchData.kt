@@ -230,7 +230,6 @@ public class SearchData : AppCompatActivity() {
             if (searchURL == URL.SURAKSHA_SAMITHI_MEMBERS) {
                 isEndOfResult = true
                 val formData = JSONArray(response.second)
-
                 Handler(Looper.getMainLooper()).post {
                     renderFormData(formData)
                 }
@@ -242,8 +241,8 @@ public class SearchData : AppCompatActivity() {
                 } else {
                     pageNumber++
                 }
+                Log.e("Railmaithri", resultData.toString())
                 val formData = resultData.getJSONArray("results")
-                Log.e("ss", "" + formData.toString())
                 Handler(Looper.getMainLooper()).post { renderFormData(formData) }
             }
         } else {

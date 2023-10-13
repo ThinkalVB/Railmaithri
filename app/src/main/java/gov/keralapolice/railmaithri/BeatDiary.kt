@@ -165,6 +165,7 @@ class BeatDiary : AppCompatActivity() {
                 Handler(Looper.getMainLooper()).post {
                     showSavedData()
                 }
+                showServerData()
             }
             ResponseType.API_ERROR -> {
                 Helper.showToast(this, response.second)
