@@ -27,7 +27,6 @@ class StrangerCheck : AppCompatActivity() {
 
     private lateinit var dateFrom:              FieldEditText
     private lateinit var dateTo:                FieldEditText
-    private lateinit var policeStation:         FieldSpinner
     private lateinit var name:                  FieldEditText
     private lateinit var identificationMarks:   FieldEditText
     private lateinit var purposeOfVisit:        FieldEditText
@@ -220,19 +219,11 @@ class StrangerCheck : AppCompatActivity() {
             fieldName = "ID card details",
             isRequired = Helper.resolveIsRequired(false, mode)
         )
-        policeStation = FieldSpinner(this,
-            JSONArray(Helper.getData(this, Storage.POLICE_STATIONS_LIST)!!),
-            "police_station",
-            "Police Station",
-            addEmptyValue = Helper.resolveAddEmptyValue(false, mode),
-            isRequired = Helper.resolveIsRequired(true, mode)
-        )
 
         val form = findViewById<LinearLayout>(R.id.form)
         form.addView(search.getLayout())
         form.addView(dateFrom.getLayout())
         form.addView(dateTo.getLayout())
-        form.addView(policeStation.getLayout())
         form.addView(name.getLayout())
         form.addView(identificationMarks.getLayout())
         form.addView(purposeOfVisit.getLayout())
@@ -328,7 +319,6 @@ class StrangerCheck : AppCompatActivity() {
 
     private fun getFormData(formData: JSONObject = JSONObject()): JSONObject? {
         try{
-            policeStation.exportData(formData)
             locationUtil.exportLocation(formData)
             dateFrom.exportData(formData, tailPadding = "T00:00:00")
             dateTo.exportData(formData, tailPadding = "T23:59:59")
@@ -356,7 +346,6 @@ class StrangerCheck : AppCompatActivity() {
     }
 
     private fun loadFormData(formData: JSONObject) {
-        policeStation.importData(formData)
         name.importData(formData)
         identificationMarks.importData(formData)
         purposeOfVisit.importData(formData)
