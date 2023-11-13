@@ -284,7 +284,6 @@ class Home : AppCompatActivity() {
         }
 
         startTracking()
-        Log.e("Railwayman", java.time.LocalDateTime.now().toString())
     }
 
     private fun startTracking() {
@@ -294,7 +293,11 @@ class Home : AppCompatActivity() {
     }
 
     private fun startLocationService() {
+        if (Helper.getData(this, "IS_TRACKING") == "true") {
+            return
+        }
         if (!isLocationServiceRunning()) {
+            Helper.saveData(this, "IS_TRACKING", "true")
             val intent = Intent(applicationContext, TrackingService::class.java)
             intent.action = "startLocationService"
             startService(intent)
@@ -321,6 +324,7 @@ class Home : AppCompatActivity() {
     }
 
     private fun stopLocationService() {
+        Helper.saveData(this, "IS_TRACKING", "false")
         if (!isLocationServiceRunning()) {
             val intent = Intent(applicationContext, TrackingService::class.java)
             intent.action = "stopLocationService"
