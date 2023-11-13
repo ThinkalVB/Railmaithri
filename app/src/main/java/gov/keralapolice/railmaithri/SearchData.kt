@@ -748,7 +748,6 @@ public class SearchData : AppCompatActivity() {
                             addAttribute(dialog, R.id.att5, "Mobile", R.id.val5, incidentData[position].mobile_number)
                         }
                         "Track" -> {
-                            addAttribute(dialog, R.id.att3, "Railway station", R.id.val3, incidentData[position].railway_station_label)
                             addAttribute(dialog, R.id.att4, "Track", R.id.val4, incidentData[position].track_location)
                             hideAttribute(dialog, R.id.att5, R.id.val5)
                         }

@@ -262,7 +262,6 @@ class IncidentReport : AppCompatActivity() {
                     platformNumber.show()
                 }
                 "Track" -> {
-                    railwayStation.show()
                     trackLocation.show()
                 }
                 "Train" -> {
@@ -294,7 +293,6 @@ class IncidentReport : AppCompatActivity() {
                 railwayStation.importData(formData)
             }
             "Track" -> {
-                railwayStation.importData(formData)
                 trackLocation.importData(formData)
             }
             "Train" -> {
@@ -325,7 +323,6 @@ class IncidentReport : AppCompatActivity() {
             search.exportData(formData)
             incidentTypes.exportData(formData)
             platformNumber.exportData(formData)
-            railwayStation.exportData(formData)
             railwayStation.exportData(formData)
             trackLocation.exportData(formData)
             train.exportData(formData)

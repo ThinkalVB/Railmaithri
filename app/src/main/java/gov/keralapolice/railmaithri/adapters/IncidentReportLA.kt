@@ -68,11 +68,11 @@ class IncidentReportLA(
                 val4?.text  = incidentDatum[position].mobile_number
             }
             "Track" -> {
-                attr2?.text = "Track"
-                val2?.text  = incidentDatum[position].train_name
+                attr2?.text = "Location"
+                val2?.text  = incidentDatum[position].track_location
 
-                attr3?.text = "Railway station"
-                val3?.text  = incidentDatum[position].railway_station_label
+                attr3?.text = "Details"
+                val3?.text  = incidentDatum[position].incident_details
 
                 attr4?.visibility = View.GONE
                 val4?.visibility  = View.GONE
