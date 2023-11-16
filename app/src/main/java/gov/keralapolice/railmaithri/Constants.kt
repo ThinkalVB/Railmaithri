@@ -5,7 +5,7 @@ class URL {
         private const val DEVELOPMENT_URL     = "http://103.10.168.42:8000"
         private const val LOCAL_URL           = "http://192.168.4.63:8000"
         private const val DEPLOYMENT_URL      = "https://railmaithri.keralapolice.gov.in:8000"
-        private const val BASE_URL            = DEPLOYMENT_URL
+        private const val BASE_URL            = DEVELOPMENT_URL
 
         const val RAILWAY_STATIONS_LIST       = "$BASE_URL/railmaithri/dropdown/railway_station_list/"
         const val TRAINS_LIST                 = "$BASE_URL/railmaithri/dropdown/train_list/"
@@ -34,6 +34,7 @@ class URL {
 
         const val MOBILE_LOGIN                = "$BASE_URL/accounts/mobile_login/"
         const val MOBILE_LOGOUT               = "$BASE_URL/accounts/logout/"
+        const val PASSWORD_CHANGE             = "$BASE_URL/accounts/password_change/"
         const val INCIDENT_REPORT             = "$BASE_URL/api/v1/incident_report/"
         const val PASSENGER_STATISTICS        = "$BASE_URL/api/v1/passenger_statistics/"
         const val STRANGER_CHECK              = "$BASE_URL/api/v1/stranger_check/"
@@ -132,7 +133,7 @@ class Mode {
 
 class App {
     companion object{
-        const val APP_VERSION               = "2.0.0"
+        const val APP_VERSION               = "3.0.0"
         const val API_VERSION               = "1.0.0"
     }
 }

@@ -55,6 +55,12 @@ class Home : AppCompatActivity() {
         logoutBT.setOnClickListener {
             CoroutineScope(Dispatchers.IO).launch { logout() }
         }
+        // Change Password
+        findViewById<ImageView>(R.id.change_password).setOnClickListener {
+            val intent = Intent(this, ChangePassword::class.java)
+            intent.putExtra("mode", Mode.NEW_FORM)
+            startActivity(intent)
+        }
 
         // Passenger statistics
         findViewById<ImageView>(R.id.add_passenger_statistics).setOnClickListener {
