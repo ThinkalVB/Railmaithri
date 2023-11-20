@@ -380,6 +380,16 @@
                             android:layout_height="32dp"
                             android:background="@drawable/im_google_map" />
                     </LinearLayout>
+                    <LinearLayout
+                        android:layout_height="wrap_content"
+                        android:gravity="center">
+                        <ImageButton
+                            android:id="@+id/open_pdf"
+                            android:gravity="center"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:background="@drawable/im_pdf" />
+                    </LinearLayout>
 
                 </TableLayout>
 

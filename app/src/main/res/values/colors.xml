@@ -149,4 +149,5 @@
     <color name="Yellow">#FFFF00</color>
     <color name="YellowGreen">#9ACD32</color>
     <color name="Transparent">#00000000</color>
+    <color name="ShadowColor">#808080</color>
 </resources>

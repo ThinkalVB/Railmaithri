@@ -706,6 +706,18 @@ public class SearchData : AppCompatActivity() {
                     val locationButton = (dialog.findViewById<View>(R.id.open_location) as ImageButton)
                     locationButton.visibility = View.INVISIBLE
 
+                    // For opening pdf
+                    val pdfButton = (dialog.findViewById<View>(R.id.open_pdf) as ImageButton)
+                    if (railMaithriMeetingData[position].pdf_file != null) {
+                        pdfButton.visibility = View.VISIBLE
+                        pdfButton.setOnClickListener {
+                            dialog.hide()
+                            openPdf(railMaithriMeetingData[position].pdf_file)
+                        }
+                    } else {
+                        pdfButton.visibility = View.INVISIBLE
+                    }
+
                     // For loading and opening image
                     val imageView = (dialog.findViewById<View>(R.id.search_data_image) as ImageView)
                     if (railMaithriMeetingData[position].photo != null) {
@@ -918,6 +930,19 @@ public class SearchData : AppCompatActivity() {
                 val message = "Failed to open map"
                 Toast.makeText(this.applicationContext, message, Toast.LENGTH_SHORT).show()
             }
+    }
+
+    private fun openPdf(pdfUrl: String) {
+        val pdfIntent = Intent(Intent.ACTION_VIEW)
+        pdfIntent.setDataAndType(Uri.parse(pdfUrl), "application/pdf")
+        pdfIntent.flags = Intent.FLAG_ACTIVITY_NO_HISTORY
+
+        try {
+            startActivity(pdfIntent)
+        } catch (e: ActivityNotFoundException) {
+            val message = "No PDF viewer installed"
+            Toast.makeText(this.applicationContext, message, Toast.LENGTH_SHORT).show()
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, resultIntent: Intent?) {

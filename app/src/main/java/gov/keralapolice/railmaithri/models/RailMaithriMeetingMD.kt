@@ -7,4 +7,5 @@ data class RailMaithriMeetingMD(var id: Int,
                                 var participants: String,
                                 var next_meeting_date: String,
                                 var gist_of_decisions_taken: String,
-                                var photo: String)
+                                var photo: String,
+                                var pdf_file: String)
