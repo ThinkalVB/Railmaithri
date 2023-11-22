@@ -6,8 +6,13 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.Typeface
 import android.icu.util.Calendar
+import android.text.Editable
 import android.text.InputType
+import android.text.TextWatcher
+import android.util.Log
 import android.view.Gravity
+import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.widget.*
 import org.json.JSONArray
@@ -219,17 +224,21 @@ class FieldSpinner(context: Context,
                    addEmptyValue: Boolean = false,
                    isHidden: Boolean = false,
                    isRequired: Boolean = false,
-
-                   isReadOnly: Boolean = false) {
+                   isReadOnly: Boolean = false
+) {
     private var _fieldLabel = fieldLabel
     private var _fieldData  = fieldData
     private var _isHidden   = isHidden
     private var _isRequired = isRequired
 
-    private val _linearLayout:  LinearLayout
-    private val _textView:      TextView
-    private val _spinner:       Spinner
-    private val _arrayAdapter:  ArrayAdapter<String>
+    private val _linearLayout:      LinearLayout
+    private val _textView:          TextView
+    private val _spinner:           Spinner
+    private val _arrayAdapter:      ArrayAdapter<String>
+    private val _searchEditText:    EditText
+    private val _popup:             PopupWindow
+    private var _isSelectionMade:   Boolean = false
+
 
     init {
         val valuesList = ArrayList<String>()
@@ -284,7 +293,78 @@ class FieldSpinner(context: Context,
         if(isHidden){
             _linearLayout.visibility = View.GONE
         }
+        _popup = PopupWindow(context)
+        val popupView = LayoutInflater.from(context).inflate(R.layout.spinner_dropdown, null)
+
+        _searchEditText = popupView.findViewById(R.id.searchEditText)
+        val listView = popupView.findViewById<ListView>(R.id.listView)
+
+        _popup.contentView = popupView
+        _popup.width = LinearLayout.LayoutParams.WRAP_CONTENT
+        _popup.height = LinearLayout.LayoutParams.WRAP_CONTENT
+        _popup.isFocusable = true
+        _popup.isOutsideTouchable = false
+
+        // Create a custom adapter for the spinner dropdown
+        val customAdapter = ArrayAdapter<String>(context, android.R.layout.simple_spinner_dropdown_item, valuesList)
+        listView.adapter = customAdapter
+
+        // Set a TextChangedListener to the search EditText
+        _searchEditText.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                // Filter the values in the adapter based on the search text
+               // Log.d("Change","Text Changed $s")
+                customAdapter.filter.filter(s)
+            }
+
+            override fun afterTextChanged(s: Editable?) {}
+        })
+
+        // Set the custom adapter for the spinner dropdown
+        _spinner.adapter = customAdapter
+
+        // Set an OnItemClickListener to handle item selection in the dropdown
+        listView.setOnItemClickListener { _, _, position, _ ->
+            if (position != AdapterView.INVALID_POSITION) {
+               // Log.d("Debug", "Dropdown position $position")
+                val selectedValue = customAdapter.getItem(position)
+                //Log.d("Debug", "Dropdown position value $selectedValue")
+                val selectedPosition = valuesList.indexOf(selectedValue)
+                //Log.d("Debug", "ValueList index $selectedPosition")
+                _spinner.adapter=ArrayAdapter<String>(context, android.R.layout.simple_spinner_dropdown_item, valuesList)
+                _spinner.setSelection(selectedPosition)
+                _searchEditText.text.clear() // Clear the search text
+                _isSelectionMade = true
+                _popup.dismiss()
+
+            }
+            else{
+                //Log.d("Error","I shouldn't be here")
+            }
+        }
+
+        // Set a dismiss listener to handle dismissal only when a selection has been made
+        _popup.setOnDismissListener {
+            if (!_isSelectionMade) {
+                // If no selection has been made, reset the search field
+                _searchEditText.text.clear()
+            }
+        }
+
+        // Set an OnTouchListener to show the popup on spinner click
+        _spinner.setOnTouchListener { _, event ->
+            if (event.action == MotionEvent.ACTION_UP) {
+                _popup.showAsDropDown(_spinner)
+                _isSelectionMade = false
+                true
+            } else {
+                false
+            }
+        }
     }
+
 
     fun importData(jsonObject: JSONObject, filedLabel: String? = null){
         var actualLabel = _fieldLabel
@@ -377,4 +457,7 @@ class FieldSpinner(context: Context,
     fun getSpinner(): Spinner {
         return _spinner
     }
+fun isSelectionMade(): Boolean {
+    return _isSelectionMade
+}
 }

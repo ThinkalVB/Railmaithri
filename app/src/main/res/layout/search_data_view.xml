@@ -5,7 +5,7 @@
 
     <LinearLayout
         android:id="@+id/top_layout"
-        android:background="@color/AliceBlue"
+        android:background="@drawable/search_view_box"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="10dp">
