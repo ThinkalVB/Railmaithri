@@ -2,15 +2,20 @@ package gov.keralapolice.railmaithri
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Typeface
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.Gravity
 import android.view.View
+import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.ProgressBar
+import android.widget.RadioButton
+import android.widget.RadioGroup
+import android.widget.TextView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -35,7 +40,10 @@ class StrangerCheck : AppCompatActivity() {
     private lateinit var mobileNumber:          FieldEditText
     private lateinit var languagesKnown:        FieldEditText
     private lateinit var placeOfCheck:          FieldEditText
-    private lateinit var isForeigner:           FieldSpinner
+    private lateinit var radioGroupIsForeigner: RadioGroup
+    private lateinit var radioButtonYes:        RadioButton
+    private lateinit var radioButtonNo:         RadioButton
+    private lateinit var nativeCountry:         FieldSpinner
     private lateinit var nativeState:           FieldSpinner
     private lateinit var nativePoliceStation:   FieldEditText
     private lateinit var nativeAddress:         FieldEditText
@@ -43,6 +51,7 @@ class StrangerCheck : AppCompatActivity() {
     private lateinit var landPhoneNumber:       FieldEditText
     private lateinit var idCardDetails:         FieldEditText
     private lateinit var search:                FieldEditText
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -106,119 +115,163 @@ class StrangerCheck : AppCompatActivity() {
     }
 
     private fun generateFields() {
-        search = FieldEditText(this,
+
+        search = FieldEditText(
+            this,
             fieldType = "text",
             fieldLabel = "search",
             fieldName = "Search",
             isRequired = false
         )
-        dateFrom = FieldEditText(this,
-            fieldType  = "date",
+        dateFrom = FieldEditText(
+            this,
+            fieldType = "date",
             fieldLabel = "checking_date_time__gte",
-            fieldName  = "Date from",
+            fieldName = "Date from",
             isRequired = false
         )
-        dateTo = FieldEditText(this,
-            fieldType  = "date",
+        dateTo = FieldEditText(
+            this,
+            fieldType = "date",
             fieldLabel = "checking_date_time__lte",
-            fieldName  = "Date to",
+            fieldName = "Date to",
             isRequired = false
         )
-        name = FieldEditText(this,
+        name = FieldEditText(
+            this,
             fieldType = "text",
             fieldLabel = "name",
             fieldName = "Name",
             isRequired = Helper.resolveIsRequired(true, mode)
         )
-        identificationMarks = FieldEditText(this,
+        identificationMarks = FieldEditText(
+            this,
             fieldType = "multiline",
             fieldLabel = "identification_marks_details",
             fieldName = "Identification marks",
-            fieldHeight=98,
+            fieldHeight = 98,
             isRequired = Helper.resolveIsRequired(true, mode)
         )
-        purposeOfVisit = FieldEditText(this,
+        purposeOfVisit = FieldEditText(
+            this,
             fieldType = "multiline",
             fieldLabel = "purpose_of_visit",
             fieldName = "Purpose of visit",
-            fieldHeight=98,
+            fieldHeight = 98,
             isRequired = Helper.resolveIsRequired(true, mode)
         )
-        age = FieldEditText(this,
+        age = FieldEditText(
+            this,
             fieldType = "number",
             fieldLabel = "age",
             fieldName = "Age",
             isRequired = Helper.resolveIsRequired(true, mode)
         )
-        emailID = FieldEditText(this,
+        emailID = FieldEditText(
+            this,
             fieldType = "email",
             fieldLabel = "email",
             fieldName = "Email ID",
             isRequired = Helper.resolveIsRequired(false, mode)
         )
-        mobileNumber = FieldEditText(this,
+        mobileNumber = FieldEditText(
+            this,
             fieldType = "number",
             fieldLabel = "mobile_number",
             fieldName = "Phone number",
             isRequired = Helper.resolveIsRequired(false, mode)
         )
-        languagesKnown = FieldEditText(this,
+        languagesKnown = FieldEditText(
+            this,
             fieldType = "text",
             fieldLabel = "languages_known",
             fieldName = "Languages known",
             isRequired = Helper.resolveIsRequired(true, mode)
         )
-        placeOfCheck = FieldEditText(this,
+        placeOfCheck = FieldEditText(
+            this,
             fieldType = "text",
             fieldLabel = "place_of_check",
             fieldName = "Place of check",
             isRequired = Helper.resolveIsRequired(true, mode)
         )
-        isForeigner = FieldSpinner(this,
-            JSONArray(Helper.getData(this, Storage.BOOLEAN_ANSWERS)!!),
-            "is_foreigner",
-            "Is foreigner",
+        nativeCountry = FieldSpinner(
+            this,
+            JSONArray(Helper.getData(this, Storage.COUNTRY_LIST)!!),
+            "country",
+            "Native Country",
             addEmptyValue = Helper.resolveAddEmptyValue(false, mode),
             isRequired = Helper.resolveIsRequired(true, mode)
         )
-        nativeState = FieldSpinner(this,
+        nativeState = FieldSpinner(
+            this,
             JSONArray(Helper.getData(this, Storage.STATES_LIST)!!),
-            "native_state",
-            "Native state",
+             "native_state",
+             "Native state",
             addEmptyValue = Helper.resolveAddEmptyValue(false, mode),
             isRequired = Helper.resolveIsRequired(true, mode)
         )
-        nativePoliceStation = FieldEditText(this,
+        nativePoliceStation = FieldEditText(
+            this,
             fieldType = "text",
             fieldLabel = "native_police_station",
             fieldName = "Native police station",
             isRequired = Helper.resolveIsRequired(true, mode)
         )
-        nativeAddress = FieldEditText(this,
+        nativeAddress = FieldEditText(
+            this,
             fieldType = "multiline",
             fieldLabel = "native_address",
             fieldName = "Native address",
-            fieldHeight=98,
+            fieldHeight = 98,
             isRequired = Helper.resolveIsRequired(true, mode)
         )
-        remarks = FieldEditText(this,
+        remarks = FieldEditText(
+            this,
             fieldType = "text",
             fieldLabel = "remarks",
             fieldName = "Remarks",
             isRequired = Helper.resolveIsRequired(true, mode)
         )
-        landPhoneNumber = FieldEditText(this,
+        landPhoneNumber = FieldEditText(
+            this,
             fieldType = "number",
             fieldLabel = "land_phone_number",
             fieldName = "Land Phone number",
             isRequired = Helper.resolveIsRequired(false, mode)
         )
-        idCardDetails = FieldEditText(this,
+        idCardDetails = FieldEditText(
+            this,
             fieldType = "text",
             fieldLabel = "id_card_details",
             fieldName = "ID card details",
             isRequired = Helper.resolveIsRequired(false, mode)
         )
+        val defaultState = "Kerala"
+        nativeState.setSelectedItem(defaultState)
+
+        val labelIsForeigner = TextView(this)
+        labelIsForeigner.text = "Is Foreigner"
+        labelIsForeigner.textSize = 14f // Adjust the text size as needed
+        labelIsForeigner.setTypeface(null, Typeface.BOLD)
+
+
+        radioGroupIsForeigner = RadioGroup(this)
+        radioGroupIsForeigner.id = View.generateViewId()
+
+        radioButtonNo = RadioButton(this)
+        radioButtonNo.id = View.generateViewId()
+        radioButtonNo.text = "No"
+
+        radioButtonYes = RadioButton(this)
+        radioButtonYes.id = View.generateViewId()
+        radioButtonYes.text = "Yes"
+
+        radioButtonNo.isChecked = true
+        radioGroupIsForeigner.orientation = LinearLayout.HORIZONTAL
+        //Radio Group
+        radioGroupIsForeigner.addView(radioButtonNo)
+        radioGroupIsForeigner.addView(radioButtonYes)
 
         val form = findViewById<LinearLayout>(R.id.form)
         form.addView(search.getLayout())
@@ -233,13 +286,35 @@ class StrangerCheck : AppCompatActivity() {
         form.addView(landPhoneNumber.getLayout())
         form.addView(languagesKnown.getLayout())
         form.addView(placeOfCheck.getLayout())
-        form.addView(isForeigner.getLayout())
+        form.addView(labelIsForeigner)
+        form.addView(radioGroupIsForeigner)
+        form.addView(nativeCountry.getLayout())
         form.addView(nativeState.getLayout())
         form.addView(nativePoliceStation.getLayout())
         form.addView(nativeAddress.getLayout())
         form.addView(idCardDetails.getLayout())
         form.addView(remarks.getLayout())
+
+
+
+        radioGroupIsForeigner.setOnCheckedChangeListener { _, checkedId ->
+            when (checkedId) {
+                radioButtonYes.id -> {
+                    nativeCountry.show()
+                    nativeState.hide()
+                }
+
+                radioButtonNo.id -> {
+                    nativeCountry.hide()
+                    nativeState.show()
+                    nativeState.setSelectedItem(defaultState)
+                }
+            }
+        }
+        nativeCountry.hide()
     }
+
+
 
     private fun sendFormData(formData: JSONObject) {
         Handler(Looper.getMainLooper()).post {
@@ -294,6 +369,7 @@ class StrangerCheck : AppCompatActivity() {
             placeOfCheck.hide()
             nativePoliceStation.hide()
             nativeAddress.hide()
+            nativeCountry.hide()
             idCardDetails.hide()
             remarks.hide()
 
@@ -331,7 +407,10 @@ class StrangerCheck : AppCompatActivity() {
             landPhoneNumber.exportData(formData)
             languagesKnown.exportData(formData)
             placeOfCheck.exportData(formData)
-            isForeigner.exportData(formData)
+            // Modify the exportData call for isForeigner
+            val isForeignerValue = radioButtonYes.isChecked
+            formData.put("is_foreigner", isForeignerValue)
+            nativeCountry.exportData(formData)
             nativeState.exportData(formData)
             nativePoliceStation.exportData(formData)
             nativeAddress.exportData(formData)
@@ -355,7 +434,13 @@ class StrangerCheck : AppCompatActivity() {
         landPhoneNumber.importData(formData)
         languagesKnown.importData(formData)
         placeOfCheck.importData(formData)
-        isForeigner.importData(formData)
+        val isForeignerValue = formData.optBoolean("is_foreigner", false)
+        if (isForeignerValue) {
+            radioGroupIsForeigner.check(radioButtonYes.id)
+        } else {
+            radioGroupIsForeigner.check(radioButtonNo.id)
+        }
+        nativeCountry.importData(formData)
         nativeState.importData(formData)
         nativePoliceStation.importData(formData)
         nativeAddress.importData(formData)

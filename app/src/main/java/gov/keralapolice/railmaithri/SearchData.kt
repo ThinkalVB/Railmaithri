@@ -278,7 +278,7 @@ public class SearchData : AppCompatActivity() {
                     addAttribute(dialog, R.id.att7, "Is foreigner", R.id.val7, strangerData[position].is_foreigner.toString())
 
                     if (strangerData[position].is_foreigner) {
-                        addAttribute(dialog, R.id.att8, "Country", R.id.val8, strangerData[position].country_name)
+                        addAttribute(dialog, R.id.att8, "Country", R.id.val8, strangerData[position].country_label)
                         hideAttribute(dialog, R.id.att9, R.id.val9)
                         hideAttribute(dialog, R.id.att10, R.id.val10)
                         hideAttribute(dialog, R.id.att11, R.id.val11)

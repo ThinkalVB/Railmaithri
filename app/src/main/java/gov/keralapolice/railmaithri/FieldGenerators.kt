@@ -227,27 +227,27 @@ class FieldSpinner(context: Context,
                    isReadOnly: Boolean = false
 ) {
     private var _fieldLabel = fieldLabel
-    private var _fieldData  = fieldData
-    private var _isHidden   = isHidden
+    private var _fieldData = fieldData
+    private var _isHidden = isHidden
     private var _isRequired = isRequired
 
-    private val _linearLayout:      LinearLayout
-    private val _textView:          TextView
-    private val _spinner:           Spinner
-    private val _arrayAdapter:      ArrayAdapter<String>
-    private val _searchEditText:    EditText
-    private val _popup:             PopupWindow
-    private var _isSelectionMade:   Boolean = false
+    private val _linearLayout: LinearLayout
+    private val _textView: TextView
+    private val _spinner: Spinner
+    private val _arrayAdapter: ArrayAdapter<String>
+    private val _searchEditText: EditText
+    private val _popup: PopupWindow
+    private var _isSelectionMade: Boolean = false
 
 
     init {
         val valuesList = ArrayList<String>()
-        if(addEmptyValue){
+        if (addEmptyValue) {
             valuesList.add("")
         }
         for (i in 0 until _fieldData.length()) {
             val arrayElement = _fieldData.getJSONObject(i)
-            val value        = arrayElement.getString("name")
+            val value = arrayElement.getString("name")
             valuesList.add(value)
         }
         _linearLayout = LinearLayout(context)
@@ -260,8 +260,8 @@ class FieldSpinner(context: Context,
         _textView = TextView(context)
         _textView.text = fieldName
         _textView.setTypeface(null, Typeface.BOLD)
-        val scale               = context.resources.displayMetrics.density
-        val padding8dp          = (8 * scale + 0.5f).toInt()
+        val scale = context.resources.displayMetrics.density
+        val padding8dp = (8 * scale + 0.5f).toInt()
         _textView.setPadding(padding8dp, 0, padding8dp, 0)
         _linearLayout.addView(_textView)
         _spinner = Spinner(context)
@@ -273,24 +273,26 @@ class FieldSpinner(context: Context,
             adjustedFieldHeight
         )
 
-        _arrayAdapter = ArrayAdapter(context,
+        _arrayAdapter = ArrayAdapter(
+            context,
             android.R.layout.simple_spinner_item,
-            valuesList)
+            valuesList
+        )
         _arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         _spinner.adapter = _arrayAdapter
         _linearLayout.addView(_spinner)
 
-        if(isRequired){
+        if (isRequired) {
             _textView.setTextColor(Color.RED)
-        } else{
+        } else {
             _textView.setTextColor(Color.GRAY)
         }
 
         if (isReadOnly) {
-            _spinner.isEnabled   = false
+            _spinner.isEnabled = false
             _spinner.isFocusable = false
         }
-        if(isHidden){
+        if (isHidden) {
             _linearLayout.visibility = View.GONE
         }
         _popup = PopupWindow(context)
@@ -306,7 +308,8 @@ class FieldSpinner(context: Context,
         _popup.isOutsideTouchable = false
 
         // Create a custom adapter for the spinner dropdown
-        val customAdapter = ArrayAdapter<String>(context, android.R.layout.simple_spinner_dropdown_item, valuesList)
+        val customAdapter =
+            ArrayAdapter<String>(context, android.R.layout.simple_spinner_dropdown_item, valuesList)
         listView.adapter = customAdapter
 
         // Set a TextChangedListener to the search EditText
@@ -315,7 +318,7 @@ class FieldSpinner(context: Context,
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 // Filter the values in the adapter based on the search text
-               // Log.d("Change","Text Changed $s")
+                // Log.d("Change","Text Changed $s")
                 customAdapter.filter.filter(s)
             }
 
@@ -328,19 +331,22 @@ class FieldSpinner(context: Context,
         // Set an OnItemClickListener to handle item selection in the dropdown
         listView.setOnItemClickListener { _, _, position, _ ->
             if (position != AdapterView.INVALID_POSITION) {
-               // Log.d("Debug", "Dropdown position $position")
+                // Log.d("Debug", "Dropdown position $position")
                 val selectedValue = customAdapter.getItem(position)
                 //Log.d("Debug", "Dropdown position value $selectedValue")
                 val selectedPosition = valuesList.indexOf(selectedValue)
                 //Log.d("Debug", "ValueList index $selectedPosition")
-                _spinner.adapter=ArrayAdapter<String>(context, android.R.layout.simple_spinner_dropdown_item, valuesList)
+                _spinner.adapter = ArrayAdapter<String>(
+                    context,
+                    android.R.layout.simple_spinner_dropdown_item,
+                    valuesList
+                )
                 _spinner.setSelection(selectedPosition)
                 _searchEditText.text.clear() // Clear the search text
                 _isSelectionMade = true
                 _popup.dismiss()
 
-            }
-            else{
+            } else {
                 //Log.d("Error","I shouldn't be here")
             }
         }
@@ -366,98 +372,111 @@ class FieldSpinner(context: Context,
     }
 
 
-    fun importData(jsonObject: JSONObject, filedLabel: String? = null){
+    fun importData(jsonObject: JSONObject, filedLabel: String? = null) {
         var actualLabel = _fieldLabel
-        if (filedLabel != null){
+        if (filedLabel != null) {
             actualLabel = filedLabel
         }
 
-        var fieldValue  = jsonObject.get(actualLabel)?: ""
-        if(fieldValue is Boolean){
-            fieldValue = if(fieldValue == false){
-                "No"
-            } else {
-                "Yes"
-            }
-        }
+        var fieldValue: Any? = jsonObject.opt(actualLabel) // Use opt to handle null
+        if (fieldValue != null) {
+            // Handle different types accordingly
+            when (fieldValue) {
+                is Boolean -> {
+                    // Handle Boolean type
+                    fieldValue = if (fieldValue == false) "No" else "Yes"
+                }
 
-        if(fieldValue is String){
-            if(fieldValue == "true"){
-                fieldValue = "Yes"
-            }else if(fieldValue == "false"){
-                fieldValue = "No"
+                is String -> {
+                    // Handle String type
+                    if (fieldValue == "true") {
+                        fieldValue = "Yes"
+                    } else if (fieldValue == "false") {
+                        fieldValue = "No"
+                    }
+                }
             }
-            val valuePos  = _arrayAdapter.getPosition(fieldValue)
-            _spinner.setSelection(valuePos)
-        } else if (fieldValue is Int) {
-            for (i in 0 until _fieldData.length()) {
-                val arrayElement = _fieldData.getJSONObject(i)
-                val id = arrayElement.getInt("id")
-                if (id == fieldValue) {
-                    val value = arrayElement.getString("name")
-                    val valuePos = _arrayAdapter.getPosition(value)
-                    _spinner.setSelection(valuePos)
-                    break
+            val valuePos = _arrayAdapter.getPosition(fieldValue.toString())
+            if (valuePos != -1) {
+                _spinner.setSelection(valuePos)
+            } else if (fieldValue is Int) {
+                for (i in 0 until _fieldData.length()) {
+                    val arrayElement = _fieldData.getJSONObject(i)
+                    val id = arrayElement.getInt("id")
+                    if (id == fieldValue) {
+                        val value = arrayElement.getString("name")
+                        val valuePos = _arrayAdapter.getPosition(value)
+                        _spinner.setSelection(valuePos)
+                        break
+                    }
                 }
             }
         }
     }
 
-    fun exportData(jsonObject: JSONObject, filedLabel: String? = null) {
-        var actualLabel = _fieldLabel
-        if (filedLabel != null){
-            actualLabel = filedLabel
+        fun exportData(jsonObject: JSONObject, filedLabel: String? = null) {
+            var actualLabel = _fieldLabel
+            if (filedLabel != null) {
+                actualLabel = filedLabel
+            }
+
+            if (_linearLayout.visibility == View.VISIBLE) {
+                val selectedID = getData()
+                if (selectedID != null) {
+                    jsonObject.put(actualLabel, selectedID)
+                }
+            }
         }
 
-        if (_linearLayout.visibility == View.VISIBLE){
-            val selectedID = getData()
-            if (selectedID != null){
-                jsonObject.put(actualLabel, selectedID)
+        fun getData(): Any? {
+            var selectedID: Any? = null
+            for (i in 0 until _fieldData.length()) {
+                val arrayElement = _fieldData.getJSONObject(i)
+                val value = arrayElement.getString("name")
+                if (value == _spinner.selectedItem) {
+                    selectedID = arrayElement.get("id")
+                    break
+                }
+            }
+            return selectedID
+        }
+
+        fun hide() {
+            _linearLayout.visibility = View.GONE
+            _isHidden = true
+        }
+
+        fun show() {
+            _linearLayout.visibility = View.VISIBLE
+            _isHidden = false
+        }
+
+        fun markAsRequired() {
+            _isRequired = true
+            _textView.setTextColor(Color.RED)
+        }
+
+        fun markAsNotRequired() {
+            _isRequired = false
+            _textView.setTextColor(Color.GRAY)
+        }
+
+        fun getLayout(): LinearLayout {
+            return _linearLayout
+        }
+
+        fun getSpinner(): Spinner {
+            return _spinner
+        }
+
+        fun isSelectionMade(): Boolean {
+            return _isSelectionMade
+        }
+
+        fun setSelectedItem(item: String) {
+            val position = _arrayAdapter.getPosition(item)
+            if (position != -1) {
+                _spinner.setSelection(position)
             }
         }
     }
-
-    fun getData(): Any? {
-        var selectedID: Any? = null
-        for (i in 0 until _fieldData.length()) {
-            val arrayElement = _fieldData.getJSONObject(i)
-            val value        = arrayElement.getString("name")
-            if (value == _spinner.selectedItem){
-                selectedID = arrayElement.get("id")
-                break
-            }
-        }
-        return selectedID
-    }
-
-    fun hide() {
-        _linearLayout.visibility = View.GONE
-        _isHidden                = true
-    }
-
-    fun show() {
-        _linearLayout.visibility = View.VISIBLE
-        _isHidden                = false
-    }
-
-    fun markAsRequired() {
-        _isRequired = true
-        _textView.setTextColor(Color.RED)
-    }
-
-    fun markAsNotRequired() {
-        _isRequired = false
-        _textView.setTextColor(Color.GRAY)
-    }
-
-    fun getLayout(): LinearLayout {
-        return _linearLayout
-    }
-
-    fun getSpinner(): Spinner {
-        return _spinner
-    }
-fun isSelectionMade(): Boolean {
-    return _isSelectionMade
-}
-}
