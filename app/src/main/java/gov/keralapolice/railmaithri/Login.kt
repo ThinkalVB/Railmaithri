@@ -107,15 +107,23 @@ class Login : AppCompatActivity() {
             val response = clientNT.newCall(request).execute()
             if (response.isSuccessful) {
                 val authData = JSONObject(response.body!!.string())
-                profile  = authData.getJSONObject("user")
-                token    = authData.getString("token")
+                profile      = authData.getJSONObject("user")
+                token        = authData.getString("token")
 
                 val cacheStatus = startCaching(token)
                 if(cacheStatus){
                     Helper.saveData(this, Storage.PROFILE, profile.toString())
                     Helper.saveData(this, Storage.TOKEN, token)
-                    startActivity(Intent(this, Home::class.java))
-                    finish()
+
+                    if (profile.getBoolean("is_strong_password")) {
+                        startActivity(Intent(this, Home::class.java))
+                        finish()
+                    } else {
+                        val message = "Password is not strong enough. Please update your password."
+                        Helper.showToast(this, message, Toast.LENGTH_LONG)
+                        startActivity(Intent(this, ChangePassword::class.java))
+                        finish()
+                    }
                 } else{
                     val message = "Failed to cache data, try after some time"
                     Helper.showToast(this, message, Toast.LENGTH_LONG)
@@ -181,6 +189,7 @@ class Login : AppCompatActivity() {
         status = status && cacheData(URL.WATCH_ZONE, Storage.WATCH_ZONE)
         status = status && cacheData(URL.RUN_OVER_TYPES, Storage.RUN_OVER_TYPES)
         status = status && cacheData(URL.RUN_OVER_CAUSE_TYPES, Storage.RUN_OVER_CAUSE_TYPES)
+        status = status && cacheData(URL.COUNTRY_LIST, Storage.COUNTRY_LIST)
 
         // Cache incident type
         val incidentTypes = "[{\"id\":\"Platform\",\"name\":\"Platform\"},{\"id\":\"Track\",\"name\":\"Track\"},{\"id\":\"Train\",\"name\":\"Train\"}]"

@@ -313,6 +313,10 @@ public class SearchData : AppCompatActivity() {
                         imageView.setImageResource(R.drawable.im_stranger_check)
                     }
                     dialog.show()
+
+                    // For showing pdf button
+                    val pdfButton = (dialog.findViewById<View>(R.id.open_pdf) as ImageButton)
+                    pdfButton.visibility = View.INVISIBLE
                 }
             }
             URL.PASSENGER_STATISTICS -> {
@@ -360,6 +364,10 @@ public class SearchData : AppCompatActivity() {
                         imageView.setImageResource(R.drawable.im_intelligence_information)
                     }
                     dialog.show()
+
+                    // For showing pdf button
+                    val pdfButton = (dialog.findViewById<View>(R.id.open_pdf) as ImageButton)
+                    pdfButton.visibility = View.INVISIBLE
                 }
             }
             URL.LOST_PROPERTY -> {
@@ -394,6 +402,10 @@ public class SearchData : AppCompatActivity() {
                         imageView.setImageResource(R.drawable.im_lost_property)
                     }
                     dialog.show()
+
+                    // For showing pdf button
+                    val pdfButton = (dialog.findViewById<View>(R.id.open_pdf) as ImageButton)
+                    pdfButton.visibility = View.INVISIBLE
                 }
             }
             URL.ABANDONED_PROPERTY -> {
@@ -428,6 +440,10 @@ public class SearchData : AppCompatActivity() {
                         imageView.setImageResource(R.drawable.im_abandoned_property)
                     }
                     dialog.show()
+
+                    // For showing pdf button
+                    val pdfButton = (dialog.findViewById<View>(R.id.open_pdf) as ImageButton)
+                    pdfButton.visibility = View.INVISIBLE
                 }
             }
             URL.RELIABLE_PERSON -> {
@@ -460,6 +476,10 @@ public class SearchData : AppCompatActivity() {
                         imageView.setImageResource(R.drawable.im_reliable_person)
                     }
                     dialog.show()
+
+                    // For showing pdf button
+                    val pdfButton = (dialog.findViewById<View>(R.id.open_pdf) as ImageButton)
+                    pdfButton.visibility = View.INVISIBLE
                 }
             }
             URL.EMERGENCY_CONTACTS -> {
@@ -504,6 +524,10 @@ public class SearchData : AppCompatActivity() {
                         imageView.setImageResource(R.drawable.im_emergency_contact)
                     }
                     dialog.show()
+
+                    // For showing pdf button
+                    val pdfButton = (dialog.findViewById<View>(R.id.open_pdf) as ImageButton)
+                    pdfButton.visibility = View.INVISIBLE
                 }
             }
             URL.POI -> {
@@ -544,6 +568,10 @@ public class SearchData : AppCompatActivity() {
                         imageView.setImageResource(R.drawable.im_poi)
                     }
                     dialog.show()
+
+                    // For showing pdf button
+                    val pdfButton = (dialog.findViewById<View>(R.id.open_pdf) as ImageButton)
+                    pdfButton.visibility = View.INVISIBLE
                 }
             }
             URL.UNAUTHORIZED_PEOPLE -> {
@@ -583,6 +611,10 @@ public class SearchData : AppCompatActivity() {
                         imageView.setImageResource(R.drawable.im_unauthorized_person)
                     }
                     dialog.show()
+
+                    // For showing pdf button
+                    val pdfButton = (dialog.findViewById<View>(R.id.open_pdf) as ImageButton)
+                    pdfButton.visibility = View.INVISIBLE
                 }
 
             }
@@ -615,6 +647,10 @@ public class SearchData : AppCompatActivity() {
                         imageView.setImageResource(R.drawable.im_crime_memo)
                     }
                     dialog.show()
+
+                    // For showing pdf button
+                    val pdfButton = (dialog.findViewById<View>(R.id.open_pdf) as ImageButton)
+                    pdfButton.visibility = View.INVISIBLE
                 }
             }
             URL.SURAKSHA_SAMITHI_MEMBERS -> {
@@ -647,6 +683,10 @@ public class SearchData : AppCompatActivity() {
                         imageView.setImageResource(R.drawable.im_suraksha_samithi_member)
                     }
                     dialog.show()
+
+                    // For showing pdf button
+                    val pdfButton = (dialog.findViewById<View>(R.id.open_pdf) as ImageButton)
+                    pdfButton.visibility = View.INVISIBLE
                 }
             }
             URL.RAIL_VOLUNTEER -> {
@@ -683,6 +723,10 @@ public class SearchData : AppCompatActivity() {
                         imageView.setImageResource(R.drawable.im_rail_volunteer)
                     }
                     dialog.show()
+
+                    // For showing pdf button
+                    val pdfButton = (dialog.findViewById<View>(R.id.open_pdf) as ImageButton)
+                    pdfButton.visibility = View.INVISIBLE
                 }
             }
             URL.RAILMAITHRI_MEETING -> {
@@ -789,6 +833,10 @@ public class SearchData : AppCompatActivity() {
                         imageView.setImageResource(R.drawable.im_incident_report)
                     }
                     dialog.show()
+
+                    // For showing pdf button
+                    val pdfButton = (dialog.findViewById<View>(R.id.open_pdf) as ImageButton)
+                    pdfButton.visibility = View.INVISIBLE
                 }
             }
             URL.SHOPS -> {
@@ -832,6 +880,10 @@ public class SearchData : AppCompatActivity() {
                         imageView.setImageResource(R.drawable.im_shop_and_labours)
                     }
                     dialog.show()
+
+                    // For showing pdf button
+                    val pdfButton = (dialog.findViewById<View>(R.id.open_pdf) as ImageButton)
+                    pdfButton.visibility = View.INVISIBLE
                 }
             }
             URL.RUN_OVER -> {
@@ -892,8 +944,13 @@ public class SearchData : AppCompatActivity() {
                         imageView.setImageResource(R.drawable.im_run_over)
                     }
                     dialog.show()
+
+                    // For showing pdf button
+                    val pdfButton = (dialog.findViewById<View>(R.id.open_pdf) as ImageButton)
+                    pdfButton.visibility = View.INVISIBLE
                 }
             }
+
         }
     }
 

@@ -1,5 +1,6 @@
 package gov.keralapolice.railmaithri
 
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -80,11 +81,15 @@ class ChangePassword : AppCompatActivity() {
         data.put("confirm_password", confirmPasswordET.text)
 
         try {
+
+            Log.e("Railmaithri", token)
+            Log.e("Railmaithri", data.toString())
+
             val request = API.post(URL.PASSWORD_CHANGE, data, token)
             val response = clientNT.newCall(request).execute()
-            Log.e("Railmaithri", response.code.toString())
-            if (response.isSuccessful || response.code == 401) {
+            if (response.isSuccessful) {
                 Helper.showToast(this, "Password Changed Successfully")
+                startActivity(Intent(this, Home::class.java))
                 finish()
             } else {
                 val errorMessage = Helper.getError(response.body!!.string())
@@ -99,6 +104,7 @@ class ChangePassword : AppCompatActivity() {
             }
         }
     }
+
     private fun togglePasswordVisibility(editText: EditText, imageView: ImageView) {
         // Toggle between password visibility and invisibility
         if (editText.transformationMethod == PasswordTransformationMethod.getInstance()) {
