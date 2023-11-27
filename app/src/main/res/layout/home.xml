@@ -30,8 +30,8 @@
 
     <ImageView
         android:id="@+id/profile_picture"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:scaleType="fitXY"
         android:scaleY="0.75"
         android:scaleX="0.75"

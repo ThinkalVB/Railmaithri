@@ -14,6 +14,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.bumptech.glide.Glide
 import com.google.android.gms.location.LocationServices
 import gov.keralapolice.railmaithri.models.LocationModel
 import gov.keralapolice.railmaithri.roomDB.DatabaseClient
@@ -46,6 +47,10 @@ class Home : AppCompatActivity() {
         logoutBT = findViewById(R.id.logout)
         savedDataBT = findViewById(R.id.saved_data)
 
+        //Profile Picture
+        val profilePictureUrl = profile.getString("profile_picture")
+        val profilePictureImageView = findViewById<ImageView>(R.id.profile_picture)
+        Glide.with(this).load(profilePictureUrl).into(profilePictureImageView)
 
         findViewById<TextView>(R.id.officer_name).text = profile.getString("username")
         savedDataBT.setOnClickListener {
