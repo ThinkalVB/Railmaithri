@@ -7,9 +7,23 @@
     tools:context=".BeatDiary">
 
     <TextView
+        android:id="@+id/officer_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:textSize="18sp"
+        android:text="Thinkal V B"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/officer_name"
         android:layout_marginTop="8dp"
         android:text="Beat Diary"
         android:textColor="@color/RoyalBlue"
@@ -17,7 +31,7 @@
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/officer_name"  />
 
     <TableLayout
         android:id="@+id/tablelayout"
@@ -124,13 +138,13 @@
         android:inputType="textMultiLine"
         android:padding="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/ly_save"
+        app:layout_constraintEnd_toStartOf="@id/ly_sync"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/ly_sync" />
+        app:layout_constraintTop_toTopOf="@+id/ly_save" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_marginEnd="8dp"
-        android:id="@+id/ly_save"
+        android:id="@+id/ly_sync"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -138,11 +152,11 @@
         app:layout_constraintStart_toEndOf="@+id/note">
 
         <Button
-            android:id="@+id/save"
+            android:id="@+id/sync"
             android:layout_width="126dp"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/CornflowerBlue"
-            android:text="save"
+            android:text="sync"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -150,19 +164,19 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/ly_sync"
+        android:id="@+id/ly_save"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_marginEnd="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/ly_save"
+        app:layout_constraintBottom_toTopOf="@+id/ly_sync"
         app:layout_constraintEnd_toEndOf="parent">
 
         <Button
-            android:id="@+id/sync"
+            android:id="@+id/save"
             android:layout_width="126dp"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/CornflowerBlue"
-            android:text="sync"
+            android:text="save"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

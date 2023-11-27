@@ -44,6 +44,8 @@ class BeatDiary : AppCompatActivity() {
         beatData     = profile.getJSONObject("last_beat_assignment")
         assignmentID = beatData.getInt("id")
 
+        findViewById<TextView>(R.id.officer_name).text = profile.getString("username")
+
         showAssignmentData()
         showSavedData()
         CoroutineScope(Dispatchers.IO).launch {
