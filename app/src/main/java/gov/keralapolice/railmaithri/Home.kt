@@ -50,7 +50,12 @@ class Home : AppCompatActivity() {
         //Profile Picture
         val profilePictureUrl = profile.getString("profile_picture")
         val profilePictureImageView = findViewById<ImageView>(R.id.profile_picture)
-        Glide.with(this).load(profilePictureUrl).into(profilePictureImageView)
+        Glide.with(this)
+            .load(profilePictureUrl)
+            .placeholder(R.drawable.profile_picture)
+            .error(R.drawable.profile_picture)
+            .into(profilePictureImageView)
+
 
         findViewById<TextView>(R.id.officer_name).text = profile.getString("username")
         savedDataBT.setOnClickListener {
