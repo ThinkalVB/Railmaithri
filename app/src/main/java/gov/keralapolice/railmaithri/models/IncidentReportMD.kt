@@ -16,4 +16,5 @@ data class IncidentReportMD(var id: Int,
                             val track_location: String,
                             val assignment_remarks: String,
                             var latitude: Float,
-                            var longitude: Float)
+                            var longitude: Float,
+                            var closing_remarks: String)

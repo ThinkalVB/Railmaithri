@@ -324,7 +324,37 @@ public class SearchData : AppCompatActivity() {
                 dialog.setContentView(R.layout.search_data_popup)
                 val myListAdapter    = PassengerStatisticsLA(this@SearchData, passengerStatisticsData)
                 listData.adapter     = myListAdapter
+
+                listData.setOnItemClickListener { parent, view, position, id ->
+                    addAttribute(dialog, R.id.att1, "Train ", R.id.val1, passengerStatisticsData[position].train_label)
+                    addAttribute(dialog, R.id.att2, "Density", R.id.val2, passengerStatisticsData[position].density_label)
+                    addAttribute(dialog, R.id.att3, "Compartment Type", R.id.val3, passengerStatisticsData[position].compartment_type_label)
+                    addAttribute(dialog, R.id.att4, "Coach Number", R.id.val4, passengerStatisticsData[position].coach)
+                    addAttribute(dialog, R.id.att5, "Action Remarks", R.id.val5, passengerStatisticsData[position].action_remarks)
+                    addAttribute(dialog, R.id.att6, "Action Status", R.id.val6, passengerStatisticsData[position].action_status.toString())
+
+                    // For opening location in google maps
+                    val locationButton = (dialog.findViewById<View>(R.id.open_location) as ImageButton)
+                    locationButton.visibility = View.INVISIBLE
+
+                    // For loading and opening image
+                    val imageView = (dialog.findViewById<View>(R.id.search_data_image) as ImageView)
+                    if (passengerStatisticsData[position].photo != null) {
+                        imageView.setOnClickListener {
+                            dialog.hide()
+                            openImage(passengerStatisticsData[position].photo)
+                        }
+                        Glide.with(this).load(passengerStatisticsData[position].photo).into(imageView)
+                    } else {
+                        imageView.setImageResource(R.drawable.im_passenger_statistics)
+                    }
+                    dialog.show()
+
+                    // For showing pdf button
+                    val pdfButton = (dialog.findViewById<View>(R.id.open_pdf) as ImageButton)
+                    pdfButton.visibility = View.INVISIBLE
             }
+                }
             URL.INTELLIGENCE_INFORMATION -> {
                 val intelligenceInformationData = gson.fromJson(formData!!.toString(), Array<IntelligenceInformationMD>::class.java).toList()
                 dialog.setContentView(R.layout.search_data_popup)
@@ -338,6 +368,8 @@ public class SearchData : AppCompatActivity() {
                     addAttribute(dialog, R.id.att3, "Mobile Number", R.id.val3, intelligenceInformationData[position].mobile_number)
                     addAttribute(dialog, R.id.att4, "Information", R.id.val4, intelligenceInformationData[position].information)
                     addAttribute(dialog, R.id.att5, "Remarks", R.id.val5, intelligenceInformationData[position].remarks)
+                    addAttribute(dialog, R.id.att6, "Attended Remarks", R.id.val6, intelligenceInformationData[position].attended_remarks.toString())
+                    addAttribute(dialog, R.id.att7, "Closing Remarks", R.id.val7, intelligenceInformationData[position].closing_remarks)
 
                     // For opening location in google maps
                     val locationButton = (dialog.findViewById<View>(R.id.open_location) as ImageButton)
@@ -383,7 +415,7 @@ public class SearchData : AppCompatActivity() {
                     addAttribute(dialog, R.id.att3, "Station number", R.id.val3, lostPropertyData[position].police_station_number)
                     addAttribute(dialog, R.id.att4, "Found in", R.id.val4, lostPropertyData[position].found_in)
                     addAttribute(dialog, R.id.att5, "Found on", R.id.val5, lostPropertyData[position].found_on)
-                    addAttribute(dialog, R.id.att6, "Remarks", R.id.val6, lostPropertyData[position].return_remarks)
+                    addAttribute(dialog, R.id.att6, "Return Remarks", R.id.val6, lostPropertyData[position].return_remarks)
                     addAttribute(dialog, R.id.att7, "Description", R.id.val7, lostPropertyData[position].description)
 
                     // For opening location in google maps
@@ -459,7 +491,6 @@ public class SearchData : AppCompatActivity() {
                     addAttribute(dialog, R.id.att3, "Police Number", R.id.val3, reliablePersonData[position].police_station_label)
                     addAttribute(dialog, R.id.att4, "Place", R.id.val4, reliablePersonData[position].place)
                     addAttribute(dialog, R.id.att5, "Description", R.id.val5, reliablePersonData[position].description)
-
                     // For opening location in google maps
                     val locationButton = (dialog.findViewById<View>(R.id.open_location) as ImageButton)
                     locationButton.visibility = View.INVISIBLE
@@ -628,7 +659,7 @@ public class SearchData : AppCompatActivity() {
                     // For loading attribute values
                     addAttribute(dialog, R.id.att1, "Category ", R.id.val1, crimeMemoData[position].crime_memo_category_label)
                     addAttribute(dialog, R.id.att2, "Memo Details", R.id.val2, crimeMemoData[position].memo_details)
-                    addAttribute(dialog, R.id.att3, "Police Station", R.id.val3, crimeMemoData[position].police_station_label.toString())
+                    addAttribute(dialog, R.id.att3, "Police Station", R.id.val3, crimeMemoData[position].police_station_label)
 
 
                     // For opening location in google maps
@@ -792,6 +823,9 @@ public class SearchData : AppCompatActivity() {
                     // For loading attribute values
                     addAttribute(dialog, R.id.att1, "Type", R.id.val1, incidentData[position].incident_type)
                     addAttribute(dialog, R.id.att2, "Description", R.id.val2, incidentData[position].incident_details)
+                    addAttribute(dialog, R.id.att6, "Status", R.id.val6, incidentData[position].status_label)
+                    addAttribute(dialog, R.id.att7, "Closing Remarks", R.id.val7, incidentData[position].closing_remarks)
+
                     when (incidentData[position].incident_type) {
                         "Platform" -> {
                             addAttribute(dialog, R.id.att3, "Railway station", R.id.val3, incidentData[position].railway_station_label)

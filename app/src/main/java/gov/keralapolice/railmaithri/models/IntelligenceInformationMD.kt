@@ -8,4 +8,6 @@ data class IntelligenceInformationMD(var id: Int,
                                      var remarks: String,
                                      var photo: String,
                                      var latitude: Float,
-                                     var longitude: Float)
+                                     var longitude: Float,
+                                     var closing_remarks: String,
+                                     var attended_remarks: Boolean)
