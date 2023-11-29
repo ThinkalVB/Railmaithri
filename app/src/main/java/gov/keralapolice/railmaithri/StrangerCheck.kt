@@ -87,6 +87,12 @@ class StrangerCheck : AppCompatActivity() {
                     val utcTime   = Helper.getUTC()
                     formData.put("checking_date_time", utcTime)
                     formData.put("police_station", stationID)
+
+                    if (locationUtil.haveLocation()) {
+                        locationUtil.exportLocation(formData)
+                        locationUtil.importLocation(formData)
+                    }
+
                     CoroutineScope(Dispatchers.IO).launch { sendFormData(formData) }
                 }
             }
@@ -395,7 +401,6 @@ class StrangerCheck : AppCompatActivity() {
 
     private fun getFormData(formData: JSONObject = JSONObject()): JSONObject? {
         try{
-            locationUtil.exportLocation(formData)
             dateFrom.exportData(formData, tailPadding = "T00:00:00")
             dateTo.exportData(formData, tailPadding = "T23:59:59")
             name.exportData(formData)
@@ -446,7 +451,7 @@ class StrangerCheck : AppCompatActivity() {
         nativeAddress.importData(formData)
         idCardDetails.importData(formData)
         remarks.importData(formData)
-        locationUtil.importLocation(formData)
+
 
         if (mode == Mode.UPDATE_FORM && formData.getBoolean("__have_file")){
             val uuid     = formData.getString("checking_date_time")
