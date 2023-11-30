@@ -697,6 +697,8 @@
             </LinearLayout>
 
             <!-- Crime memo, Suraksha samithi member, Rail volunteer -->
+
+            <!-- Railmaithri meeting, Close communication, Task list -->
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -706,6 +708,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="13.5dp">
+
                     <ImageView
                         android:id="@+id/add_crime_memo"
                         android:layout_width="115dp"
@@ -715,27 +718,30 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:srcCompat="@drawable/grid_background"  />
+                        app:srcCompat="@drawable/grid_background" />
+
                     <ImageView
-                        android:layout_marginTop="15dp"
-                        android:layout_marginEnd="18dp"
                         android:layout_width="70dp"
                         android:layout_height="70dp"
+                        android:layout_marginTop="15dp"
+                        android:layout_marginEnd="18dp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         app:srcCompat="@drawable/im_crime_memo" />
+
                     <Button
                         android:id="@+id/search_crime_memo"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
+                        android:layout_marginStart="0dp"
+                        android:layout_marginTop="0dp"
                         android:backgroundTint="@color/WhiteSmoke"
                         android:drawableTop="@drawable/ic_search"
                         android:insetTop="0dp"
                         android:insetBottom="0dp"
-                        android:layout_marginStart="0dp"
-                        android:layout_marginTop="0dp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
+
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -754,6 +760,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="13.5dp">
+
                     <ImageView
                         android:id="@+id/add_suraksha_samithi_member"
                         android:layout_width="115dp"
@@ -763,27 +770,30 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:srcCompat="@drawable/grid_background"  />
+                        app:srcCompat="@drawable/grid_background" />
+
                     <ImageView
-                        android:layout_marginTop="15dp"
-                        android:layout_marginEnd="18dp"
                         android:layout_width="70dp"
                         android:layout_height="70dp"
+                        android:layout_marginTop="15dp"
+                        android:layout_marginEnd="18dp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         app:srcCompat="@drawable/im_suraksha_samithi_member" />
+
                     <Button
                         android:id="@+id/search_suraksha_samithi_member"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
+                        android:layout_marginStart="0dp"
+                        android:layout_marginTop="0dp"
                         android:backgroundTint="@color/WhiteSmoke"
                         android:drawableTop="@drawable/ic_search"
                         android:insetTop="0dp"
                         android:insetBottom="0dp"
-                        android:layout_marginStart="0dp"
-                        android:layout_marginTop="0dp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
+
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -801,6 +811,7 @@
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
+
                     <ImageView
                         android:id="@+id/add_rail_volunteer"
                         android:layout_width="115dp"
@@ -810,27 +821,30 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:srcCompat="@drawable/grid_background"  />
+                        app:srcCompat="@drawable/grid_background" />
+
                     <ImageView
-                        android:layout_marginTop="15dp"
-                        android:layout_marginEnd="18dp"
                         android:layout_width="70dp"
                         android:layout_height="70dp"
+                        android:layout_marginTop="15dp"
+                        android:layout_marginEnd="18dp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         app:srcCompat="@drawable/im_rail_volunteer" />
+
                     <Button
                         android:id="@+id/search_rail_volunteer"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
+                        android:layout_marginStart="0dp"
+                        android:layout_marginTop="0dp"
                         android:backgroundTint="@color/WhiteSmoke"
                         android:drawableTop="@drawable/ic_search"
                         android:insetTop="0dp"
                         android:insetBottom="0dp"
-                        android:layout_marginStart="0dp"
-                        android:layout_marginTop="0dp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
+
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -847,7 +861,6 @@
 
             </LinearLayout>
 
-            <!-- Railmaithri meeting, Close communication, Task list -->
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -1055,6 +1068,52 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="4dp"
                         android:text="Run over\n"
+                        android:textAlignment="center"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:id="@+id/add_contract_staff"
+                        android:layout_width="115dp"
+                        android:layout_height="125dp"
+                        android:paddingBottom="35dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/grid_background"  />
+                    <ImageView
+                        android:layout_marginTop="15dp"
+                        android:layout_marginEnd="18dp"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/im_contract_staff" />
+                    <Button
+                        android:id="@+id/search_contract_staff"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:backgroundTint="@color/WhiteSmoke"
+                        android:drawableTop="@drawable/ic_search"
+                        android:insetTop="0dp"
+                        android:insetBottom="0dp"
+                        android:layout_marginStart="0dp"
+                        android:layout_marginTop="0dp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="4dp"
+                        android:text="Contract Staff\n"
                         android:textAlignment="center"
                         android:textColor="@color/white"
                         android:textSize="12sp"

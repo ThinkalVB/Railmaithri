@@ -182,6 +182,14 @@ class SavedData : AppCompatActivity() {
             val button  = RunOver.generateButton(this, value, Mode.UPDATE_FORM)
             resultLayout.addView(button)
         }
+        val contractStaff = loadFormData(this, Storage.CONTRACT_STAFF)
+        val csKeys        = contractStaff.keys()
+        while (csKeys.hasNext()) {
+            val csKeys = csKeys.next()
+            val value  = contractStaff.getJSONObject(csKeys)
+            val button = ContractStaff.generateButton(this, value, Mode.UPDATE_FORM)
+            resultLayout.addView(button)
+        }
     }
 
     private fun syncData() {
@@ -362,6 +370,17 @@ class SavedData : AppCompatActivity() {
             val formData  = runOver.getJSONObject(roKeys)
             CoroutineScope(Dispatchers.IO).launch {
                 sendFormData(URL.RUN_OVER, Storage.RUN_OVER, formData, token)
+            }
+        }
+
+        val contractStaff  = loadFormData(this, Storage.CONTRACT_STAFF)
+        val csKeys   = contractStaff.keys()
+        while (csKeys.hasNext()) {
+            dataCount++
+            val csKeys    = csKeys.next()
+            val formData  = contractStaff.getJSONObject(csKeys)
+            CoroutineScope(Dispatchers.IO).launch {
+                sendFormData(URL.CONTRACT_STAFF, Storage.CONTRACT_STAFF, formData, token)
             }
         }
 

@@ -299,6 +299,18 @@ class Home : AppCompatActivity() {
             startActivity(intent)
         }
 
+        //Contract Staff
+        findViewById<ImageView>(R.id.add_contract_staff).setOnClickListener {
+            val intent = Intent(this, ContractStaff::class.java)
+            intent.putExtra("mode", Mode.NEW_FORM)
+            startActivity(intent)
+        }
+        findViewById<Button>(R.id.search_contract_staff).setOnClickListener {
+            val intent = Intent(this, SearchData::class.java)
+            intent.putExtra("base_url", URL.CONTRACT_STAFF)
+            startActivity(intent)
+        }
+
         startTracking()
     }
 

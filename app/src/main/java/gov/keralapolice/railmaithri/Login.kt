@@ -190,6 +190,7 @@ class Login : AppCompatActivity() {
         status = status && cacheData(URL.RUN_OVER_TYPES, Storage.RUN_OVER_TYPES)
         status = status && cacheData(URL.RUN_OVER_CAUSE_TYPES, Storage.RUN_OVER_CAUSE_TYPES)
         status = status && cacheData(URL.COUNTRY_LIST, Storage.COUNTRY_LIST)
+        status = status && cacheData(URL.CONTRACT_STAFF_TYPES, Storage.CONTRACT_STAFF_TYPES)
 
         // Cache incident type
         val incidentTypes = "[{\"id\":\"Platform\",\"name\":\"Platform\"},{\"id\":\"Track\",\"name\":\"Track\"},{\"id\":\"Train\",\"name\":\"Train\"}]"

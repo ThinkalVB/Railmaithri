@@ -22,6 +22,7 @@ import com.bumptech.glide.Glide
 import com.google.gson.GsonBuilder
 import gov.keralapolice.railmaithri.adapters.AbandonedPropertyLA
 import gov.keralapolice.railmaithri.adapters.BeatDiaryLA
+import gov.keralapolice.railmaithri.adapters.ContractStaffLA
 import gov.keralapolice.railmaithri.adapters.CrimeMemoLA
 import gov.keralapolice.railmaithri.adapters.EmergencyContactLA
 import gov.keralapolice.railmaithri.adapters.IncidentReportLA
@@ -39,6 +40,7 @@ import gov.keralapolice.railmaithri.adapters.SurakshaSamithiMemberLA
 import gov.keralapolice.railmaithri.adapters.UnauthorizedPersonLA
 import gov.keralapolice.railmaithri.models.AbandonedPropertyMD
 import gov.keralapolice.railmaithri.models.BeatDiaryMD
+import gov.keralapolice.railmaithri.models.ContractStaffMD
 import gov.keralapolice.railmaithri.models.CrimeMemoMD
 import gov.keralapolice.railmaithri.models.EmergencyContactMD
 import gov.keralapolice.railmaithri.models.IncidentReportMD
@@ -186,6 +188,11 @@ public class SearchData : AppCompatActivity() {
 
                 URL.RUN_OVER -> {
                     val intent = Intent(this, RunOver::class.java)
+                    intent.putExtra("mode", Mode.SEARCH_FORM)
+                    startActivityForResult(intent, 1000)
+                }
+                URL.CONTRACT_STAFF -> {
+                    val intent = Intent(this, ContractStaff::class.java)
                     intent.putExtra("mode", Mode.SEARCH_FORM)
                     startActivityForResult(intent, 1000)
                 }
@@ -976,6 +983,50 @@ public class SearchData : AppCompatActivity() {
                         Glide.with(this).load(runOverData[position].photo).into(imageView)
                     } else {
                         imageView.setImageResource(R.drawable.im_run_over)
+                    }
+                    dialog.show()
+
+                    // For showing pdf button
+                    val pdfButton = (dialog.findViewById<View>(R.id.open_pdf) as ImageButton)
+                    pdfButton.visibility = View.INVISIBLE
+                }
+            }
+            URL.CONTRACT_STAFF -> {
+                val contractData  = gson.fromJson(formData!!.toString(), Array<ContractStaffMD>::class.java).toList()
+                dialog.setContentView(R.layout.search_data_popup)
+                val myListAdapter = ContractStaffLA(this@SearchData, contractData)
+                listData.adapter  = myListAdapter
+
+                listData.setOnItemClickListener { parent, view, position, id ->
+                    // For loading attribute values
+                    addAttribute(dialog, R.id.att1, "Category", R.id.val1, contractData[position].staff_porter_category_label)
+                    addAttribute(dialog, R.id.att2, "Name", R.id.val2, contractData[position].name)
+                    addAttribute(dialog, R.id.att3, "Age", R.id.val3, contractData[position].age.toString())
+                    addAttribute(dialog, R.id.att4, "Gender", R.id.val4, contractData[position].gender)
+                    addAttribute(dialog, R.id.att5, "Mobile Number", R.id.val5, contractData[position].mobile_number)
+                    addAttribute(dialog, R.id.att6, "Aadhar Number", R.id.val6, contractData[position].aadhar_number)
+                    addAttribute(dialog, R.id.att7, "jobDetails", R.id.val7, contractData[position].job_details)
+                    addAttribute(dialog, R.id.att8, "address", R.id.val8, contractData[position].address)
+                    addAttribute(dialog, R.id.att9, "Native state", R.id.val9, contractData[position].native_state_label)
+                    addAttribute(dialog, R.id.att10, "Native police station", R.id.val10, contractData[position].native_police_station)
+                    addAttribute(dialog, R.id.att11, "Railway Station", R.id.val11, contractData[position].railway_station_label)
+                    addAttribute(dialog, R.id.att12, "Migrant/Not", R.id.val12, contractData[position].migrant_or_not.toString())
+
+
+                    // For opening location in google maps
+                    val locationButton = (dialog.findViewById<View>(R.id.open_location) as ImageButton)
+                    locationButton.visibility = View.INVISIBLE
+
+                    // For loading and opening image
+                    val imageView = (dialog.findViewById<View>(R.id.search_data_image) as ImageView)
+                    if (contractData[position].photo != null) {
+                        imageView.setOnClickListener {
+                            dialog.hide()
+                            openImage(contractData[position].photo)
+                        }
+                        Glide.with(this).load(contractData[position].photo).into(imageView)
+                    } else {
+                        imageView.setImageResource(R.drawable.im_contract_staff)
                     }
                     dialog.show()
 

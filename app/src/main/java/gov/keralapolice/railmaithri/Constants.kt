@@ -32,6 +32,7 @@ class URL {
         const val RUN_OVER_TYPES              = "$BASE_URL/railmaithri/dropdown/run_over_category_list/"
         const val RUN_OVER_CAUSE_TYPES        = "$BASE_URL/railmaithri/dropdown/run_over_cause_category_list/"
         const val COUNTRY_LIST                = "$BASE_URL/accounts/dropdown/country_list/"
+        const val CONTRACT_STAFF_TYPES        = "$BASE_URL/railmaithri/dropdown/contract_staff_porter_category_list/"
 
         const val MOBILE_LOGIN                = "$BASE_URL/accounts/mobile_login/"
         const val MOBILE_LOGOUT               = "$BASE_URL/accounts/logout/"
@@ -58,6 +59,7 @@ class URL {
         const val LONELY_PASSENGER            = "$BASE_URL/api/v1/lonely_passenger/"
         const val SOS                         = "$BASE_URL/api/v1/sos_message/"
         const val RUN_OVER                    = "$BASE_URL/api/v1/run_over_report/"
+        const val CONTRACT_STAFF              = "$BASE_URL//api/v1/contract_staff_porter/"
 
         const val OFFICERS_IN_PS              = "$BASE_URL/accounts/dropdown/beat_officers_in_ps/"
         const val COMMUNICATION_RECEIVER      = "$BASE_URL/api/v1/close_communication_receiver/"
@@ -101,6 +103,7 @@ class Storage {
         const val BOOLEAN_ANSWERS             = "BOOLEAN_ANSWERS"
         const val STATION_TYPE                = "STATION_TYPE"
         const val COUNTRY_LIST                = "COUNTRY_LIST"
+        const val CONTRACT_STAFF_TYPES        = "CONTRACT_STAFF_TYPES"
 
         const val INCIDENT_REPORT             = "INCIDENT_REPORT"
         const val PASSENGER_STATISTICS        = "PASSENGER_STATISTICS"
@@ -121,6 +124,7 @@ class Storage {
         const val LABOURS                     = "LABOURS"
         const val WATCH_ZONE                  = "WATCH_ZONE"
         const val RUN_OVER                    = "RUN_OVER"
+        const val CONTRACT_STAFF              = "CONTRACT_STAFF"
     }
 }
 
