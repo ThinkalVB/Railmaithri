@@ -61,6 +61,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.json.JSONArray
 import org.json.JSONObject
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.util.Calendar
 
 public class SearchData : AppCompatActivity() {
     private lateinit var progressPB: ProgressBar
@@ -229,6 +232,11 @@ public class SearchData : AppCompatActivity() {
             parameters.put("beat_officer", officerID)
         } else if (searchURL == URL.INCIDENT_REPORT) {
             parameters.put("informer", officerID)
+        } else if (searchURL == URL.PASSENGER_STATISTICS){
+            if (parameters.optString("last_updated__gte")==""&& parameters.optString("last_updated__lte")=="" ){
+               val filterTime = LocalDateTime.now().minusHours(24).format(DateTimeFormatter.ISO_DATE_TIME)
+                parameters.put("last_updated__gte",filterTime)
+            }
         }
 
         val token = Helper.getData(this, Storage.TOKEN)!!
