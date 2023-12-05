@@ -89,7 +89,7 @@ class ChangePassword : AppCompatActivity() {
             val response = clientNT.newCall(request).execute()
             if (response.isSuccessful) {
                 Helper.showToast(this, "Password Changed Successfully")
-                startActivity(Intent(this, Home::class.java))
+                startActivity(Intent(this, Login::class.java))
                 finish()
             } else {
                 val errorMessage = Helper.getError(response.body!!.string())
