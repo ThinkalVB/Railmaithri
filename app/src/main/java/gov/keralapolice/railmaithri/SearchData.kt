@@ -673,9 +673,25 @@ public class SearchData : AppCompatActivity() {
                 listData.setOnItemClickListener { parent, view, position, id ->
                     // For loading attribute values
                     addAttribute(dialog, R.id.att1, "Category ", R.id.val1, crimeMemoData[position].crime_memo_category_label)
-                    addAttribute(dialog, R.id.att2, "Memo Details", R.id.val2, crimeMemoData[position].memo_details)
-                    addAttribute(dialog, R.id.att3, "Police Station", R.id.val3, crimeMemoData[position].police_station_label)
-
+                    addAttribute(dialog, R.id.att6, "Memo Details ", R.id.val6, crimeMemoData[position].memo_details)
+                    addAttribute(dialog, R.id.att7, "Crime Details ", R.id.val7, crimeMemoData[position].crime_details)
+                    when (crimeMemoData[position].case_registered_in) {
+                        "Railway Police Station" -> {
+                            addAttribute(dialog, R.id.att3, "Railway Police station", R.id.val3, crimeMemoData[position].police_station_label)
+                            hideAttribute(dialog, R.id.att4, R.id.val4)
+                            hideAttribute(dialog, R.id.att5, R.id.val5)
+                        }
+                        "Local Police Station" -> {
+                            addAttribute(dialog, R.id.att4, "Local Police Station", R.id.val4, crimeMemoData[position].local_police_station)
+                            hideAttribute(dialog, R.id.att3, R.id.val3)
+                            hideAttribute(dialog, R.id.att5, R.id.val5)
+                        }
+                        "Others" -> {
+                            addAttribute(dialog, R.id.att5, "Other Police Station", R.id.val5, crimeMemoData[position].other_police_station)
+                            hideAttribute(dialog, R.id.att3, R.id.val3)
+                            hideAttribute(dialog, R.id.att4, R.id.val4)
+                        }
+                    }
 
                     // For opening location in google maps
                     val locationButton = (dialog.findViewById<View>(R.id.open_location) as ImageButton)
@@ -696,7 +712,15 @@ public class SearchData : AppCompatActivity() {
 
                     // For showing pdf button
                     val pdfButton = (dialog.findViewById<View>(R.id.open_pdf) as ImageButton)
-                    pdfButton.visibility = View.INVISIBLE
+                    if (crimeMemoData[position].pdf_file != null) {
+                        pdfButton.visibility = View.VISIBLE
+                        pdfButton.setOnClickListener {
+                            dialog.hide()
+                            openPdf(crimeMemoData[position].pdf_file)
+                        }
+                    } else {
+                        pdfButton.visibility = View.INVISIBLE
+                    }
                 }
             }
             URL.SURAKSHA_SAMITHI_MEMBERS -> {

@@ -33,6 +33,7 @@ class URL {
         const val RUN_OVER_CAUSE_TYPES        = "$BASE_URL/railmaithri/dropdown/run_over_cause_category_list/"
         const val COUNTRY_LIST                = "$BASE_URL/accounts/dropdown/country_list/"
         const val CONTRACT_STAFF_TYPES        = "$BASE_URL/railmaithri/dropdown/contract_staff_porter_category_list/"
+        const val CRIME_MEMO_STATION_TYPES    = "$BASE_URL/railmaithri/dropdown/crime_memo_station_type_list/"
 
         const val MOBILE_LOGIN                = "$BASE_URL/accounts/mobile_login/"
         const val MOBILE_LOGOUT               = "$BASE_URL/accounts/logout/"
@@ -104,6 +105,7 @@ class Storage {
         const val STATION_TYPE                = "STATION_TYPE"
         const val COUNTRY_LIST                = "COUNTRY_LIST"
         const val CONTRACT_STAFF_TYPES        = "CONTRACT_STAFF_TYPES"
+        const val CRIME_MEMO_STATION_TYPES    ="CRIME_MEMO_STATION_TYPES"
 
         const val INCIDENT_REPORT             = "INCIDENT_REPORT"
         const val PASSENGER_STATISTICS        = "PASSENGER_STATISTICS"

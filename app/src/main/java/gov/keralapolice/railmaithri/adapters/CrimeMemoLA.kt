@@ -47,11 +47,11 @@ class CrimeMemoLA(
         attr1?.text = "Category"
         val1?.text  = crimeMemoDatum[position].crime_memo_category_label
 
-        attr2?.text = "Memo Details"
-        val2?.text  = crimeMemoDatum[position].memo_details
+        attr2?.text = "Case Registered In"
+        val2?.text  = crimeMemoDatum[position].case_registered_in
 
-        attr3?.text = "Police Station"
-        val3?.text  = crimeMemoDatum[position].police_station_label
+        attr3?.text = "Memo Details"
+        val3?.text  = crimeMemoDatum[position].memo_details
 
 //        attr4?.text = "Information"
 //        val4?.text  = crimeMemoDatum[position].information

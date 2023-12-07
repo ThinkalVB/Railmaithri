@@ -8,6 +8,7 @@ import android.os.Handler
 import android.os.Looper
 import android.view.Gravity
 import android.view.View
+import android.widget.AdapterView
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.ProgressBar
@@ -27,6 +28,10 @@ class CrimeMemo : AppCompatActivity() {
     private lateinit var crimeDetails:          FieldEditText
     private lateinit var policeStation:         FieldSpinner
     private lateinit var search:                FieldEditText
+    private lateinit var memoDetails:           FieldEditText
+    private lateinit var caseRegisteredIn:      FieldSpinner
+    private lateinit var localPoliceStation:    FieldEditText
+    private lateinit var otherPoliceStation:    FieldEditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,6 +42,13 @@ class CrimeMemo : AppCompatActivity() {
         progressPB   = findViewById(R.id.progress_bar)
         actionBT     = findViewById(R.id.action)
         generateFields()
+
+        caseRegisteredIn.getSpinner().onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                renderFields()
+            }
+        }
 
         actionBT.setOnClickListener { performAction() }
         fileUtil     = FileUtil(this, findViewById(R.id.ly_file), "photo")
@@ -96,12 +108,20 @@ class CrimeMemo : AppCompatActivity() {
             addEmptyValue = Helper.resolveAddEmptyValue(false, mode),
             isRequired = Helper.resolveIsRequired(true, mode)
         )
-        crimeDetails = FieldEditText(this,
+        memoDetails = FieldEditText(this,
             fieldMaxLines = 16,
             fieldType = "multiline",
             fieldLabel = "memo_details",
             fieldName = "Memo Details",
-            fieldHeight=294,
+            fieldHeight=100,
+            isRequired = Helper.resolveIsRequired(true, mode)
+        )
+        crimeDetails = FieldEditText(this,
+            fieldMaxLines = 16,
+            fieldType = "multiline",
+            fieldLabel = "crime_details",
+            fieldName = "Crime Details",
+            fieldHeight=100,
             isRequired = Helper.resolveIsRequired(true, mode)
         )
         policeStation = FieldSpinner(this,
@@ -111,14 +131,38 @@ class CrimeMemo : AppCompatActivity() {
             addEmptyValue = Helper.resolveAddEmptyValue(false, mode),
             isRequired = Helper.resolveIsRequired(true, mode)
         )
+        caseRegisteredIn = FieldSpinner(this,
+            JSONArray(Helper.getData(this, Storage.CRIME_MEMO_STATION_TYPES)!!),
+            "case_registered_in",
+            "Case Registered In",
+            addEmptyValue = Helper.resolveAddEmptyValue(false, mode),
+            isRequired = Helper.resolveIsRequired(true, mode)
+        )
+        localPoliceStation = FieldEditText(this,
+            fieldType = "multiline",
+            fieldLabel = "local_police_station",
+            fieldName = "Local Police Station",
+            isRequired = Helper.resolveIsRequired(true, mode)
+        )
+        otherPoliceStation = FieldEditText(this,
+            fieldType = "multiline",
+            fieldLabel = "other_police_station",
+            fieldName = "Other Police Station",
+            isRequired = Helper.resolveIsRequired(true, mode)
+        )
 
         val form = findViewById<LinearLayout>(R.id.form)
         form.addView(search.getLayout())
         form.addView(crimeMemoCategory.getLayout())
+        form.addView(caseRegisteredIn.getLayout())
         form.addView(policeStation.getLayout())
+        form.addView(localPoliceStation.getLayout())
+        form.addView(otherPoliceStation.getLayout())
+        form.addView(memoDetails.getLayout())
         form.addView(crimeDetails.getLayout())
-    }
 
+
+    }
     private fun sendFormData(formData: JSONObject) {
         Handler(Looper.getMainLooper()).post {
             actionBT.isClickable  = false
@@ -145,7 +189,6 @@ class CrimeMemo : AppCompatActivity() {
             progressPB.visibility = View.GONE
         }
     }
-
     private fun storeFile(formData: JSONObject, uuid: String) {
         if (fileUtil.haveFile()) {
             formData.put("__have_file", true)
@@ -156,15 +199,39 @@ class CrimeMemo : AppCompatActivity() {
             formData.put("__file_name", "No file")
         }
     }
-
     private fun renderFields() {
-        if (mode == Mode.SEARCH_FORM){
-            fileUtil.hide()
-            crimeDetails.hide()
+        search.hide()
+        crimeMemoCategory.hide()
+        caseRegisteredIn.hide()
+        policeStation.hide()
+        localPoliceStation.hide()
+        otherPoliceStation.hide()
+        memoDetails.hide()
+        crimeDetails.hide()
 
+        if (mode == Mode.SEARCH_FORM){
+            search.show()
+            crimeMemoCategory.show()
+            caseRegisteredIn.show()
             actionBT.text = "Search"
+
         } else if(mode == Mode.VIEW_FORM || mode== Mode.UPDATE_FORM || mode == Mode.NEW_FORM){
-            search.hide()
+            fileUtil.show()
+            crimeMemoCategory.show()
+            memoDetails.show()
+            crimeDetails.show()
+            caseRegisteredIn.show()
+            when (caseRegisteredIn.getData().toString()) {
+                "Railway Police Station" -> {
+                    policeStation.show()
+                }
+                "Local Police Station" -> {
+                    localPoliceStation.show()
+                }
+                "Others" ->{
+                    otherPoliceStation.show()
+                }
+            }
 
             when (mode) {
                 Mode.VIEW_FORM -> {
@@ -179,11 +246,14 @@ class CrimeMemo : AppCompatActivity() {
             }
         }
     }
-
     private fun getFormData(formData: JSONObject = JSONObject()): JSONObject? {
         try{
             search.exportData(formData)
             crimeMemoCategory.exportData(formData)
+            memoDetails.exportData(formData)
+            caseRegisteredIn.exportData(formData)
+            localPoliceStation.exportData(formData)
+            otherPoliceStation.exportData(formData)
             crimeDetails.exportData(formData)
             policeStation.exportData(formData)
         } catch (e: Exception){
@@ -194,17 +264,33 @@ class CrimeMemo : AppCompatActivity() {
     }
 
     private fun loadFormData(formData: JSONObject) {
-        crimeMemoCategory.importData(formData)
-        crimeDetails.importData(formData)
-        policeStation.importData(formData)
+        caseRegisteredIn.importData(formData)
+        when (caseRegisteredIn.getData().toString()) {
+            "Railway Police Station" -> {
+                policeStation.importData(formData)
+            }
 
-        if (mode == Mode.UPDATE_FORM && formData.getBoolean("__have_file")){
-            val uuid     = formData.getString("utc_timestamp")
-            val fileName = formData.getString("__file_name")
-            fileUtil.loadFile(this, uuid , fileName)
+            "Local Police Station" -> {
+                localPoliceStation.importData(formData)
+            }
+
+            "Others" -> {
+                otherPoliceStation.importData(formData)
+            }
         }
-        if (mode == Mode.VIEW_FORM) {
-            fileUtil.registerLink(formData)
+        crimeMemoCategory.importData(formData)
+        memoDetails.importData(formData)
+        crimeDetails.importData(formData)
+
+        if (mode == Mode.UPDATE_FORM) {
+            val uuid = formData.getString("utc_timestamp")
+            if (formData.getBoolean("__have_file")) {
+                val fileName = formData.getString("__file_name")
+                fileUtil.loadFile(this, uuid, fileName)
+            }
+            if (mode == Mode.VIEW_FORM) {
+                fileUtil.registerLink(formData)
+            }
         }
     }
 
