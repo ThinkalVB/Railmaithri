@@ -44,17 +44,19 @@ class BeatDiaryLA(
         val attr4 = listItemView?.findViewById<TextView>(R.id.attr4)
         val val4 = listItemView?.findViewById<TextView>(R.id.val4)
 
-        attr1?.text = "On"
-        val1?.text = beatDiaryData[position].utc_timestamp.take(16).replace("T", "\t")
+        attr1?.text = "Duty"
+        val1?.text = beatDiaryDatum[position].beat_label
 
-        attr2?.visibility = View.GONE
-        val2?.text = beatDiaryDatum[position].description
+       // val1?.text = beatDiaryData[position].utc_timestamp.take(16).replace("T", "\t")
 
-        attr3?.visibility = View.GONE
-        val3?.visibility = View.GONE
+        attr2?.text = "officer"
+        val2?.text = beatDiaryDatum[position].beat_officer_label
 
-        attr4?.visibility = View.GONE
-        val4?.visibility = View.GONE
+        attr3?.text = "Assigned on"
+        val3?.text = beatDiaryDatum[position].assigned_on.take(16).replace("T", "\t")
+
+        attr4?.text = "Note"
+        val4?.text = beatDiaryDatum[position].assignment_note
         return listItemView!!
     }
 }

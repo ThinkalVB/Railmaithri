@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.Gravity
 import android.widget.Button
 import android.widget.EditText
@@ -27,6 +28,7 @@ class BeatDiary : AppCompatActivity() {
     private lateinit var profile:       JSONObject
     private lateinit var beatData:      JSONObject
     private var assignmentID            = 0
+    private var officerID:           Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,6 +47,7 @@ class BeatDiary : AppCompatActivity() {
         assignmentID = beatData.getInt("id")
 
         findViewById<TextView>(R.id.officer_name).text = profile.getString("username")
+        findViewById<TextView>(R.id.cpo_number).text = "(${profile.getString("cpo_number")})"
 
         showAssignmentData()
         showSavedData()
@@ -64,13 +67,18 @@ class BeatDiary : AppCompatActivity() {
             val serverNotes = resultData.getJSONArray("results").getJSONObject(0).getJSONArray("beatAssignmentToBeatDiaryPid")
 
             Handler(Looper.getMainLooper()).post {
+                var beatNotes = ""
+                for (it in serverNotes.length()-1 downTo 0 ){
+                    val serverNote  = serverNotes.getJSONObject(it)
+                    val createdOn   = serverNote.getString("utc_timestamp").take(16).replace("T", "\t")
+                    val description = serverNote.getString("description")
+                    beatNotes      += createdOn + "\n" + description + "\n\n"
+                }
+
                 val serverNotesLY  = findViewById<LinearLayout>(R.id.serverNoteList)
                 serverNotesLY.removeAllViews()
-                (0 until serverNotes.length()).forEach {
-                    val serverNote = serverNotes.getJSONObject(it)
-                    val button   = generateButton(this, serverNote, false)
-                    serverNotesLY.addView(button)
-                }
+                val button         = generateNote(this, beatNotes)
+                serverNotesLY.addView(button)
             }
         } else {
             Helper.showToast(this, response.second)
@@ -119,10 +127,14 @@ class BeatDiary : AppCompatActivity() {
         val token         = Helper.getData(this, Storage.TOKEN)!!
         val beatDiary = loadFormData(this, Storage.BEAT_DIARY)
         val bdKeys = beatDiary.keys()
+        officerID = profile.getInt("id")
         while (bdKeys.hasNext()) {
             val bdKeys    = bdKeys.next()
             val formData  = beatDiary.getJSONObject(bdKeys)
+            formData.put("beat_officer", officerID)
+
             CoroutineScope(Dispatchers.IO).launch {
+                Log.d("SyncData", "Officer ID: $officerID")
                 sendFormData(URL.BEAT_DIARY, Storage.BEAT_DIARY, formData, token)
             }
         }
@@ -137,6 +149,14 @@ class BeatDiary : AppCompatActivity() {
             formData.put("description", noteData)
         }
         return formData
+    }
+
+    fun generateNote(context: Context, note: String): Button {
+        val button       = Button(context)
+        button.isAllCaps = false
+        button.gravity   = Gravity.START
+        button.text      = note
+        return button
     }
 
     fun generateButton(context: Context, formData: JSONObject, isInteractive: Boolean=true): Button {
@@ -165,10 +185,12 @@ class BeatDiary : AppCompatActivity() {
             ResponseType.SUCCESS -> {
                 Helper.removeFormData(this, uuid, storage)
                 Helper.purgeFile(this, uuid)
+
                 Handler(Looper.getMainLooper()).post {
                     showSavedData()
                 }
                 showServerData()
+                Helper.showToast(this, "Data Send Successfully")
             }
             ResponseType.API_ERROR -> {
                 Helper.showToast(this, response.second)

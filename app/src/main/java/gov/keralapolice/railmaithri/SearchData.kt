@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.Button
 import android.widget.ImageButton
@@ -19,6 +20,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
+import com.google.android.gms.common.api.Response
 import com.google.gson.GsonBuilder
 import gov.keralapolice.railmaithri.adapters.AbandonedPropertyLA
 import gov.keralapolice.railmaithri.adapters.BeatDiaryLA
@@ -62,6 +64,7 @@ import kotlinx.coroutines.launch
 import org.json.JSONArray
 import org.json.JSONObject
 import java.time.LocalDateTime
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Calendar
 
@@ -240,7 +243,12 @@ public class SearchData : AppCompatActivity() {
         }
 
         val token = Helper.getData(this, Storage.TOKEN)!!
-        val response = Helper.getFormData(searchURL, parameters, token)
+        val response = if (searchURL == URL.BEAT_DIARY){
+            Helper.getFormData(URL.BEAT_ASSIGNMENT_DIARY, parameters, token)
+        } else {
+            Helper.getFormData(searchURL, parameters, token)
+        }
+
         if (response.first == ResponseType.SUCCESS) {
             if (searchURL == URL.SURAKSHA_SAMITHI_MEMBERS) {
                 isEndOfResult = true
@@ -851,6 +859,49 @@ public class SearchData : AppCompatActivity() {
                 dialog.setContentView(R.layout.search_data_popup)
                 val myListAdapter    = BeatDiaryLA(this@SearchData, beatDiaryData)
                 listData.adapter     = myListAdapter
+
+                listData.setOnItemClickListener { parent, view, position, id ->
+
+                    addAttribute(dialog, R.id.att1, "Date From", R.id.val1, beatDiaryData[position].beat_duty_from
+                        .take(16).replace("T", "\t"))
+                    addAttribute(dialog, R.id.att2, "Date To", R.id.val2, beatDiaryData[position].beat_duty_to
+                        .take(16).replace("T", "\t"))
+                    val entriesLayout = dialog.findViewById<View>(R.id.entries_layout) as LinearLayout
+                    entriesLayout.removeAllViews() // Clear previous entries
+
+                    beatDiaryData[position].beatAssignmentToBeatDiaryPid.forEach { entry ->
+                        val entryView = LayoutInflater.from(this).inflate(R.layout.entry_item, entriesLayout, false)
+                        val utcTextView = entryView.findViewById<TextView>(R.id.utc_text_view)
+
+                        val descriptionTextView = entryView.findViewById<TextView>(R.id.description_text_view)
+                        utcTextView.text = entry.utc_timestamp.take(16).replace("T", "\t")
+                        descriptionTextView.text = entry.description + "\n"
+
+                        entriesLayout.addView(entryView)
+                    }
+
+                    // For loading and opening image
+                    val imageView = (dialog.findViewById<View>(R.id.search_data_image) as ImageView)
+                    if (beatDiaryData[position].photo != null) {
+                        imageView.setOnClickListener {
+                            dialog.hide()
+                            openImage(beatDiaryData[position].photo)
+                        }
+                        Glide.with(this).load(beatDiaryData[position].photo).into(imageView)
+                    } else {
+                        imageView.setImageResource(R.drawable.im_beat_diary)
+                    }
+
+                    // For opening location in google maps
+                    val locationButton = (dialog.findViewById<View>(R.id.open_location) as ImageButton)
+                    locationButton.visibility = View.INVISIBLE
+
+                    // For showing pdf button
+                    val pdfButton = (dialog.findViewById<View>(R.id.open_pdf) as ImageButton)
+                    pdfButton.visibility = View.INVISIBLE
+
+                    dialog.show()
+                }
             }
             URL.INCIDENT_REPORT -> {
                 val incidentData  = gson.fromJson(formData!!.toString(), Array<IncidentReportMD>::class.java).toList()
