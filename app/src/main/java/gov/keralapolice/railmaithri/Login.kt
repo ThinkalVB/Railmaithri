@@ -6,8 +6,6 @@ import android.app.PendingIntent
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
-import android.os.Build.VERSION
-import android.os.Build.VERSION_CODES
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -191,6 +189,8 @@ class Login : AppCompatActivity() {
         status = status && cacheData(URL.RUN_OVER_CAUSE_TYPES, Storage.RUN_OVER_CAUSE_TYPES)
         status = status && cacheData(URL.COUNTRY_LIST, Storage.COUNTRY_LIST)
         status = status && cacheData(URL.CONTRACT_STAFF_TYPES, Storage.CONTRACT_STAFF_TYPES)
+        status = status && cacheData(URL.CRIME_MEMO_STATION_TYPES, Storage.CRIME_MEMO_STATION_TYPES)
+
 
         // Cache incident type
         val incidentTypes = "[{\"id\":\"Platform\",\"name\":\"Platform\"},{\"id\":\"Track\",\"name\":\"Track\"},{\"id\":\"Train\",\"name\":\"Train\"}]"

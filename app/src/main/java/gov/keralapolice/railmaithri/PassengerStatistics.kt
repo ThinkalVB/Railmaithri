@@ -113,7 +113,7 @@ class PassengerStatistics : AppCompatActivity() {
         coachNumber = FieldEditText(this,
             fieldType  = "text",
             fieldLabel = "coach",
-            fieldName  = "Coach number",
+            fieldName  = "Coach",
             isRequired = Helper.resolveIsRequired(true, mode)
         )
         density = FieldSpinner(this,
