@@ -34,6 +34,11 @@
         android:theme="@style/Theme.Railmaithri"
         android:usesCleartextTraffic="true"
         tools:targetApi="31" >
+
+        <activity
+            android:name=".WebLinks"
+            android:exported="false"
+            android:screenOrientation="nosensor" />
         <activity
             android:name=".ContractStaff"
             android:exported="false"
@@ -163,6 +168,7 @@
             android:exported="false" >
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
+                <action android:name="android.intent.action.RESPOND_VIA_MESSAGE"/>
             </intent-filter>
         </service>
 

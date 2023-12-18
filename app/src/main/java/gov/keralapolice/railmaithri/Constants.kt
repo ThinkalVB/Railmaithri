@@ -60,7 +60,8 @@ class URL {
         const val LONELY_PASSENGER            = "$BASE_URL/api/v1/lonely_passenger/"
         const val SOS                         = "$BASE_URL/api/v1/sos_message/"
         const val RUN_OVER                    = "$BASE_URL/api/v1/run_over_report/"
-        const val CONTRACT_STAFF              = "$BASE_URL//api/v1/contract_staff_porter/"
+        const val CONTRACT_STAFF              = "$BASE_URL/api/v1/contract_staff_porter/"
+        const val WEB_LINKS                   = "$BASE_URL/api/v1/weblink/"
 
         const val OFFICERS_IN_PS              = "$BASE_URL/accounts/dropdown/beat_officers_in_ps/"
         const val COMMUNICATION_RECEIVER      = "$BASE_URL/api/v1/close_communication_receiver/"
@@ -127,6 +128,7 @@ class Storage {
         const val WATCH_ZONE                  = "WATCH_ZONE"
         const val RUN_OVER                    = "RUN_OVER"
         const val CONTRACT_STAFF              = "CONTRACT_STAFF"
+        const val WEB_LINKS                   = "WEB_LINKS"
     }
 }
 

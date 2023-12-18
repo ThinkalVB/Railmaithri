@@ -311,6 +311,11 @@ class Home : AppCompatActivity() {
             startActivity(intent)
         }
 
+        //Web links
+        findViewById<ImageView>(R.id.add_web_links).setOnClickListener {
+            val intent = Intent(this, WebLinks::class.java)
+            startActivity(intent)
+        }
         startTracking()
     }
 

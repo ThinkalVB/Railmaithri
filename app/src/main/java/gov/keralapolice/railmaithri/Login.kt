@@ -146,7 +146,8 @@ class Login : AppCompatActivity() {
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.INTERNET,
             Manifest.permission.CALL_PHONE,
-            Manifest.permission.POST_NOTIFICATIONS
+            Manifest.permission.POST_NOTIFICATIONS,
+            Manifest.permission.SET_ALARM
         )
         val neededPermissions = ArrayList<String>()
         for (permission in appPermissions) {
@@ -190,7 +191,7 @@ class Login : AppCompatActivity() {
         status = status && cacheData(URL.COUNTRY_LIST, Storage.COUNTRY_LIST)
         status = status && cacheData(URL.CONTRACT_STAFF_TYPES, Storage.CONTRACT_STAFF_TYPES)
         status = status && cacheData(URL.CRIME_MEMO_STATION_TYPES, Storage.CRIME_MEMO_STATION_TYPES)
-
+        status = status && cacheData(URL.WEB_LINKS, Storage.WEB_LINKS)
 
         // Cache incident type
         val incidentTypes = "[{\"id\":\"Platform\",\"name\":\"Platform\"},{\"id\":\"Track\",\"name\":\"Track\"},{\"id\":\"Train\",\"name\":\"Train\"}]"
