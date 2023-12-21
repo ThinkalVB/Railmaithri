@@ -12,7 +12,6 @@ import kotlinx.coroutines.launch
 import org.json.JSONArray
 import org.json.JSONObject
 
-
 class TaskList : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,6 +44,14 @@ class TaskList : AppCompatActivity() {
             button.isAllCaps = false
             button.gravity   = Gravity.START
             button.text      = buttonData
+            button.setBackgroundResource(R.drawable.search_view_box)
+            button.setPadding(16, 10, 16, 10)
+            val layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+            layoutParams.setMargins(8, 0, 8, 16)
+            button.layoutParams = layoutParams
             button.setOnClickListener {
                 val taskType = task.getString("notification_type")
                 val taskID   = task.getInt("item_id")
