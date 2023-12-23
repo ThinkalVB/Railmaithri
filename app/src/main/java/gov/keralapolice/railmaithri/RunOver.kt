@@ -196,6 +196,11 @@ class RunOver : AppCompatActivity() {
                 val occurredOn = dateOfOccurrence.getData() + "T"+ timeOfOccurrence.getData()
                 formData.put("date_time_of_occurance", occurredOn)
             }
+
+            val profile   = JSONObject(Helper.getData(this, Storage.PROFILE)!!)
+            val stationID = profile.getJSONArray("police_station").getJSONObject(0).getInt("id")
+            formData.put("added_from_rps", stationID)
+
             search.exportData(formData)
             placeOfOccurrence.exportData(formData)
             betweenStation1.exportData(formData)
