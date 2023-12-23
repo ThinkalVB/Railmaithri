@@ -54,9 +54,7 @@ class LocationUtil(_activity: Activity, _locationLY: ConstraintLayout) {
                 Toast.makeText(_activity.applicationContext, message, Toast.LENGTH_SHORT).show()
             }
         }
-        fetchLocation(_activity)
     }
-
     @SuppressLint("MissingPermission")
     fun fetchLocation(context: Context) {
         if (Helper.haveLocationPermission(context)) {
@@ -83,11 +81,9 @@ class LocationUtil(_activity: Activity, _locationLY: ConstraintLayout) {
             Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
         }
     }
-
     fun haveLocation(): Boolean {
         return !(latitude == null || longitude == null)
     }
-
     fun enableUpdate () {
         getLocationBT.isClickable = true
     }
@@ -115,7 +111,6 @@ class LocationUtil(_activity: Activity, _locationLY: ConstraintLayout) {
         locationDataTV.text     = locationString
         locationAccuracyTV.text = accuracyString
     }
-
     fun exportLocation(data: JSONObject): JSONObject {
         if(haveLocation()){
             if(!isHidden){

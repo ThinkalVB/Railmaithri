@@ -298,6 +298,11 @@ class Home : AppCompatActivity() {
             val intent = Intent(this, TaskList::class.java)
             startActivity(intent)
         }
+//        findViewById<Button>(R.id.search_task_list).setOnClickListener {
+//            val intent = Intent(this, SearchData::class.java)
+//            intent.putExtra("base_url", URL.TASK_LIST)
+//            startActivity(intent)
+//        }
 
         //Contract Staff
         findViewById<ImageView>(R.id.add_contract_staff).setOnClickListener {
@@ -398,7 +403,6 @@ class Home : AppCompatActivity() {
             }
         }
     }
-
     private fun saveLocationDataToServer(
         latitude: String,
         longitude: String,
@@ -420,7 +424,6 @@ class Home : AppCompatActivity() {
                 }
                 return
             }
-
             val locationData = JSONObject()
             locationData.put("beat_officer", officerID)
             locationData.put("latitude", latitude)

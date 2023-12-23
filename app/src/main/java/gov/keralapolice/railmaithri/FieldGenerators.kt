@@ -3,6 +3,7 @@ package gov.keralapolice.railmaithri
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Context
+import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.Typeface
 import android.icu.util.Calendar
@@ -14,10 +15,14 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import org.json.JSONArray
 import org.json.JSONObject
 import java.util.ArrayList
+import java.util.Collections.min
+import kotlin.math.min
 
 
 // This exception is thrown when the field is required but empty when calling getData()
@@ -369,8 +374,51 @@ class FieldSpinner(context: Context,
                 false
             }
         }
+        _spinner.setOnTouchListener { _, event ->
+            if (event.action == MotionEvent.ACTION_UP) {
+                showPopupAboveKeyboard()
+                true
+            } else {
+                false
+            }
+        }
     }
 
+    private fun showPopupAboveKeyboard() {
+        val screenHeight = Resources.getSystem().displayMetrics.heightPixels
+        val popupHeight = calculatePopupHeight()
+
+        // Calculate the vertical position to center the popup
+        val yPos = (screenHeight - popupHeight) / 2
+
+        // Set an OnTouchListener to hide the keyboard and show the popup
+        _popup.showAtLocation(_spinner, Gravity.TOP, 0, yPos)
+        _popup.update(
+            0,
+            yPos,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+
+        _isSelectionMade = false
+
+        val imm =
+            _spinner.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(_searchEditText.windowToken, 0)
+    }
+
+    private fun calculatePopupHeight(): Int {
+        // Calculate the height of the popup based on the number of items in the dropdown
+        val itemHeight = _spinner.height
+        val dropdownHeight = _arrayAdapter.count * itemHeight
+        return min(dropdownHeight, maxHeight)
+    }
+    private val maxHeight: Int
+        get() {
+            // Set a maximum height for the popup to prevent it from covering the entire screen
+            val displayMetrics = Resources.getSystem().displayMetrics
+            return (displayMetrics.heightPixels * 0.6).toInt()
+        }
 
     fun importData(jsonObject: JSONObject, filedLabel: String? = null) {
         var actualLabel = _fieldLabel
@@ -479,4 +527,4 @@ class FieldSpinner(context: Context,
                 _spinner.setSelection(position)
             }
         }
-    }
+}

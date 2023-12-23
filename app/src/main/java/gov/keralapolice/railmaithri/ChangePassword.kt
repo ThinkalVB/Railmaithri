@@ -74,21 +74,17 @@ class ChangePassword : AppCompatActivity() {
         Handler(Looper.getMainLooper()).post {
             changeBT.isClickable = false
         }
-
         val data = JSONObject()
         data.put("old_password", currentPasswordET.text)
         data.put("new_password", newPasswordET.text)
         data.put("confirm_password", confirmPasswordET.text)
 
         try {
-
-            Log.e("Railmaithri", token)
-            Log.e("Railmaithri", data.toString())
-
             val request = API.post(URL.PASSWORD_CHANGE, data, token)
             val response = clientNT.newCall(request).execute()
             if (response.isSuccessful) {
                 Helper.showToast(this, "Password Changed Successfully")
+                Helper.saveData(this, Storage.TOKEN, "")
                 startActivity(Intent(this, Login::class.java))
                 finish()
             } else {
