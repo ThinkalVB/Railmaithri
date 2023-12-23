@@ -54,6 +54,7 @@ class LocationUtil(_activity: Activity, _locationLY: ConstraintLayout) {
                 Toast.makeText(_activity.applicationContext, message, Toast.LENGTH_SHORT).show()
             }
         }
+        fetchLocation(_activity)
     }
     @SuppressLint("MissingPermission")
     fun fetchLocation(context: Context) {
