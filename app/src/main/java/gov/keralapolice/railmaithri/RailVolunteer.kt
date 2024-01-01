@@ -122,7 +122,7 @@ class RailVolunteer : AppCompatActivity() {
             isRequired = Helper.resolveIsRequired(true, mode)
         )
         mobileNumber = FieldEditText(this,
-            fieldType = "number",
+            fieldType = "phone",
             fieldLabel = "mobile_number",
             fieldName = "Mobile Number",
             isRequired = Helper.resolveIsRequired(true, mode)

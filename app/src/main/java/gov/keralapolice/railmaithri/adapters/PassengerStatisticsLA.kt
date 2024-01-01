@@ -53,7 +53,7 @@ class PassengerStatisticsLA(
         attr3?.text = "Compartment Type"
         val3?.text  = PassengerStatisticsDatum[position].compartment_type_label
 
-        attr4?.text = "Coach Number"
+        attr4?.text = "Coach"
         val4?.text  = PassengerStatisticsDatum[position].coach
         return listItemView!!
     }

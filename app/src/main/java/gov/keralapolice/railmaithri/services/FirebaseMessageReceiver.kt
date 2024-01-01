@@ -1,10 +1,12 @@
 package gov.keralapolice.railmaithri.services
 
+import android.app.AlarmManager
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Intent
 import android.os.Build
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
@@ -49,5 +51,14 @@ class FirebaseMessageReceiver : FirebaseMessagingService() {
             manager?.createNotificationChannel(channel)
         }
         manager?.notify(0, builder.build())
+
+        /* Alarm on firebase notification */
+        Log.e("Railmaithri", "Endpoint 1")
+        val almIntent = Intent(applicationContext, TaskList::class.java)
+        val pintent = PendingIntent.getActivity(applicationContext, 0, almIntent, PendingIntent.FLAG_IMMUTABLE)
+        val alarm = getSystemService(ALARM_SERVICE) as AlarmManager
+        alarm.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 0, pintent)
+        alarm[ AlarmManager.RTC_WAKEUP, System.currentTimeMillis()] = pintent
+        Log.e("Railmaithri", "Endpoint 2")
     }
 }

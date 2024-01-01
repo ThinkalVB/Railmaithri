@@ -511,7 +511,7 @@ public class SearchData : AppCompatActivity() {
                     // For loading attribute values
                     addAttribute(dialog, R.id.att1, "Name", R.id.val1, reliablePersonData[position].name)
                     addAttribute(dialog, R.id.att2, "Mobile Number", R.id.val2, reliablePersonData[position].mobile_number)
-                    addAttribute(dialog, R.id.att3, "Police Number", R.id.val3, reliablePersonData[position].police_station_label)
+                    addAttribute(dialog, R.id.att3, "Police Station", R.id.val3, reliablePersonData[position].police_station_label)
                     addAttribute(dialog, R.id.att4, "Place", R.id.val4, reliablePersonData[position].place)
                     addAttribute(dialog, R.id.att5, "Description", R.id.val5, reliablePersonData[position].description)
                     // For opening location in google maps

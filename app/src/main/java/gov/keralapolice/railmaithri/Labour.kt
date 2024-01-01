@@ -151,7 +151,7 @@ class Labour : AppCompatActivity() {
             isRequired = Helper.resolveIsRequired(true, mode)
         )
         mobileNumber = FieldEditText(this,
-            fieldType  = "number",
+            fieldType  = "phone",
             fieldLabel = "mobile_number",
             fieldName  = "Mobile number",
             isRequired = Helper.resolveIsRequired(true, mode)

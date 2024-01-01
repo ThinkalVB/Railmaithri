@@ -182,7 +182,7 @@ class StrangerCheck : AppCompatActivity() {
         )
         mobileNumber = FieldEditText(
             this,
-            fieldType = "number",
+            fieldType = "phone",
             fieldLabel = "mobile_number",
             fieldName = "Phone number",
             isRequired = Helper.resolveIsRequired(false, mode)

@@ -73,6 +73,9 @@ class Chat : AppCompatActivity() {
             val message = JSONObject()
             message.put("message", messageStr)
             message.put("utc_timestamp", Helper.getUTC())
+            message.put("sender", senderID)
+
+            Log.e("Railmaithri", message.toString())
 
             val request  = API.post(URL.CLOSE_COMMUNICATION, message, token)
             val response = clientNT.newCall(request).execute()
@@ -80,6 +83,7 @@ class Chat : AppCompatActivity() {
                 mapMessage(JSONObject(response.body!!.string()))
             } else {
                 val apiResponse  = response.body!!.string()
+                Log.e("Railmaithri", apiResponse.toString())
                 val errorMessage = Helper.getError(apiResponse)
                 Helper.showToast(this, errorMessage, Toast.LENGTH_LONG)
             }

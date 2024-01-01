@@ -55,9 +55,17 @@ class RailMaithriMeeting : AppCompatActivity() {
             Mode.NEW_FORM -> {
                 val formData = getFormData()
                 if (formData != null) {
-                    val utcTime = Helper.getUTC()
-                    formData.put("utc_timestamp", utcTime)
-                    CoroutineScope(Dispatchers.IO).launch { sendFormData(formData) }
+                    // Validate that Next Meeting Date is greater than Meeting Date
+                    val meetingDateValue = formData.optString("meeting_date", "")
+                    val nextMeetingDateValue = formData.optString("next_meeting_date", "")
+
+                    if (Helper.isDateAfter(meetingDateValue, nextMeetingDateValue)) {
+                        val utcTime = Helper.getUTC()
+                        formData.put("utc_timestamp", utcTime)
+                        CoroutineScope(Dispatchers.IO).launch { sendFormData(formData) }
+                    } else {
+                        Helper.showToast(this, "Next Meeting Date should be greater than Meeting Date.")
+                    }
                 }
             }
             Mode.SEARCH_FORM -> {

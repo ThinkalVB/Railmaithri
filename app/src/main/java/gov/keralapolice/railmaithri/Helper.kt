@@ -24,6 +24,7 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.json.JSONArray
 import android.R.layout
+import java.util.Date
 
 class Helper {
     companion object {
@@ -298,6 +299,18 @@ class Helper {
             val arrayAdapter = ArrayAdapter(context, layout.simple_spinner_item, arrayList)
             arrayAdapter.setDropDownViewResource(layout.simple_spinner_dropdown_item)
             return arrayAdapter
+        }
+        fun isDateAfter(date1: String, date2: String): Boolean {
+            val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
+            try {
+                val parsedDate1: Date = format.parse(date1)
+                val parsedDate2: Date = format.parse(date2)
+
+                return parsedDate2.after(parsedDate1)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+            return false
         }
     }
 }

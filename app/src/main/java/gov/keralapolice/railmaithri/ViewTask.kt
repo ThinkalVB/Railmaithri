@@ -95,6 +95,7 @@ class ViewTask : AppCompatActivity() {
                         fields.addView(generateLayout("PNR",        lonelyPassenger.optString("pnr_number")))
                         fields.addView(generateLayout("Dress code", lonelyPassenger.optString("dress_code")))
                         fields.addView(generateLayout("Remarks",    lonelyPassenger.optString("remarks")))
+                        fields.addView(generateLayout("Assignment Remarks", lonelyPassenger.optString("assignment_remarks")))
                         locationUtil.hide()
                     }
                 }
@@ -111,6 +112,7 @@ class ViewTask : AppCompatActivity() {
                         fields.addView(generateLayout("Coach",    incidentInTrain.optString("coach")))
                         fields.addView(generateLayout("Mobile",   incidentInTrain.optString("mobile_number")))
                         fields.addView(generateLayout("Details",  incidentInTrain.optString("incident_details")))
+                        fields.addView(generateLayout("Assignment Remarks",  incidentInTrain.optString("assignment_remarks")))
                         updateLocation(incidentInTrain)
                     }
                 }
@@ -126,6 +128,7 @@ class ViewTask : AppCompatActivity() {
                         fields.addView(generateLayout("Platform", incidentInPlatform.optString("platform_number")))
                         fields.addView(generateLayout("Station",  incidentInPlatform.optString("railway_station_label")))
                         fields.addView(generateLayout("Details",  incidentInPlatform.optString("incident_details")))
+                        fields.addView(generateLayout("Assignment Remarks",  incidentInPlatform.optString("assignment_remarks")))
                         updateLocation(incidentInPlatform)
                     }
                 }
@@ -140,6 +143,7 @@ class ViewTask : AppCompatActivity() {
                         fields.addView(generateLayout("Incident", incidentInTrack.optString("incident_type")))
                         fields.addView(generateLayout("Track",    incidentInTrack.optString("track_location")))
                         fields.addView(generateLayout("Details",  incidentInTrack.optString("incident_details")))
+                        fields.addView(generateLayout("Assignment Remarks",  incidentInTrack.optString("assignment_remarks")))
                         updateLocation(incidentInTrack)
                     }
                 }
@@ -192,10 +196,11 @@ class ViewTask : AppCompatActivity() {
             this,
             fieldType = "multiline",
             fieldLabel = "attended_remarks",
-            fieldName = "Closing remarks",
+            fieldName = "Attended remarks",
             fieldHeight=98,
             isRequired = Helper.resolveIsRequired(true, Mode.NEW_FORM)
         )
+
         val form = findViewById<LinearLayout>(R.id.form)
         form.addView(remarks.getLayout())
     }

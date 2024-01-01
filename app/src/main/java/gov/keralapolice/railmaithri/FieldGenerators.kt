@@ -8,6 +8,7 @@ import android.graphics.Color
 import android.graphics.Typeface
 import android.icu.util.Calendar
 import android.text.Editable
+import android.text.InputFilter
 import android.text.InputType
 import android.text.TextWatcher
 import android.util.Log
@@ -70,6 +71,22 @@ class FieldEditText(context: Context,
         when (fieldType) {
             "phone" -> {
                 _editText.inputType = InputType.TYPE_CLASS_PHONE
+                _editText.hint = "Enter phone number"
+
+                _editText.filters = arrayOf(InputFilter.LengthFilter(10))
+
+                _editText.setOnFocusChangeListener { _, hasFocus ->
+                    if (!hasFocus) {
+                        val phoneNumber = _editText.text.toString().trim()
+
+                        if (isValidPhoneNumber(phoneNumber)) {
+                            // Phone number is valid
+                        } else {
+                            // Invalid phone number
+                            _editText.error = "Invalid phone number"
+                        }
+                    }
+                }
             }
             "email" -> {
                 _editText.inputType = InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS
@@ -91,19 +108,22 @@ class FieldEditText(context: Context,
                 _editText.isVerticalScrollBarEnabled = true
             }
             "date" -> {
-                // No specific class is available hence simple text is used
                 _editText.inputType = InputType.TYPE_CLASS_TEXT
-                _editText.setOnClickListener {
-                    val calendar = Calendar.getInstance()
-                    val yearNow  = calendar.get(Calendar.YEAR)
-                    val monthNow = calendar.get(Calendar.MONTH)
-                    val dayNow   = calendar.get(Calendar.DAY_OF_MONTH)
-                    val datePickerDialog = DatePickerDialog(context,
-                        { _, year, monthOfYear, dayOfMonth ->
-                            val date = "$year-${monthOfYear+1}-$dayOfMonth"
-                            _editText.setText(date)
-                        }, yearNow, monthNow, dayNow)
-                    datePickerDialog.show()
+                _editText.setOnTouchListener { _, event ->
+                    if (event.action == MotionEvent.ACTION_UP) {
+                        val calendar = Calendar.getInstance()
+                        val yearNow = calendar.get(Calendar.YEAR)
+                        val monthNow = calendar.get(Calendar.MONTH)
+                        val dayNow = calendar.get(Calendar.DAY_OF_MONTH)
+                        val datePickerDialog = DatePickerDialog(context,
+                            { _, year, monthOfYear, dayOfMonth ->
+                                val date = "$year-${monthOfYear + 1}-$dayOfMonth"
+                                _editText.setText(date)
+                            }, yearNow, monthNow, dayNow)
+                        datePickerDialog.show()
+                        return@setOnTouchListener true
+                    }
+                    return@setOnTouchListener false
                 }
             }
             "time" -> {
@@ -218,6 +238,13 @@ class FieldEditText(context: Context,
 
     fun getLayout(): LinearLayout {
         return  _linearLayout
+    }
+    private fun isValidPhoneNumber(phone: String): Boolean {
+        // Define the regex pattern for a valid Indian mobile number
+        val regexPattern = Regex("^[6-9]\\d{9}$")
+
+        // Check if the entered phone number matches the pattern
+        return phone.length == 10 && phone.matches(regexPattern) && !phone.all { it == '0' }
     }
 }
 

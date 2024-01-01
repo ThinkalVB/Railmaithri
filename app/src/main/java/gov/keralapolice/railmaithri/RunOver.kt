@@ -389,7 +389,7 @@ class RunOver : AppCompatActivity() {
             isRequired = Helper.resolveIsRequired(true, mode)
         )
         relativesContact = FieldEditText(this,
-            fieldType = "number",
+            fieldType = "phone",
             fieldLabel = "contact_number",
             fieldName = "Relatives contact",
             isRequired = Helper.resolveIsRequired(true, mode)

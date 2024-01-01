@@ -98,7 +98,7 @@ class ShopAndLabours : AppCompatActivity() {
             isRequired = Helper.resolveIsRequired(true, mode)
         )
         mobileNumber = FieldEditText(this,
-            fieldType = "number",
+            fieldType = "phone",
             fieldLabel = "contact_number",
             fieldName = "Mobile number",
             isRequired = Helper.resolveIsRequired(true, mode)

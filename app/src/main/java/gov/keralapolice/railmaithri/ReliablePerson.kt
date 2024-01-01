@@ -24,7 +24,7 @@ class ReliablePerson : AppCompatActivity() {
 
     private lateinit var name:              FieldEditText
     private lateinit var mobileNumber:      FieldEditText
-    private lateinit var policeStation:     FieldSpinner
+   // private lateinit var policeStation:     FieldSpinner
     private lateinit var place:             FieldEditText
     private lateinit var description:       FieldEditText
     private lateinit var search:            FieldEditText
@@ -52,8 +52,11 @@ class ReliablePerson : AppCompatActivity() {
             Mode.NEW_FORM -> {
                 val formData = getFormData()
                 if (formData != null) {
+                    val profile   = JSONObject(Helper.getData(this, Storage.PROFILE)!!)
+                    val stationID = profile.getJSONArray("police_station").getJSONObject(0).getInt("id")
                     val utcTime = Helper.getUTC()
                     formData.put("utc_timestamp", utcTime)
+                    formData.put("police_station", stationID)
                     CoroutineScope(Dispatchers.IO).launch { sendFormData(formData) }
                 }
             }
@@ -95,18 +98,18 @@ class ReliablePerson : AppCompatActivity() {
             isRequired = Helper.resolveIsRequired(true, mode)
         )
         mobileNumber = FieldEditText(this,
-            fieldType = "number",
+            fieldType = "phone",
             fieldLabel = "mobile_number",
             fieldName = "Mobile number",
             isRequired = Helper.resolveIsRequired(true, mode)
         )
-        policeStation = FieldSpinner(this,
-            JSONArray(Helper.getData(this, Storage.POLICE_STATIONS_LIST)!!),
-            "police_station",
-            "Police Station",
-            addEmptyValue = Helper.resolveAddEmptyValue(false, mode),
-            isRequired = Helper.resolveIsRequired(true, mode)
-        )
+//        policeStation = FieldSpinner(this,
+//            JSONArray(Helper.getData(this, Storage.POLICE_STATIONS_LIST)!!),
+//            "police_station",
+//            "Police Station",
+//            addEmptyValue = Helper.resolveAddEmptyValue(false, mode),
+//            isRequired = Helper.resolveIsRequired(true, mode)
+//        )
         place = FieldEditText(this,
             fieldType = "text",
             fieldLabel = "place",
@@ -126,7 +129,7 @@ class ReliablePerson : AppCompatActivity() {
         form.addView(search.getLayout())
         form.addView(name.getLayout())
         form.addView(mobileNumber.getLayout())
-        form.addView(policeStation.getLayout())
+       // form.addView(policeStation.getLayout())
         form.addView(place.getLayout())
         form.addView(description.getLayout())
     }
@@ -160,7 +163,7 @@ class ReliablePerson : AppCompatActivity() {
     private fun renderFields() {
         if (mode == Mode.SEARCH_FORM){
             mobileNumber.hide()
-            policeStation.hide()
+            //policeStation.hide()
             place.hide()
             description.hide()
 
@@ -187,7 +190,7 @@ class ReliablePerson : AppCompatActivity() {
             search.exportData(formData)
             name.exportData(formData)
             mobileNumber.exportData(formData)
-            policeStation.exportData(formData)
+            //policeStation.exportData(formData)
             place.exportData(formData)
             description.exportData(formData)
         } catch (e: Exception){
@@ -200,7 +203,7 @@ class ReliablePerson : AppCompatActivity() {
     private fun loadFormData(formData: JSONObject) {
         name.importData(formData)
         mobileNumber.importData(formData)
-        policeStation.importData(formData)
+       // policeStation.importData(formData)
         place.importData(formData)
         description.importData(formData)
     }
